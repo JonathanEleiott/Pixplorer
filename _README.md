@@ -4,9 +4,9 @@
 
 ## Team
 
-  - __Product Owner__: teamMember
-  - __Scrum Master__: teamMember
-  - __Development Team Members__: teamMember, teamMember
+  - __Product Owner__: Bill Lea
+  - __Scrum Master__: Jonathan Eleiott
+  - __Development Team Members__: Dan Svorcan
 
 ## Table of Contents
 
