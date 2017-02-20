@@ -1,1 +1,1 @@
-web: nodemon index.js
+web: forever start index.js
