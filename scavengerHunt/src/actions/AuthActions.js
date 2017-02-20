@@ -1,4 +1,6 @@
 // Sends trigger and calls functions
+
+import axios from 'axios';
 import { Actions } from 'react-native-router-flux';
 import {
   EMAIL_CHANGED,
@@ -31,7 +33,7 @@ export const loginUser = ({ email, password }) => {
     console.log('loginUser called', email, password);
     loginUserSuccess(dispatch, 'user');
     // loginUserFail(dispatch)
-    // insert AJAX call with email and password
+    axios.get('https://');
   };
 };
 

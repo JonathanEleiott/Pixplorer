@@ -11,7 +11,6 @@ import itemList from '../itemList.json';
 class HuntingList extends Component {
 
   foundItemChecker(foundItem, item) {
-    console.log(foundItem);
     if (foundItem === 'true') {
       return (
         <CardSection style={{ borderBottomWidth: 0 }}>
@@ -47,7 +46,6 @@ class HuntingList extends Component {
     return (
       <Card>
       { itemList.map((item, index) => {
-        console.log(item);
         return (
           <CardSection key={index}>
             { this.foundItemChecker(item.found, item) }
