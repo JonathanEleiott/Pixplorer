@@ -1,6 +1,11 @@
-node_modules/
-bower_components/
-*.log
+.DS_Store
+.AppleDouble
+.LSOverride
+iisnode.yml
+npm-debug.log
 
-build/
-dist/
+db/shortly.sqlite
+node_modules
+bower_components
+public/dist
+lib/
