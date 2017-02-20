@@ -35,17 +35,16 @@ describe('AUTH', function() {
   it('should login existing user', function(done) {
     var requestParams = {
       method: 'POST',
-      url: 'https://young-castle-28291.herokuapp.com/',
+      url: 'http://127.0.0.1:3000/login',
       form: {
         email: 'john@aol.com',
         password: 'John123'}
     };
 
     request(requestParams, function(error, response, body) {
-      console.log(response);
-      // var parsedBody = JSON.parse(body);
-      // expect(response.statusCode).to.equal(201);
-      // expect(parsedBody.email).to.equal('john@aol.com');
+      var parsedBody = JSON.parse(body);
+      expect(response.statusCode).to.equal(201);
+      expect(parsedBody.email).to.equal('john@aol.com');
       done();
     });
   });
