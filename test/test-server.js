@@ -17,6 +17,11 @@ var generateParams = function(method, endpoint, optionalParams){
 };
 
 describe('REST', function() {
+  afterEach(function() {
+    // logout user - runs after each test in this block
+    var logoutParams = generateParams('POST', 'logout');
+    request(logoutParams);
+  });
 
   it('should list respond with status 200 on basic GET request', function(done) {
     var params = generateParams('GET', '');
