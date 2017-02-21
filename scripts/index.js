@@ -20,6 +20,14 @@ app.post('/logout', function (req, res) {
   requestHandler.logout(req, res);
 });
 
+app.post('/createUser', function (req, res) {
+  requestHandler.createUser(req, res);
+});
+
+app.post('/deleteUser', function (req, res) {
+  requestHandler.deleteUser(req, res);
+});
+
 app.get('/checkUserCredentials', function (req, res) {
   requestHandler.checkUserCredentials(req, res);
 });

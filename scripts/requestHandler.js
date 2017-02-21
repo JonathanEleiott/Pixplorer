@@ -34,7 +34,7 @@ module.exports = {
   },
 
   checkUserCredentials: function(req, res) {
-    console.log('Serving ' + req.method + ' request for ' + req.url + ' (inside login)');
+    console.log('Serving ' + req.method + ' request for ' + req.url + ' (inside requestHandler.checkUserCredentials)');
     var user = firebase.auth().currentUser;
     if (user) {
       sendResponse(res, 200, headers, JSON.stringify(user));
@@ -42,4 +42,36 @@ module.exports = {
       sendResponse(res, 401, '', 'User is not logged in!');
     }
   },
+
+  createUser: function(req, res) {
+    console.log('Serving ' + req.method + ' request for ' + req.url + ' (inside requestHandler.createUser)');
+    firebase.auth().createUserWithEmailAndPassword(req.body.email, req.body.password)
+      .then(function(user){
+        sendResponse(res, 201, headers, JSON.stringify(user));
+      })
+      .catch(function(error){
+        sendResponse(res, 400, '', JSON.stringify(error));
+      });
+  },
+
+  deleteUser: function(req, res) {
+    console.log('Serving ' + req.method + ' request for ' + req.url + ' (inside requestHandler.deleteUser)');
+    var user = firebase.auth().currentUser;
+    if (user) {
+      user.delete()
+        .then(function(success) {
+          sendResponse(res, 201, '', 'User deleted!');
+        })
+        .catch(function(error) {
+          sendResponse(res, 401, '', 'User not logged in, or doesn\'t exist!');
+        });
+      } else {
+        sendResponse(res, 401, '', 'User not logged in, or doesn\'t exist!');
+      }
+    
+  },
 };
+
+
+
+
