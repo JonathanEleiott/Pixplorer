@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/CruciferousCrustaceans/hrsf53-thesis#readme",
   "dependencies": {
+    "@google-cloud/vision": "^0.8.0",
     "bluebird": "^3.4.7",
     "body-parser": "^1.16.1",
     "eslint-config-rallycoding": "^3.2.0",
