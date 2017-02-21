@@ -19,6 +19,7 @@ module.exports = {
 
   login: function(req, res) {
     console.log('Serving ' + req.method + ' request for ' + req.url + ' (inside requestHandler.login)');
+    console.log('email:', req.body.email, 'pass: ', req.body.password, typeof req.body.email);
     firebase.auth().signInWithEmailAndPassword(req.body.email, req.body.password)
       .then(function(user){
         console.log('success login: ', user);
