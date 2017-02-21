@@ -7,11 +7,11 @@ import {
   PASSWORD_CHANGED,
   LOGIN_USER,
   SIGNUP_USER,
-  LOGIN_USER_SUCCESS
+  LOGIN_USER_SUCCESS,
+  LOGIN_USER_FAIL
 } from './types';
 
 export const emailChanged = (text) => {
-  console.log('emailChanged called');
   return {
     type: EMAIL_CHANGED,
     payload: text
@@ -19,7 +19,6 @@ export const emailChanged = (text) => {
 };
 
 export const passwordChanged = (text) => {
-  console.log('passwordChanged called');
   return {
     type: PASSWORD_CHANGED,
     payload: text
@@ -29,21 +28,48 @@ export const passwordChanged = (text) => {
 export const loginUser = ({ email, password }) => {
   return (dispatch) => {
     dispatch({ type: LOGIN_USER });
-
     console.log('loginUser called', email, password);
-    loginUserSuccess(dispatch, 'user');
-    // loginUserFail(dispatch)
-    axios.get('https://');
+    console.log('email type', typeof email);
+
+    axios({
+      method: 'post',
+      url: 'http://198.199.94.223:8080/login',
+      data: {
+        email,
+        password
+      }
+    })
+    .then(response => {
+      console.log('response from login success', response);
+      loginUserSuccess(dispatch, 'user');
+    })
+    .catch(response => {
+      console.log('response from login request error', response);
+      loginUserFail(dispatch, 'user');
+    });
   };
 };
 
 export const signupUser = ({ email, password }) => {
   return (dispatch) => {
     dispatch({ type: SIGNUP_USER });
-
-    console.log('signupUser called', email, password);
-    loginUserSuccess(dispatch, 'user');
-    // insert AJAX call with email and password
+    
+    axios({
+      method: 'post',
+      url: 'http://198.199.94.223:8080/signup',
+      data: {
+        email,
+        password
+      }
+    })
+    .then(response => {
+      console.log('response in signup success', response);
+      loginUserSuccess(dispatch, 'user');
+    })
+    .catch(response => {
+      console.log('response from signup request error', response);
+      loginUserFail(dispatch, 'user');
+    });
   };
 };
 
@@ -52,4 +78,9 @@ const loginUserSuccess = (dispatch, user) => {
   dispatch({ type: LOGIN_USER_SUCCESS, payload: user });
 
   Actions.main();
+};
+
+const loginUserFail = (dispatch, user) => {
+  console.log('loginUSerFail called', user);
+  dispatch({ type: LOGIN_USER_FAIL, payload: user });
 };
