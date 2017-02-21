@@ -8,7 +8,6 @@ var app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-
 app.get('/', function (req, res) {
   requestHandler.landing(req, res);
 });

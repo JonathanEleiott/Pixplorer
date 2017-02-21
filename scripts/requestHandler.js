@@ -22,7 +22,7 @@ module.exports = {
     console.log('email:', req.body.email, 'pass: ', req.body.password, typeof req.body.email);
     firebase.auth().signInWithEmailAndPassword(req.body.email, req.body.password)
       .then(function(user){
-        console.log('success login: ', user);
+        console.log('success login: ', user.email);
         sendResponse(res, 201, headers, JSON.stringify(user));
       })
       .catch(function(error){
@@ -56,7 +56,7 @@ module.exports = {
     console.log('Serving ' + req.method + ' request for ' + req.url + ' (inside requestHandler.createUser)');
     firebase.auth().createUserWithEmailAndPassword(req.body.email, req.body.password)
       .then(function(user){
-        console.log('success createUser: ', user);
+        console.log('success createUser: ', user.email);
         sendResponse(res, 201, headers, JSON.stringify(user));
       })
       .catch(function(error){
