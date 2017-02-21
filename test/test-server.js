@@ -2,7 +2,6 @@ var chai = require('chai');
 var request = require('request');
 var expect = require('chai').expect;
 var bodyParser = require('body-parser');
-//var server = require('../index.js');
 var should = chai.should();
 
 var generateParams = function(method, endpoint, optionalParams){
@@ -12,8 +11,8 @@ var generateParams = function(method, endpoint, optionalParams){
       url: 'http://198.199.94.223:8080/' + endpoint,
       form: optionalParams
   };
-  //live server url: http://198.199.94.223:8080
-  //local server url: http://localhost:8080
+  //live server url: http://198.199.94.223:8080/
+  //local server url: http://localhost:8080/
 };
 
 describe('REST', function() {
@@ -46,6 +45,86 @@ describe('AUTH', function() {
     // logout user - runs after each test in this block
     var logoutParams = generateParams('POST', 'logout');
     request(logoutParams);
+  });
+
+  it('should create a new user', function(done) {
+    var createUserParams = generateParams('POST', 'createUser', {email: 'john2@aol.com', password: 'John123'});
+
+    request(createUserParams, function(error, response, body) {
+      var parsedBody = JSON.parse(body);
+      expect(response.statusCode).to.equal(201);
+      expect(parsedBody.uid).to.exist;
+      expect(parsedBody.email).to.equal('john2@aol.com');
+      done();
+    });
+  });
+
+  it('should delete an existing, logged in user', function(done) {
+    var loginParams = generateParams('POST', 'login', {email: 'john2@aol.com', password: 'John123'});
+    var deleteUserParams = generateParams('POST', 'deleteUser');
+
+    request(loginParams, function(error, response, body) {
+      request(deleteUserParams, function(error, response, body) {
+        expect(response.statusCode).to.equal(201);
+        expect(body).to.equal('User deleted!');
+        done();
+      });
+    });
+  });
+
+  it('should NOT delete a user if they are not logged in', function(done) {
+    var deleteUserParams = generateParams('POST', 'deleteUser');
+    //attempt to delete without logging in first
+    request(deleteUserParams, function(error, response, body) {
+      expect(response.statusCode).to.equal(401);
+      expect(body).to.equal('User not logged in, or doesn\'t exist!');
+      done();
+    });
+  });
+
+  it('should NOT delete a user if they don\'t have an account', function(done) {
+    var loginParams = generateParams('POST', 'login', {email: 'john2123@aol.com', password: 'John123'});
+    var deleteUserParams = generateParams('POST', 'deleteUser');
+
+    request(loginParams, function(error, response, body) {
+      request(deleteUserParams, function(error, response, body) {
+        expect(response.statusCode).to.equal(401);
+        expect(body).to.equal('User not logged in, or doesn\'t exist!');
+        done();
+      });
+    });
+  });
+
+  it('should NOT create a new user if the account already exists', function(done) {
+    var createUserParams = generateParams('POST', 'createUser', {email: 'john@aol.com', password: 'John123'});
+    request(createUserParams, function(error, response, body) {
+      var parsedBody = JSON.parse(body);
+      expect(response.statusCode).to.equal(400);
+      expect(body).to.contain('The email address is already in use by another account');
+      done();
+    });
+  });
+
+  it('should NOT create a new user with invalid email format', function(done) {
+    var createUserParams = generateParams('POST', 'createUser', {email: 'johnaol.com', password: 'John123'});
+
+    request(createUserParams, function(error, response, body) {
+      var parsedBody = JSON.parse(body);
+      expect(response.statusCode).to.equal(400);
+      expect(body).to.contain('The email address is badly formatted');
+      done();
+    });
+  });
+
+  it('should NOT create a new user with password that is less than 6 characters long', function(done) {
+    var createUserParams = generateParams('POST', 'createUser', {email: 'john2@aol.com', password: '1234'});
+    
+    request(createUserParams, function(error, response, body) {
+      var parsedBody = JSON.parse(body);
+      expect(response.statusCode).to.equal(400);
+      expect(body).to.contain('Password should be at least 6 characters');
+      done();
+    });
   });
 
   it('should login existing user', function(done) {
@@ -86,7 +165,7 @@ describe('AUTH', function() {
     });
   });
 
-  it('after login, user should have a session', function(done) {
+  it('should have a session after logging in', function(done) {
     var loginParams = generateParams('POST', 'login', {email: 'john@aol.com', password: 'John123'});
     var checkCredentialsParams = generateParams('GET', 'checkUserCredentials');
 
@@ -106,14 +185,14 @@ describe('AUTH', function() {
     });
   });
 
-  it('without logging in, user should not have a session', function(done) {
+  it('should not have a session without logging in', function(done) {
     var checkCredentialsParams = generateParams('GET', 'checkUserCredentials');
-
     request(checkCredentialsParams, function(error, response, body) {
       expect(response.statusCode).to.equal(401);
       expect(body).to.equal('User is not logged in!');
       done();
     });
-
   });
+
+
 });
