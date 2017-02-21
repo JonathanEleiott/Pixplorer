@@ -18,14 +18,38 @@ class LoginForm extends Component {
     this.props.passwordChanged(text);
   }
 
-  renderButton(text, cb) {
+  loginButtonPress() {
+    const { email, password } = this.props;
+
+    this.props.loginUser({ email, password });
+  }
+
+  signupButtonPress() {
+    const { email, password } = this.props;
+
+    this.props.signupUser({ email, password });
+  }
+
+  renderLoginButton() {
     if (this.props.loading) {
       return <Spinner size="large" />;
     }
 
     return (
-      <Button onPress={cb.bind(this)}>
-        {text}
+      <Button onPress={this.loginButtonPress.bind(this)}>
+        Log in
+      </Button>
+    );
+  }
+
+  renderSignupButton() {
+    if (this.props.loading) {
+      return <Spinner size="large" />;
+    }
+
+    return (
+      <Button onPress={this.signupButtonPress.bind(this)}>
+        Sign Up
       </Button>
     );
   }
@@ -44,6 +68,7 @@ class LoginForm extends Component {
 
         <CardSection>
           <Input
+            secureTextEntry
             label="Password"
             placeholder="password123"
             onChangeText={this.onPasswordChange.bind(this)}
@@ -56,11 +81,11 @@ class LoginForm extends Component {
         </Text>
 
         <CardSection>
-          {this.renderButton('Log in', this.props.loginUser)}
+          {this.renderLoginButton()}
         </CardSection>
 
         <CardSection>
-          {this.renderButton('Sign up', this.props.signupUser)}
+          {this.renderSignupButton()}
         </CardSection>
       </Card>
     );
