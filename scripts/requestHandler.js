@@ -12,7 +12,7 @@ var sendResponse = function(res, statusCode, headers, responseMessage) {
 };
 
 module.exports = {
-  landing: function(req, res) {
+  landing: function(req, res) { 
     console.log('Serving ' + req.method + ' request for ' + req.url + ' (inside requestHandler.landing)');
     sendResponse(res, 200, headers, 'Welcome the server for Crustaceans thesis project!');
   },
