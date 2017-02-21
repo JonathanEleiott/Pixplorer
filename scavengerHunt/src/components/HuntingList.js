@@ -2,10 +2,14 @@
 
 import React, { Component } from 'react';
 import { Image, Text, ScrollView } from 'react-native';
-import { Card, CardSection, Button } from './mostCommon';
+import { Card, CardSection } from './mostCommon';
 import emptyCheckbox from '../images/emptyCheckbox.png';
 import checkedCheckbox from '../images/checkedCheckbox.png';
+
+/////////////////////////////////////////////////////////
+// ITEM LIST IS A HARDCODED JSON FILE!!! ////////////////
 import itemList from '../itemList.json';
+////////////////////////////////////////////////////////
 
 class HuntingList extends Component {
   foundItemChecker(foundItem, item) {
@@ -43,10 +47,6 @@ class HuntingList extends Component {
     );
   }
 
-  createAList() {
-
-  }
-
   render() {
     return (
       <ScrollView>
@@ -59,9 +59,6 @@ class HuntingList extends Component {
             );
           })}
       </Card>
-      <Button onPress={this.createAList.bind(this)}>
-        Create A List
-      </Button>
     </ScrollView>
     );
   }

@@ -3,16 +3,23 @@
 import React, { Component } from 'react';
 import { Text, Image, ScrollView, TouchableHighlight } from 'react-native';
 import { connect } from 'react-redux';
-import { Card, CardSection } from './mostCommon';
-import listOfHunts from '../listOfHunts.json';
+import { Card, CardSection, Button } from './mostCommon';
 import rightArrow from '../images/rightArrow.png';
 import { titleClicked } from '../actions';
 
+///////////////////////////////////////////////////////////////////////////////
+// LIST OF HUNTS IS A HARDCODED JSON FILE!!! REPLACE WITH AJAX CALL TO DB... //
+import listOfHunts from '../listOfHunts.json';
+///////////////////////////////////////////////////////////////////////////////
+
 class ListChooser extends Component {
 
-  goToSelectedList(title) {
-    console.log('title', title);
-    // this.props.titleClicked(title);
+  clickOnATitle(title) {
+    this.props.titleClicked(title);
+  }
+
+  createAList() {
+    
   }
 
   render() {
@@ -25,17 +32,24 @@ class ListChooser extends Component {
             return (
               <CardSection key={index} style={{ padding: 20 }}>
                 <Text style={titleStyle} value={title.name}>{title.name}</Text>
-                <TouchableHighlight onPress={this.goToSelectedList.bind(this)}>
+                <TouchableHighlight
+                  activeOpacity={0.5}
+                  underlayColor={'white'}
+                  value={title}
+                  onPress={() => this.clickOnATitle(title)}
+                >
                   <Image
                     source={rightArrow}
                     style={rightArrowStyle}
                     alt="right arrow"
-                    value={this.props.title}
                   />
                 </TouchableHighlight>
               </CardSection>
             );
           })}
+          <Button onPress={this.createAList.bind(this)}>
+            Create A List
+          </Button>
         </Card>
       </ScrollView>
     );
@@ -50,6 +64,10 @@ const styles = {
   rightArrowStyle: {
     width: 30,
     height: 30
+  },
+  onClickStyle: {
+
+
   }
 };
 
