@@ -44,7 +44,7 @@ class HuntingList extends Component {
   }
 
   createAList() {
-    
+
   }
 
   render() {

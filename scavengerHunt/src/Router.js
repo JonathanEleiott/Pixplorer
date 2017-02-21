@@ -25,6 +25,7 @@ const RouterComponent = () => {
           key="huntingList"
           component={HuntingList}
           title="Hunting List"
+          initial
         />
       </Scene>
     </Router >

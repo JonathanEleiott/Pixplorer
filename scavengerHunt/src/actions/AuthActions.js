@@ -37,7 +37,7 @@ export const loginUser = ({ email, password }) => {
         password
       }
     })
-    .then(response => {
+    .then(() => {
       loginUserSuccess(dispatch, 'user');
     })
     .catch(response => {
@@ -59,7 +59,7 @@ export const signupUser = ({ email, password }) => {
         password
       }
     })
-    .then(response => {
+    .then(() => {
       loginUserSuccess(dispatch, 'user');
     })
     .catch(response => {
