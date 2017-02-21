@@ -1,5 +1,9 @@
 var firebase = require('./firebaseConfig.js');
 var headers = require('./headers');
+var vision = require('@google-cloud/vision')({
+  projectId: 'thesis-de1f8',
+  keyFilename: '../keys/Thesis-b9fb73d56c41.json'
+});
 
 
 var sendResponse = function(res, statusCode, headers, responseMessage) {
@@ -68,6 +72,20 @@ module.exports = {
       } else {
         sendResponse(res, 401, '', 'User not logged in, or doesn\'t exist!');
       }
+    
+  },
+
+  vision: function(req, res) {
+    console.log('Serving ' + req.method + ' request for ' + req.url + ' (inside requestHandler.vision)');
+    // The name of the image file to annotate
+    const fileName = 'http://cdn.history.com/sites/2/2015/05/hith-golden-gate-144833144-E.jpeg';
+    // Performs label detection on the image file
+    vision.detectLabels(fileName)
+      .then((results) => {
+        const labels = results[0];
+        labels.forEach((label) => console.log(label));
+        res.json(results);
+      });
     
   },
 };
