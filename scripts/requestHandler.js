@@ -4,6 +4,7 @@ var vision = require('@google-cloud/vision')({
   projectId: 'thesis-de1f8',
   keyFilename: '../keys/Thesis-b9fb73d56c41.json'
 });
+var fs = require('fs');
 
 
 var sendResponse = function(res, statusCode, headers, responseMessage) {
@@ -81,7 +82,18 @@ module.exports = {
       } else {
         sendResponse(res, 401, '', 'User not logged in, or doesn\'t exist!');
       }
-    
+  },
+  
+  postImage: function(req, res) {
+    console.log('Serving ' + req.method + ' request for ' + req.url + ' (inside requestHandler.postImage)');
+    var imageBuffer = new Buffer(req.body.imageBuffer, 'base64');
+    fs.writeFile('test123.jpg', imageBuffer, function(error) {
+      if (error) {
+        sendResponse(res, 500, '', 'Error - image could not be saved');
+      } else {
+        sendResponse(res, 201, headers, 'Image successfuly saved!');
+      }
+    });
   },
 
   vision: function(req, res) {

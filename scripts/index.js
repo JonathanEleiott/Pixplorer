@@ -1,6 +1,8 @@
 var express = require('express');
 var firebaseConfig = require('./firebaseConfig.js');
 var bodyParser = require('body-parser');
+var stream = require('stream');
+
 
 var requestHandler = require('./requestHandler.js');
 
@@ -34,6 +36,10 @@ app.get('/checkUserCredentials', function (req, res) {
 
 app.get('/vision', function (req, res) {
   requestHandler.vision(req, res);
+});
+
+app.post('/postImage', function (req, res) {
+  requestHandler.postImage(req, res);
 });
 
 var port = process.env.PORT || 8080;
