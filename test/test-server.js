@@ -165,6 +165,15 @@ describe('AUTH', function() {
     });
   });
 
+  it('should not have a session without logging in', function(done) {
+    var checkCredentialsParams = generateParams('GET', 'checkUserCredentials');
+    request(checkCredentialsParams, function(error, response, body) {
+      expect(response.statusCode).to.equal(401);
+      expect(body).to.equal('User is not logged in!');
+      done();
+    });
+  });
+
   it('should have a session after logging in', function(done) {
     var loginParams = generateParams('POST', 'login', {email: 'john@aol.com', password: 'John123'});
     var checkCredentialsParams = generateParams('GET', 'checkUserCredentials');
@@ -184,15 +193,5 @@ describe('AUTH', function() {
       });
     });
   });
-
-  it('should not have a session without logging in', function(done) {
-    var checkCredentialsParams = generateParams('GET', 'checkUserCredentials');
-    request(checkCredentialsParams, function(error, response, body) {
-      expect(response.statusCode).to.equal(401);
-      expect(body).to.equal('User is not logged in!');
-      done();
-    });
-  });
-
 
 });
