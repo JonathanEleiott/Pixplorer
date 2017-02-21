@@ -5,7 +5,8 @@ var bodyParser = require('body-parser');
 var requestHandler = require('./requestHandler.js');
 
 var app = express();
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 
 
 app.get('/', function (req, res) {
