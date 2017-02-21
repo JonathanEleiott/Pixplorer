@@ -28,8 +28,6 @@ export const passwordChanged = (text) => {
 export const loginUser = ({ email, password }) => {
   return (dispatch) => {
     dispatch({ type: LOGIN_USER });
-    console.log('loginUser called', email, password);
-    console.log('email type', typeof email);
 
     axios({
       method: 'post',
@@ -40,7 +38,6 @@ export const loginUser = ({ email, password }) => {
       }
     })
     .then(response => {
-      console.log('response from login success', response);
       loginUserSuccess(dispatch, 'user');
     })
     .catch(response => {
@@ -53,17 +50,16 @@ export const loginUser = ({ email, password }) => {
 export const signupUser = ({ email, password }) => {
   return (dispatch) => {
     dispatch({ type: SIGNUP_USER });
-    
+
     axios({
       method: 'post',
-      url: 'http://198.199.94.223:8080/signup',
+      url: 'http://198.199.94.223:8080/createUser',
       data: {
         email,
         password
       }
     })
     .then(response => {
-      console.log('response in signup success', response);
       loginUserSuccess(dispatch, 'user');
     })
     .catch(response => {
@@ -74,7 +70,6 @@ export const signupUser = ({ email, password }) => {
 };
 
 const loginUserSuccess = (dispatch, user) => {
-  console.log('loginUserSuccess called', user);
   dispatch({ type: LOGIN_USER_SUCCESS, payload: user });
 
   Actions.main();

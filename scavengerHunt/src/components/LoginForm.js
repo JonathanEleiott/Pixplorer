@@ -68,6 +68,7 @@ class LoginForm extends Component {
 
         <CardSection>
           <Input
+            secureTextEntry
             label="Password"
             placeholder="password123"
             onChangeText={this.onPasswordChange.bind(this)}
