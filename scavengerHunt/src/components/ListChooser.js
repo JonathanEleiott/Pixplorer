@@ -12,7 +12,7 @@ class ListChooser extends Component {
 
   goToSelectedList(title) {
     console.log('title', title);
-    this.props.titleClicked(title);
+    // this.props.titleClicked(title);
   }
 
   render() {
