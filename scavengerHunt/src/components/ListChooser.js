@@ -12,6 +12,11 @@ import { titleClicked, createListClicked, importLists } from '../actions';
 // import listOfHunts from '../listOfHunts.json'; /////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 
+///////////////////////////////////////////////////////////////////////////////
+// LIST OF HUNTS IS A HARDCODED JSON FILE!!! REPLACE WITH AJAX CALL TO DB... //
+// import listOfHunts from '../listOfHunts.json';//////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+
 class ListChooser extends Component {
 
   // Sets lists to all the lists in the DB
@@ -79,6 +84,10 @@ const styles = {
   rightArrowStyle: {
     width: 30,
     height: 30
+  },
+  onClickStyle: {
+
+
   }
 };
 

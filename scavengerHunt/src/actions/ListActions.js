@@ -1,8 +1,12 @@
+<<<<<<< a9b9e1d02d111c312fb1074a92a8399342cc0b53
 // Sends trigger and calls functions
 
 // import { fetch } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import axios from 'axios';
+=======
+import { Actions } from 'react-native-router-flux';
+>>>>>>> ListChooser buttons go to HuntingList
 import {
   TITLE_CLICKED,
   CREATE_LIST_CLICKED,
@@ -33,6 +37,7 @@ export const titleClicked = (title) => {
   };
 };
 
+<<<<<<< a9b9e1d02d111c312fb1074a92a8399342cc0b53
 // Goes to create list screen
   // Does not set anything to state/props yet
 export const createListClicked = () => {
@@ -139,4 +144,9 @@ const goToCamera = (title) => {
   // IF YOU DON'T WANT A BACK BUTON //
   ////////////////////////////////////
   Actions.cameraFrame();
+=======
+const goToHuntingList = (title) => {
+  console.log('goToHuntingList', title);
+  Actions.huntingList(title);
+>>>>>>> ListChooser buttons go to HuntingList
 };
