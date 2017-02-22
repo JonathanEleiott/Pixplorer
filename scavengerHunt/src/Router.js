@@ -5,6 +5,7 @@ import { Scene, Router, Actions } from 'react-native-router-flux';
 import LoginForm from './components/LoginForm';
 import HuntingList from './components/HuntingList';
 import ListChooser from './components/ListChooser';
+import CameraFrame from './components/CameraFrame';
 
 const RouterComponent = () => {
   return (
@@ -22,13 +23,20 @@ const RouterComponent = () => {
           initial
         />
         <Scene
+          onRight={() => Actions.cameraFrame()}
+          rightTitle="CAMERA"
           key="huntingList"
           component={HuntingList}
           title="Hunting List"
           initial
         />
+        <Scene
+          key="cameraFrame"
+          component={CameraFrame}
+          title="Camera"
+        />
       </Scene>
-    </Router >
+    </Router>
   );
 };
 
