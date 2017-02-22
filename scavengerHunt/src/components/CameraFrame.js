@@ -44,7 +44,7 @@ class CameraFrame extends Component {
         //       console.log('error');
         //     });
         //   })
-        RNFetchBlob.fs.readFile(data.path, 'base64')
+        RNFetchBlob.fs.readFile(data.path, 'base64') 
         .then((imageData) => {
           // handle the data ..
           console.log(imageData.length);
