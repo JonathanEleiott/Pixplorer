@@ -33,7 +33,7 @@ module.exports = {
 
   logout: function(req, res) {
     console.log('Serving ' + req.method + ' request for ' + req.url + ' (inside requestHandler.logout)');
-    firebase.auth().signOut().then(function() {
+    firebase.auth().signOut().then(function() { 
       console.log('success logout!');
       sendResponse(res, 201, headers, 'Sign-out successful!');
     }, function(error) {
@@ -85,7 +85,7 @@ module.exports = {
   
   postImage: function(req, res) {
     console.log('Serving ' + req.method + ' request for ' + req.url + ' (inside requestHandler.postImage)');
-    
+
     // var imageBuffer = new Buffer(req.body.imageBuffer, 'base64');
     // fs.writeFile('test123.jpg', imageBuffer, function(error) {
     //   if (error) {
