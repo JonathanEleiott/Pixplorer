@@ -228,35 +228,27 @@ describe('AUTH', function() {
 
 });
 
-describe('IMATE UPLOAD', function() {
-  // afterEach(function() {
-  //   // logout user - runs after each test in this block
-  //   var logoutParams = generateParams('POST', 'logout');
-  //   request(logoutParams);
-  // });
+describe('IMAGE UPLOAD', function() {
 
   it('it should post an image to the server', function(done) {
 
     var processData = function(data) {
       var imageData =  new Buffer(data).toString('base64');
-
       axios({
         method: 'post',
         responseType: 'arraybuffer',
         url: 'http://localhost:8080/postImage',
         data: {imageBuffer: imageData}
       })
-        .then(function(response) {
-          expect(response.status).to.equal(201);
-          done();
-
-        })
-        .catch(function(error) {
-          console.log('error');
-          done();
-        });
-
-     };
+      .then(function(response) {
+        expect(response.status).to.equal(201);
+        done();
+      })
+      .catch(function(error) {
+        console.log('error');
+        done();
+      });
+    };
     
     fs.readFile('red-bull-image.jpg', function(err, data) {
       if (err) throw err;
