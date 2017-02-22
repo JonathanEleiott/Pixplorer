@@ -1,12 +1,23 @@
 import React, { Component } from 'react';
-import { View, Text } from 'react-native';
+import { Card, CardSection, Input, Button } from './mostCommon';
 
 class CreateList extends Component {
+
   render() {
     return (
-      <View>
-        <Text>CreateList</Text>
-      </View>
+      <Card>
+        <CardSection>
+          <Input
+            label="Name"
+            placeholder="My Hunt"
+            value={this.props.huntName}
+          />
+        </CardSection>
+        <CardSection>
+          <Button onPress={'blah blah blah'}>Create New List</Button>
+          <Button onPress={'blah blah blah'}>Edit A List</Button>
+        </CardSection>
+      </Card>
     );
   }
 }

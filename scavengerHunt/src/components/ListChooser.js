@@ -2,6 +2,7 @@
 
 import React, { Component } from 'react';
 import { Text, Image, ScrollView, TouchableHighlight } from 'react-native';
+import { Actions } from 'react-native-router-flux';
 import { connect } from 'react-redux';
 import { Card, CardSection, Button } from './mostCommon';
 import rightArrow from '../images/rightArrow.png';
@@ -14,12 +15,17 @@ import listOfHunts from '../listOfHunts.json';
 
 class ListChooser extends Component {
 
+  ////////////////////////////
+  //COMPONENT WILL MOUNT...//
+  ////FETCH LIST OF HUNTS////
+  ///////////////////////////
+
   clickOnATitle(title) {
     this.props.titleClicked(title);
   }
 
   createAList() {
-    
+    Actions.createList();
   }
 
   render() {
