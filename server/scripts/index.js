@@ -49,7 +49,7 @@ app.get('/checkUserCredentials', function (req, res) {
 });
 
 app.get('/vision', function (req, res) {
-  requestHandler.vision(req, res);
+  requestHandler.gVision(req, res);
 });
 
 app.post('/postImage', function (req, res) {
