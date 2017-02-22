@@ -7,12 +7,11 @@ import HuntingList from './components/HuntingList';
 import ListChooser from './components/ListChooser';
 import CameraFrame from './components/CameraFrame';
 
+
+//TODO: MAke sure to put the components back! Right now it goes straight to camera!!!
 const RouterComponent = () => {
   return (
     <Router sceneStyle={{ paddingTop: 65 }}>
-      <Scene key="auth">
-        <Scene key="login" component={LoginForm} title="Please Login" />
-      </Scene>
       <Scene key="main">
         <Scene
           onRight={() => Actions.huntingList()}
@@ -20,7 +19,7 @@ const RouterComponent = () => {
           key="listChooser"
           component={ListChooser}
           title="Choose A List"
-          initial
+          
         />
         <Scene
           onRight={() => Actions.cameraFrame()}
@@ -28,13 +27,16 @@ const RouterComponent = () => {
           key="huntingList"
           component={HuntingList}
           title="Hunting List"
-          initial
         />
         <Scene
           key="cameraFrame"
           component={CameraFrame}
           title="Camera"
+          initial
         />
+      </Scene>
+      <Scene key="auth">
+        <Scene key="login" component={LoginForm} title="Please Login" />
       </Scene>
     </Router>
   );
