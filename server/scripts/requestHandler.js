@@ -4,7 +4,8 @@ var gcloud = require('google-cloud');
 var vision = gcloud.vision({
   projectId: 'thesis-de1f8',
   keyFilename: '../../keys/Thesis-b9fb73d56c41.json'
-});
+}); 
+
 var fs = require('fs'); 
 
 var sendResponse = function(res, statusCode, headers, responseMessage) {
