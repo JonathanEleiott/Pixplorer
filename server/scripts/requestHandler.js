@@ -33,7 +33,7 @@ module.exports = {
 
   logout: function(req, res) {
     console.log('Serving ' + req.method + ' request for ' + req.url + ' (inside requestHandler.logout)');
-    firebase.auth().signOut().then(function() { 
+    firebase.auth().signOut().then(function() {  
       console.log('success logout!');
       sendResponse(res, 201, headers, 'Sign-out successful!');
     }, function(error) {
