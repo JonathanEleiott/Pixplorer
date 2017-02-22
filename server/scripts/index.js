@@ -3,7 +3,6 @@ var firebaseConfig = require('./firebaseConfig.js');
 var bodyParser = require('body-parser');
 var stream = require('stream');
 
-var getRawBody = require('raw-body')
 
 var requestHandler = require('./requestHandler.js');
 
