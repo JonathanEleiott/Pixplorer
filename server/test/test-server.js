@@ -1,6 +1,8 @@
 var chai = require('chai');
+var fs = require('fs');
 var request = require('request');
 var expect = require('chai').expect;
+var axios = require('axios');
 var bodyParser = require('body-parser');
 var should = chai.should();
 
@@ -8,7 +10,7 @@ var generateParams = function(method, endpoint, optionalParams){
   optionalParams = optionalParams || '';
   return {
     method: method,
-      url: 'http://198.199.94.223:8080/' + endpoint,
+      uri: 'http://localhost:8080/' + endpoint,
       form: optionalParams
   };
   //live server url: http://198.199.94.223:8080/
@@ -56,6 +58,103 @@ describe('AUTH', function() {
       expect(parsedBody.uid).to.exist;
       expect(parsedBody.email).to.equal('john2@aol.com');
       done();
+    });
+  });
+
+  it('should login existing user', function(done) {
+    var loginParams = generateParams('POST', 'login', {email: 'john@aol.com', password: 'John123'});
+    var logoutParams = generateParams('POST', 'logout');
+
+    request(loginParams, function(error, response, body) {
+      var parsedBody = JSON.parse(body);
+      expect(response.statusCode).to.equal(201);
+      expect(parsedBody.email).to.equal('john@aol.com');
+      done();
+    });
+  });
+
+  it('should login existing user using URLencoded content type (default test type)', function(done) {
+    var loginParams = generateParams('POST', 'login', {email: 'john@aol.com', password: 'John123'});
+    var logoutParams = generateParams('POST', 'logout');
+
+    request(loginParams, function(error, response, body) {
+      var parsedBody = JSON.parse(body);
+      expect(response.statusCode).to.equal(201);
+      expect(parsedBody.email).to.equal('john@aol.com');
+      done();
+    });
+  });
+
+  it('should login existing user using JSON content type (instead of URLencoded)', function(done) {
+    axios({
+         method: 'post',
+         url: 'http://localhost:8080/login',
+         data: {email: 'john@aol.com', password: 'John123'}
+       })
+       .then(function(response) {
+         expect(response.status).to.equal(201);
+         expect(response.data.email).to.equal('john@aol.com');
+         done();
+       })
+       .catch(function(error) {
+         expect(error.status).to.equal(201);
+         expect(error.data.email).to.equal('john@aol.com');
+         done();
+       });
+  });
+
+  it('should logout a previously logged in user', function(done) {
+    var loginParams = generateParams('POST', 'login', {email: 'john@aol.com', password: 'John123'});
+    var logoutParams = generateParams('POST', 'logout');
+
+    //first login
+    request(loginParams, function(error, response, body) {
+      //then logout to test
+      request(logoutParams, function(error, response, body) {
+        expect(response.statusCode).to.equal(201);
+        expect(body).to.equal('Sign-out successful!');
+        done();
+      });
+    });
+  });
+
+  it('should not login user without existing account', function(done) {
+    var loginParams = generateParams('POST', 'login', {email: 'nonexistentUser@aol.com', password: 'nonexistentUserPass'});
+
+    request(loginParams, function(error, response, body) {
+      var parsedBody = JSON.parse(body);
+      expect(response.statusCode).to.equal(401);
+      expect(parsedBody.message).to.contain('There is no user record corresponding to this identifier');
+      done();
+    });
+  });
+
+  it('should not have a session without logging in', function(done) {
+    var checkCredentialsParams = generateParams('GET', 'checkUserCredentials');
+    request(checkCredentialsParams, function(error, response, body) {
+      expect(response.statusCode).to.equal(401);
+      expect(body).to.equal('User is not logged in!');
+      done();
+    });
+  });
+
+  it('should have a session after logging in', function(done) {
+    var loginParams = generateParams('POST', 'login', {email: 'john@aol.com', password: 'John123'});
+    var checkCredentialsParams = generateParams('GET', 'checkUserCredentials');
+
+    //login
+    request(loginParams, function(error, response, body) {
+      //then check credentials
+      request(checkCredentialsParams, function(error, response, body) {
+        var parsedBody = JSON.parse(body);
+        expect(response.statusCode).to.equal(200);
+        expect(parsedBody.uid).to.exist;
+        expect(parsedBody.stsTokenManager).to.exist;
+        expect(parsedBody.stsTokenManager.accessToken).to.exist;
+        expect(parsedBody.stsTokenManager.expirationTime).to.exist;
+        expect(parsedBody.redirectEventId).to.be.null;
+        done();
+      });
     });
   });
 
@@ -127,71 +226,36 @@ describe('AUTH', function() {
     });
   });
 
-  it('should login existing user', function(done) {
-    var loginParams = generateParams('POST', 'login', {email: 'john@aol.com', password: 'John123'});
-    var logoutParams = generateParams('POST', 'logout');
+});
 
-    request(loginParams, function(error, response, body) {
-      var parsedBody = JSON.parse(body);
-      expect(response.statusCode).to.equal(201);
-      expect(parsedBody.email).to.equal('john@aol.com');
-      done();
-    });
-  });
+describe('IMAGE UPLOAD', function() {
 
-  it('should logout a previously logged in user', function(done) {
-    var loginParams = generateParams('POST', 'login', {email: 'john@aol.com', password: 'John123'});
-    var logoutParams = generateParams('POST', 'logout');
+  it('it should post an image to the server', function(done) {
 
-    //first login
-    request(loginParams, function(error, response, body) {
-      //then logout to test
-      request(logoutParams, function(error, response, body) {
-        expect(response.statusCode).to.equal(201);
-        expect(body).to.equal('Sign-out successful!');
+    var processData = function(data) {
+      var imageData =  new Buffer(data).toString('base64');
+      axios({
+        method: 'post',
+        responseType: 'arraybuffer',
+        url: 'http://localhost:8080/postImage',
+        data: {imageBuffer: imageData}
+      })
+      .then(function(response) {
+        expect(response.status).to.equal(201);
+        done();
+      })
+      .catch(function(error) {
+        console.log('error');
         done();
       });
+    };
+    
+    fs.readFile('red-bull-image.jpg', function(err, data) {
+      if (err) throw err;
+      processData(data);
     });
-  });
-
-  it('should not login user without existing account', function(done) {
-    var loginParams = generateParams('POST', 'login', {email: 'nonexistentUser@aol.com', password: 'nonexistentUserPass'});
-
-    request(loginParams, function(error, response, body) {
-      var parsedBody = JSON.parse(body);
-      expect(response.statusCode).to.equal(401);
-      expect(parsedBody.message).to.contain('There is no user record corresponding to this identifier');
-      done();
-    });
-  });
-
-  it('should not have a session without logging in', function(done) {
-    var checkCredentialsParams = generateParams('GET', 'checkUserCredentials');
-    request(checkCredentialsParams, function(error, response, body) {
-      expect(response.statusCode).to.equal(401);
-      expect(body).to.equal('User is not logged in!');
-      done();
-    });
-  });
-
-  it('should have a session after logging in', function(done) {
-    var loginParams = generateParams('POST', 'login', {email: 'john@aol.com', password: 'John123'});
-    var checkCredentialsParams = generateParams('GET', 'checkUserCredentials');
-
-    //login
-    request(loginParams, function(error, response, body) {
-      //then check credentials
-      request(checkCredentialsParams, function(error, response, body) {
-        var parsedBody = JSON.parse(body);
-        expect(response.statusCode).to.equal(200);
-        expect(parsedBody.uid).to.exist;
-        expect(parsedBody.stsTokenManager).to.exist;
-        expect(parsedBody.stsTokenManager.accessToken).to.exist;
-        expect(parsedBody.stsTokenManager.expirationTime).to.exist;
-        expect(parsedBody.redirectEventId).to.be.null;
-        done();
-      });
-    });
+   
   });
 
 });
+
