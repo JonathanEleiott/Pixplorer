@@ -4,7 +4,7 @@ var vision = require('@google-cloud/vision')({
   projectId: 'thesis-de1f8',
   keyFilename: '../keys/Thesis-b9fb73d56c41.json'
 });
-var fs = require('fs');
+var fs = require('fs'); 
 
 var sendResponse = function(res, statusCode, headers, responseMessage) {
   res.writeHead(statusCode, headers);

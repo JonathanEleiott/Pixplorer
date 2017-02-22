@@ -1,4 +1,3 @@
-global.Buffer = global.Buffer || require('buffer').Buffer;
 import {
   AppRegistry
 } from 'react-native';
