@@ -6,7 +6,6 @@ var vision = require('@google-cloud/vision')({
 });
 var fs = require('fs');
 
-
 var sendResponse = function(res, statusCode, headers, responseMessage) {
   res.writeHead(statusCode, headers);
   res.end(responseMessage);

@@ -24,7 +24,7 @@ app.post('/logout', function (req, res) {
 
 app.post('/createUser', function (req, res) {
   requestHandler.createUser(req, res);
-});
+}); 
 
 app.post('/deleteUser', function (req, res) {
   requestHandler.deleteUser(req, res);
