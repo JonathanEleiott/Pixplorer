@@ -7,7 +7,9 @@ var stream = require('stream');
 var requestHandler = require('./requestHandler.js');
 
 var app = express();
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({limit: '5mb', extended: true}));
+
+app.use(bodyParser.json({limit: '50mb', type: 'application/json'}));
 app.use(bodyParser.json());
 
 // app.use(function (req, res, next) {

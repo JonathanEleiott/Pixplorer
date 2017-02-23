@@ -88,15 +88,14 @@ module.exports = {
   postImage: function(req, res) {
     console.log('Serving ' + req.method + ' request for ' + req.url + ' (inside requestHandler.postImage)');
 
-    // var imageBuffer = new Buffer(req.body.imageBuffer, 'base64');
-    // fs.writeFile('test123.jpg', imageBuffer, function(error) {
-    //   if (error) {
-    //     sendResponse(res, 500, '', 'Error - image could not be saved');
-    //   } else {
-    //     sendResponse(res, 201, headers, 'Image successfuly saved!');
-    //   }
-    // });
-    sendResponse(res, 500, '', 'Error - image could not be saved');
+    var imageBuffer = new Buffer(req.body.imageBuffer, 'base64');
+    fs.writeFile('iphoneImage.jpg', imageBuffer, function(error) {
+      if (error) {
+        sendResponse(res, 500, '', 'Error - image could not be saved');
+      } else {
+        sendResponse(res, 201, headers, 'Image successfuly saved!');
+      }
+    });
   },
 
   gVision: function(req, res) {

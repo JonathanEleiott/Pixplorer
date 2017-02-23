@@ -7,7 +7,6 @@ import {
   ImageStore
 } from 'react-native';
 import Camera from 'react-native-camera';
-import RNFS from 'react-native-fs';
 import axios from 'axios';
 import RNFetchBlob from 'react-native-fetch-blob'
 
@@ -20,38 +19,15 @@ class CameraFrame extends Component {
       .then((data) => {
         Vibration.vibrate();
         console.log('DATA IMG:', data.path);
-        console.log('DATA:', data);
 
-        var uploadUrl = 'http://localhost:8080/postImage';  // For testing purposes, go to http://requestb.in/ and create your own link
-        // create an array of objects of the files you want to upload
-        
-
-        // upload files
-        // RNFS.readFile( data.path, 'base64')
-        //   .then(function(imageData) {
-        //     console.log(imageData.length);
-        //     var imageDataBuffer =  '' + imageData + ''
-        //     axios({
-        //       method: 'post',
-        //       responseType: 'arraybuffer',
-        //       url: 'http://localhost:8080/postImage',
-        //       data: {imageBuffer: imageDataBuffer}
-        //     })
-        //     .then(function(response) {
-        //       expect(response.status).to.equal(201);
-        //     })
-        //     .catch(function(error) {
-        //       console.log('error');
-        //     });
-        //   })
-        RNFetchBlob.fs.readFile(data.path, 'base64')  
+        RNFetchBlob.fs.readFile(data.path, 'base64')
         .then((imageData) => {
           // handle the data ..
           console.log(imageData.length);
           axios({
               method: 'post',
               responseType: 'arraybuffer',
-              url: 'http://localhost:8080/postImage',
+              url: 'http://198.199.94.223:8080/postImage',
               data: {imageBuffer: imageData}
             })
             .then(function(response) {
