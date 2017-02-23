@@ -10,7 +10,7 @@ var generateParams = function(method, endpoint, optionalParams){
   optionalParams = optionalParams || '';
   return {
     method: method,
-      uri: 'http://localhost:8080/' + endpoint,
+      uri: 'http://198.199.94.223:8080/' + endpoint,
       form: optionalParams
   };
   //live server url: http://198.199.94.223:8080/

@@ -1,10 +1,12 @@
 var firebase = require('./firebaseConfig.js');
 var headers = require('./headers');
-var vision = require('@google-cloud/vision')({
+var gcloud = require('google-cloud');
+var vision = gcloud.vision({
   projectId: 'thesis-de1f8',
-  keyFilename: '../keys/Thesis-b9fb73d56c41.json'
-});
-var fs = require('fs');
+  keyFilename: '../../keys/Thesis-b9fb73d56c41.json'
+}); 
+
+var fs = require('fs'); 
 
 var sendResponse = function(res, statusCode, headers, responseMessage) {
   res.writeHead(statusCode, headers);
@@ -33,7 +35,7 @@ module.exports = {
 
   logout: function(req, res) {
     console.log('Serving ' + req.method + ' request for ' + req.url + ' (inside requestHandler.logout)');
-    firebase.auth().signOut().then(function() {
+    firebase.auth().signOut().then(function() {  
       console.log('success logout!');
       sendResponse(res, 201, headers, 'Sign-out successful!');
     }, function(error) {
@@ -85,8 +87,9 @@ module.exports = {
   
   postImage: function(req, res) {
     console.log('Serving ' + req.method + ' request for ' + req.url + ' (inside requestHandler.postImage)');
+
     var imageBuffer = new Buffer(req.body.imageBuffer, 'base64');
-    fs.writeFile('test123.jpg', imageBuffer, function(error) {
+    fs.writeFile('iphoneImage.jpg', imageBuffer, function(error) {
       if (error) {
         sendResponse(res, 500, '', 'Error - image could not be saved');
       } else {
@@ -95,7 +98,7 @@ module.exports = {
     });
   },
 
-  vision: function(req, res) {
+  gVision: function(req, res) {
     console.log('Serving ' + req.method + ' request for ' + req.url + ' (inside requestHandler.vision)');
     // The name of the image file to annotate
     const fileName = 'http://cdn.history.com/sites/2/2015/05/hith-golden-gate-144833144-E.jpeg';

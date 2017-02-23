@@ -4,25 +4,14 @@ import {
   StyleSheet,
   Text,
   Vibration, 
+  ImageStore
 } from 'react-native';
 import Camera from 'react-native-camera';
-//import axios from 'axios';
+import axios from 'axios';
+import RNFetchBlob from 'react-native-fetch-blob'
 
 class CameraFrame extends Component {
 
-  // toDataUrl(url, callback) {
-  //   var xhr = new XMLHttpRequest();
-  //   xhr.onload = function() {
-  //     var reader = new FileReader();
-  //     reader.onloadend = function() {
-  //       callback(reader.result);
-  //     }
-  //     reader.readAsDataURL(xhr.response);
-  //   };
-  //   xhr.open('GET', url);
-  //   xhr.responseType = 'blob';
-  //   xhr.send();
-  // }
 
   takePicture() {
     console.log('PRESSED');
@@ -31,29 +20,26 @@ class CameraFrame extends Component {
         Vibration.vibrate();
         console.log('DATA IMG:', data.path);
 
-        // CODE BELOW USED FOR UPLOAD
-
-        // const body = new FormData();
-        // body.append('photo', data.path);
-        // body.append('title', 'A beautiful photo!');
-
-       // this.toDataUrl(data.path, (base64Img) => {
-          //console.log('base64Img', base64Img);
-
-          // axios({
-          //     url: 'https://localhost:9000/upload',
-          //     method: 'POST',
-          //     data: base64Img, //new Buffer(data, "base64").toString(),
-          //     headers: {
-          //         'Content-Type': 'image/jpeg',
-          //     },
-          // })
-          // .then((res) => {
-          //   console.log('RETURN!:', res.data);
-          // });
-        //});
-      })
-      .catch(err => console.error(err));
+        RNFetchBlob.fs.readFile(data.path, 'base64')
+        .then((imageData) => {
+          // handle the data ..
+          console.log(imageData.length);
+          axios({
+              method: 'post',
+              responseType: 'arraybuffer',
+              url: 'http://198.199.94.223:8080/postImage',
+              data: {imageBuffer: imageData}
+            })
+            .then(function(response) {
+              expect(response.status).to.equal(201);
+            })
+            .catch(function(error) {
+              console.log('error');
+            });
+          })
+        })
+          
+        
   }
 
   render() {
