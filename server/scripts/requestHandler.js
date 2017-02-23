@@ -6,7 +6,15 @@ var vision = gcloud.vision({
   keyFilename: '../../keys/Thesis-b9fb73d56c41.json'
 }); 
 
-var fs = require('fs'); 
+var AWS = require('aws-sdk');
+AWS.config.loadFromPath('../../aws-config.json');
+
+var s3 = new AWS.S3();
+var myBucket = 'image-upload-folder2';
+var myKey = 'myBucketKey';
+var fs = require('fs');
+
+
 
 var sendResponse = function(res, statusCode, headers, responseMessage) {
   res.writeHead(statusCode, headers);
@@ -85,17 +93,43 @@ module.exports = {
       }
   },
   
-  postImage: function(req, res) {
+  postImage: function (req, res) {
     console.log('Serving ' + req.method + ' request for ' + req.url + ' (inside requestHandler.postImage)');
-
+    var randomImageName = '' + Math.random() + '.jpg';
     var imageBuffer = new Buffer(req.body.imageBuffer, 'base64');
-    fs.writeFile('iphoneImage.jpg', imageBuffer, function(error) {
+
+    fs.writeFile(randomImageName, imageBuffer, function(error) {
       if (error) {
         sendResponse(res, 500, '', 'Error - image could not be saved');
       } else {
-        sendResponse(res, 201, headers, 'Image successfuly saved!');
+
+        var uploadParams = {Bucket: 'image-upload-folder', Key: '', Body: ''};
+        var file = randomImageName;
+
+        var fileStream = fs.createReadStream(file);
+        fileStream.on('error', function(err) {
+          console.log('File Error', err);
+        });
+        uploadParams.Body = fileStream;
+
+        var path = require('path');
+        uploadParams.Key = path.basename(file);
+
+        // call S3 to retrieve upload file to specified bucket
+        s3.upload (uploadParams, function (err, data) {
+          if (err) {
+            console.log("Error", err);
+            sendResponse(res, 404, '', 'Error');
+          } if (data) {
+            console.log("Upload Success", data.Location);
+            sendResponse(res, 201, headers, 'Image successfuly saved!');
+          }
+        });
+        
       }
     });
+
+   
   },
 
   gVision: function(req, res) {

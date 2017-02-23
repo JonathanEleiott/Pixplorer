@@ -11,3 +11,4 @@ public/dist
 lib/
 keys
 *.pem
+aws-config.json
