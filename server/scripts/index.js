@@ -59,7 +59,7 @@ app.post('/postImage', function (req, res) {
   requestHandler.postImage(req, res);
 });
 
-var port = process.env.PORT || 80;
+var port = process.env.PORT || 8080;
 
 app.listen(port, function () {
   console.log(process.env.PORT)
