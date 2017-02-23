@@ -1,15 +1,14 @@
-var express = require('express');
-var firebaseConfig = require('./firebaseConfig.js');
-var bodyParser = require('body-parser');
-var stream = require('stream');
+const express = require('express');
+//const firebaseConfig = require('./firebaseConfig.js');
+const bodyParser = require('body-parser');
+//const stream = require('stream');
 
+const requestHandler = require('./requestHandler');
 
-var requestHandler = require('./requestHandler.js');
+const app = express();
+app.use(bodyParser.urlencoded({ limit: '5mb', extended: true }));
 
-var app = express();
-app.use(bodyParser.urlencoded({limit: '5mb', extended: true}));
-
-app.use(bodyParser.json({limit: '50mb', type: 'application/json'}));
+app.use(bodyParser.json({ limit: '50mb', type: 'application/json' }));
 app.use(bodyParser.json());
 
 // app.use(function (req, res, next) {
@@ -24,44 +23,65 @@ app.use(bodyParser.json());
 //   })
 // })
 
+////////////////////////////////////////////////
+//////// DEFAULT ROUTES ////////////////////////
+//////////////////////////////////////////////
 
-app.get('/', function (req, res) {
+app.get('/', (req, res) => {
   requestHandler.landing(req, res);
 });
 
-app.post('/login', function (req, res) {
+////////////////////////////////////////////////
+//////// AUTH ROUTES ////////////////////////
+//////////////////////////////////////////////
+
+app.post('/login', (req, res) => {
   requestHandler.login(req, res);
 });
 
-app.post('/logout', function (req, res) {
+app.post('/logout', (req, res) => {
   requestHandler.logout(req, res);
 });
 
-app.post('/createUser', function (req, res) {
+app.post('/createUser', (req, res) => {
   requestHandler.createUser(req, res);
 }); 
 
-app.post('/deleteUser', function (req, res) {
+app.post('/deleteUser', (req, res) => {
   requestHandler.deleteUser(req, res);
 });
 
-app.get('/checkUserCredentials', function (req, res) {
+app.get('/checkUserCredentials', (req, res) => {
   requestHandler.checkUserCredentials(req, res);
 });
 
-app.get('/vision', function (req, res) {
+////////////////////////////////////////////////
+//////// IMAGE ROUTES ////////////////////////
+//////////////////////////////////////////////
+
+app.get('/vision', (req, res) => {
   requestHandler.gVision(req, res);
 });
 
-app.post('/postImage', function (req, res) {
+app.post('/postImage', (req, res) => {
   console.log(req.body);
 
   requestHandler.postImage(req, res);
 });
 
-var port = process.env.PORT || 8080;
+////////////////////////////////////////////////
+//////// DATA ROUTES ////////////////////////
+//////////////////////////////////////////////
 
-app.listen(port, function () {
-  console.log('Example app listening on port ' + port + '!');
+// Goes here
+
+////////////////////////////////////////////////
+//////// CONFIG, ETC ////////////////////////
+//////////////////////////////////////////////
+
+const port = process.env.PORT || 8080;
+
+app.listen(port, () => {
+  console.log(`Example app listening on port ${port}!`);
 });
 

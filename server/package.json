@@ -17,22 +17,22 @@
   },
   "homepage": "https://github.com/CruciferousCrustaceans/hrsf53-thesis#readme",
   "dependencies": {
+    "axios": "^0.15.3",
     "bluebird": "^3.4.7",
     "body-parser": "^1.16.1",
+    "chai": "^3.5.0",
+    "chai-http": "^3.0.0",
+    "eslint": "^3.15.0",
     "eslint-config-rallycoding": "^3.2.0",
     "express": "^4.14.1",
     "express-promise-router": "^1.1.1",
     "firebase": "^3.6.9",
     "forever": "^0.15.3",
-    "google-cloud": "^0.47.0"
+    "google-cloud": "^0.47.0",
+    "mocha": "^3.2.0",
+    "request": "^2.79.0"
   },
   "devDependencies": {
-    "axios": "^0.15.3",
-    "chai": "^3.5.0",
-    "chai-http": "^3.0.0",
-    "eslint": "^3.15.0",
-    "mocha": "^3.2.0",
-    "nodemon": "^1.11.0",
-    "request": "^2.79.0"
+    "nodemon": "^1.11.0"
   }
 }
