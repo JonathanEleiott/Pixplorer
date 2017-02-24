@@ -4,6 +4,8 @@ const bodyParser = require('body-parser');
 //const stream = require('stream');
 
 const requestHandler = require('./requestHandler');
+const requestHandlerAPI = require('./handlers/api');
+const requestHandlerSETUP = require('./handlers/setup');
 
 const app = express();
 app.use(bodyParser.urlencoded({ limit: '5mb', extended: true }));
@@ -11,17 +13,6 @@ app.use(bodyParser.urlencoded({ limit: '5mb', extended: true }));
 app.use(bodyParser.json({ limit: '50mb', type: 'application/json' }));
 app.use(bodyParser.json());
 
-// app.use(function (req, res, next) {
-//   getRawBody(req, {
-//     length: req.headers['content-length'],
-//     limit: '1mb',
-//     encoding: contentType.parse(req).parameters.charset
-//   }, function (err, string) {
-//     if (err) return next(err)
-//     req.text = string
-//     next()
-//   })
-// })
 
 ////////////////////////////////////////////////
 //////// DEFAULT ROUTES ////////////////////////
@@ -73,10 +64,36 @@ app.post('/postImage', (req, res) => {
 //////// DATA ROUTES ////////////////////////
 //////////////////////////////////////////////
 
-// Goes here
+app.get('/api/lists', (req, res) => {
+  requestHandlerAPI.lists(req, res);
+});
+
+app.post('/api/lists', (req, res) => {
+  requestHandlerAPI.listsCreate(req, res);
+});
+
+app.get('/api/items', (req, res) => {
+  requestHandlerAPI.items(req, res);
+});
+
+app.get('/api/all', (req, res) => {
+  requestHandlerAPI.all(req, res);
+});
+
+app.get('/api/create', (req, res) => {
+  requestHandlerSETUP.create(req, res);
+});
+
+app.get('/api/delete', (req, res) => {
+  requestHandlerSETUP.delete(req, res);
+});
+
+app.get('/api/*', (req, res) => {
+  requestHandlerAPI.default(req, res);
+});
 
 ////////////////////////////////////////////////
-//////// CONFIG, ETC ////////////////////////
+//////// CONFIG & LISTEN! ////////////////////////
 //////////////////////////////////////////////
 
 const port = process.env.PORT || 8080;
