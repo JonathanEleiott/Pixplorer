@@ -18,7 +18,6 @@ const RouterComponent = () => {
           key="listChooser"
           component={ListChooser}
           title="Choose A List"
-
         />
         <Scene
           onBack={() => Actions.listChooser()}
@@ -35,7 +34,6 @@ const RouterComponent = () => {
           key="cameraFrame"
           component={CameraFrame}
           title="Camera"
-          initial
         />
       </Scene>
       <Scene key="auth">
