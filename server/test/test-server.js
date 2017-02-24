@@ -6,14 +6,16 @@ var axios = require('axios');
 var bodyParser = require('body-parser');
 var should = chai.should();
 
-var generateParams = function(method, endpoint, optionalParams){
+var generateParams = function(method, endpoint, optionalParams, optionalUrl) {
   optionalParams = optionalParams || '';
+  optionalUrl = optionalUrl || 'http://54.218.118.52:8080/';
   return {
     method: method,
-      uri: 'http://198.199.94.223:8080/' + endpoint,
+      uri: optionalUrl + endpoint,
       form: optionalParams
   };
-  //live server url: http://198.199.94.223:8080/
+  //live Digital Ocean server url: http://198.199.94.223:8080/
+  //live AWS EC2 server url: http://54.218.118.52:8080/
   //local server url: http://localhost:8080/
 };
 
@@ -37,6 +39,44 @@ describe('REST', function() {
     var params = generateParams('GET', 'randomEndPoint');
     request(params, function(error, response, body) {
       expect(response.statusCode).to.equal(404);
+      done();
+    });
+  });
+});
+
+describe('SERVER SECURITY', function() {
+  afterEach(function() {
+    // logout user - runs after each test in this block
+    var logoutParams = generateParams('POST', 'logout');
+    request(logoutParams);
+  });
+
+  it('should not respond to requests on port 20 (FTP)', function(done) {
+    var params = generateParams('GET', '', '', 'http://54.218.118.52:22/');
+    request(params, function(error, response, body) {
+      expect(error).to.exist;
+      expect(response).to.not.exist;
+      expect(body).to.not.exist;
+      done();
+    });
+  });
+
+  it('should not respond to requests on port 21 (FTP)', function(done) {
+    var params = generateParams('GET', '', '', 'http://54.218.118.52:22/');
+    request(params, function(error, response, body) {
+      expect(error).to.exist;
+      expect(response).to.not.exist;
+      expect(body).to.not.exist;
+      done();
+    });
+  });
+
+  it('should not respond to requests on port 22 (SSH)', function(done) {
+    var params = generateParams('GET', '', '', 'http://54.218.118.52:22/');
+    request(params, function(error, response, body) {
+      expect(error).to.exist;
+      expect(response).to.not.exist;
+      expect(body).to.not.exist;
       done();
     });
   });
@@ -86,10 +126,12 @@ describe('AUTH', function() {
   });
 
   it('should login existing user using JSON content type (instead of URLencoded)', function(done) {
+    var axiosParams = generateParams('post', 'login', {email: 'john@aol.com', password: 'John123'});
+
     axios({
-         method: 'post',
-         url: 'http://localhost:8080/login',
-         data: {email: 'john@aol.com', password: 'John123'}
+         method: axiosParams.method,
+         url: axiosParams.uri,
+         data: axiosParams.form
        })
        .then(function(response) {
          expect(response.status).to.equal(201);
