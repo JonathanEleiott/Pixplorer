@@ -48,6 +48,7 @@ export default (state = INITIAL_STATE, action) => {
     // Updates list name prop based on what the user has passed in
     case LIST_NAME_CHANGED:
       return { ...state, listName: action.payload };
+    // Updates lists without deleted list
     case DELETE_LIST:
       return { ...state, lists: action.payload };
     default:

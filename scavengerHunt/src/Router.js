@@ -21,7 +21,6 @@ const RouterComponent = () => {
         <Scene
           key="huntingList"
           component={HuntingList}
-          getTitle={this.props}
           onBack={() => Actions.listChooser()}
         />
         <Scene

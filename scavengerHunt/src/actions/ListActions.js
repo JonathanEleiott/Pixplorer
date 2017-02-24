@@ -11,7 +11,8 @@ import {
   IMPORT_LISTS,
   ADD_LIST_TO_DB,
   DELETE_ITEM,
-  LIST_NAME_CHANGED
+  LIST_NAME_CHANGED,
+  DELETE_LIST
 } from './types';
 
 /////////////////////////////////////////////////////////////
@@ -26,7 +27,8 @@ const listUrl = 'https://618de498.ngrok.io/api/';
 // Goes to hunting list for the list title that was clicked on
   // Sets clicked title to state/props
 export const titleClicked = (title) => {
-  goToHuntingList(title);
+  console.log('title', title);
+  goToHuntingList(title, title.name);
   return {
     type: TITLE_CLICKED,
     payload: title
@@ -92,7 +94,7 @@ export const addListToDB = (listName) => {
     })
     .then(response => {
       console.log('response', response.data);
-      goToHuntingList(response.data.items);
+      goToHuntingList(response.data.items, response.data.name);
       return {
         type: ADD_LIST_TO_DB,
         payload: response.data
@@ -105,11 +107,48 @@ export const addListToDB = (listName) => {
 };
 
 // Deletes an item in the DB
-export const deleteItem = (item) => {
-  console.log('item in deleteItem', item);
-  return {
-    type: DELETE_ITEM,
-    payload: item
+export const deleteItem = (item, list) => {
+  console.log('item in deleteItem', item, list);
+  return (dispatch) => {
+    axios({
+      method: 'delete',
+      url: `${listUrl}items/${item.id}/${list.id}`
+    })
+    .then(response => {
+      console.log('response', response.data);
+      goToHuntingList(response.data.items, response.data.name);
+      dispatch({
+        type: DELETE_ITEM,
+        payload: response.data
+      });
+    })
+    .catch(error => {
+      console.log('error in addListToDB call', error);
+    });
+  };
+};
+
+// Deletes a list from the DB
+export const deleteList = (listName) => {
+  // PULL IN WHOLE LIST
+  // SEND BILLY THE LIST ID
+  console.log('listName', listName);
+  return (dispatch) => {
+    axios({
+      method: 'delete',
+      url: `${listUrl}lists/${listName.id}`
+    })
+    .then(response => {
+      console.log('response', response.data);
+      goToListChooser();
+      dispatch({
+        type: DELETE_LIST,
+        payload: response.data
+      });
+    })
+    .catch(error => {
+      console.log('error in addListToDB call', error);
+    });
   };
 };
 
@@ -126,9 +165,14 @@ const goToCreateList = () => {
   Actions.createList();
 };
 
+// Goes to the list choosing page
+const goToListChooser = () => {
+  Actions.listChooser();
+};
+
 // Goes to the hunting list screen
-const goToHuntingList = (list) => {
-  Actions.huntingList(list);
+const goToHuntingList = (list, name) => {
+  Actions.huntingList({ list, getTitle: () => name });
 };
 
 // Goes to the camera screen
