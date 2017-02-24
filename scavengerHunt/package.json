@@ -7,6 +7,7 @@
     "test": "jest"
   },
   "dependencies": {
+    "@maintained-repos/react-native-swipeout": "^3.1.5",
     "axios": "^0.15.3",
     "buffer": "^5.0.5",
     "file-base64": "1.0.0",

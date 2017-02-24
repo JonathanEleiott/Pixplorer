@@ -1,19 +1,24 @@
-// Creates list of hunting items
+// Shows a list of hunting items based on which list was clicked
 
 import React, { Component } from 'react';
 import { Image, Text, ScrollView } from 'react-native';
-import { Card, CardSection } from './mostCommon';
+import { connect } from 'react-redux';
+import Swipeout from '@maintained-repos/react-native-swipeout';
+import { Card, CardSection, Button } from './mostCommon';
+import { addItem, clickedUncheckedBox, deleteItem } from '../actions';
 import emptyCheckbox from '../images/emptyCheckbox.png';
 import checkedCheckbox from '../images/checkedCheckbox.png';
 
 /////////////////////////////////////////////////////////
 // ITEM LIST IS A HARDCODED JSON FILE!!! ////////////////
-import itemList from '../itemList.json';
+// import itemList from '../itemList.json'; /////////////
 ////////////////////////////////////////////////////////
 
 class HuntingList extends Component {
-  foundItemChecker(foundItem, item) {
-    if (foundItem === 'true') {
+
+  // Displays item with checked/unchecked box based on if it has been found yet
+  listTitle(item, bool) {
+    if (this.props.title && bool) {
       return (
         <CardSection style={{ borderBottomWidth: 0, padding: 20 }}>
           <Image
@@ -31,37 +36,94 @@ class HuntingList extends Component {
           >{ item.name }</Text>
         </CardSection>
       );
+    } else if (this.props.title) {
+      return (
+        <CardSection style={{ borderBottomWidth: 0, padding: 20 }}>
+          <Image
+            source={emptyCheckbox}
+            style={{ width: 30, height: 30 }}
+            alt="empty checkbox"
+          />
+          <Text
+            style={{
+              paddingLeft: 10,
+              fontSize: 20,
+              width: 250
+            }}
+            onPress={this.uncheckedBoxClicked.bind(this)}
+          >{ item.name }</Text>
+        </CardSection>
+      );
+    }
+  }
+
+  // Goes to the camera screen to take a picture of the item to add to DB
+  addItemToList() {
+      this.props.addItem(this.props.title);
+    }
+
+  // Goes to the camera screen to take a picture of the item that the user found
+  uncheckedBoxClicked() {
+    this.props.clickedUncheckedBox(this.props.title);
+  }
+
+  // Returns listTitle based on whether the item has been found or not
+  foundItemChecker(foundItem, item) {
+    if (foundItem === true) {
+      return (
+        this.listTitle(item, true)
+      );
     }
 
     return (
-      <CardSection style={{ borderBottomWidth: 0, padding: 20 }}>
-      <Image source={emptyCheckbox} style={{ width: 30, height: 30 }} alt="empty checkbox" />
-      <Text
-      style={{
-        paddingLeft: 10,
-        fontSize: 20,
-        width: 250
-      }}
-      >{ item.name }</Text>
-      </CardSection>
+      this.listTitle(item, false)
     );
+  }
+
+  // Makes an AJAX call to change an item from active to inactive
+  deleteItem(item) {
+    console.log('delete this item');
+    this.props.deleteItem(item);
+  }
+
+  renderList() {
+    const swipeButtons = [{
+      key: Math.random(),
+      text: 'Delete',
+      backgroundColor: 'red',
+      onPress: this.deleteItem.bind(this)
+    }];
+
+    if (this.props.title.items) {
+      return this.props.title.items.map((item, index) => {
+        return (
+          <Swipeout key={index} right={swipeButtons}>
+            { this.foundItemChecker(item.foundItem, item) }
+          </Swipeout>
+        );
+      });
+    }
+    return;
   }
 
   render() {
     return (
       <ScrollView>
         <Card>
-          { itemList.map((item, index) => {
-            return (
-              <CardSection key={index}>
-                { this.foundItemChecker(item.found, item) }
-              </CardSection>
-            );
-          })}
+          { this.renderList.bind(this) }
+      <Button onPress={this.addItemToList.bind(this)}>Add Item</Button>
       </Card>
     </ScrollView>
     );
   }
 }
 
-export default HuntingList;
+const mapStateToProps = ({ list }) => {
+  const { title } = list;
+
+  return { title };
+};
+
+export default connect(mapStateToProps, {
+  addItem, clickedUncheckedBox, deleteItem
+})(HuntingList);

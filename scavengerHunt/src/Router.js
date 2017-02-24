@@ -1,10 +1,11 @@
 // Allows movement from one screen to another
 
 import React from 'react';
-import { Scene, Router } from 'react-native-router-flux';
+import { Scene, Router, Actions } from 'react-native-router-flux';
 import LoginForm from './components/LoginForm';
 import HuntingList from './components/HuntingList';
 import ListChooser from './components/ListChooser';
+import CreateList from './components/CreateList';
 import CameraFrame from './components/CameraFrame';
 
 
@@ -20,11 +21,15 @@ const RouterComponent = () => {
 
         />
         <Scene
-          onRight={() => Actions.cameraFrame()}
-          rightTitle="CAMERA"
+          onBack={() => Actions.listChooser()}
           key="huntingList"
           component={HuntingList}
           title="Hunting List"
+        />
+        <Scene
+          key="createList"
+          component={CreateList}
+          title="Create A List"
         />
         <Scene
           key="cameraFrame"

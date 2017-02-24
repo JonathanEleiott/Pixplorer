@@ -1,5 +1,5 @@
 [
-  { "name": "Red Bull Jon's Hunting List" },
-  { "name": "Dan's Run-around-the-city Scavenger Hunt" },
-  { "name": "Bill Lea's Big Billy Bear Hunt" }
+  { "name": "Red Bull Jon's Hunting List", "id": 1 },
+  { "name": "Dan's Run-around-the-city Scavenger Hunt", "id": 2 },
+  { "name": "Bill Lea's Big Billy Bear Hunt", "id": 3 }
 ]
