@@ -55,8 +55,6 @@ app.get('/vision', (req, res) => {
 });
 
 app.post('/postImage', (req, res) => {
-  console.log(req.body);
-
   requestHandler.postImage(req, res);
 });
 
