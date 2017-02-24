@@ -70,6 +70,10 @@ app.post('/api/lists', (req, res) => {
   requestHandlerAPI.listsCreate(req, res);
 });
 
+app.delete('/api/lists/:list_id', (req, res) => {
+  requestHandlerAPI.listsDelete(req, res);
+});
+
 app.get('/api/items', (req, res) => {
   requestHandlerAPI.items(req, res);
 });
