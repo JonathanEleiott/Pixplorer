@@ -68,7 +68,14 @@ module.exports = {
               .destroy()
               .then(() => {
                 console.log('FULL LIST DELETED');
-                res.send('LIST DELETED');
+                new List()
+                  .fetchAll({ withRelated: ['items'] })
+                  .then((lists) => { 
+                        res.send(lists.toJSON());
+                      }).catch((error) => {
+                        console.log(error);
+                        res.send('An error occured');
+                      });
               });
           })
       .catch((error) => {
