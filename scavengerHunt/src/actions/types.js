@@ -15,3 +15,4 @@ export const IMPORT_LISTS = 'import_lists';
 export const ADD_LIST_TO_DB = 'add_list_to_db';
 export const DELETE_ITEM = 'delete_item';
 export const LIST_NAME_CHANGED = 'list_name_changed';
+export const DELETE_LIST = 'delete_list';

@@ -3,9 +3,10 @@
 import React, { Component } from 'react';
 import { Text, Image, ScrollView, TouchableHighlight } from 'react-native';
 import { connect } from 'react-redux';
+import Swipeout from '@maintained-repos/react-native-swipeout';
 import { Card, CardSection, Button } from './mostCommon';
 import rightArrow from '../images/rightArrow.png';
-import { titleClicked, createListClicked, importLists } from '../actions';
+import { titleClicked, createListClicked, importLists, deleteList } from '../actions';
 
 ///////////////////////////////////////////////////////////////////////////////
 // LIST OF HUNTS IS A HARDCODED JSON FILE!!! REPLACE WITH AJAX CALL TO DB... //
@@ -34,37 +35,54 @@ class ListChooser extends Component {
     this.props.createListClicked();
   }
 
+  //Deletes a list from the DB
+  deleteListFromDB(listName) {
+    console.log('listName in deleteListFromDB', listName);
+    this.props.deleteList(listName);
+  }
+
   render() {
     console.log('props', this.props);
-    const { titleStyle, rightArrowStyle } = styles;
 
     return (
       <ScrollView>
         <Card>
           { this.props.lists.map((title, index) => {
+            const { titleStyle, rightArrowStyle } = styles;
+            const swipeButts = [{
+              key: Math.random(),
+              text: 'Delete',
+              backgroundColor: 'red',
+              onPress: () => {
+                console.log('propsLists', this.props.lists);
+                this.deleteListFromDB(title);
+              }
+            }];
             return (
-              <CardSection key={index} style={{ padding: 20 }}>
-                <TouchableHighlight
-                  activeOpacity={0.5}
-                  underlayColor={'white'}
-                  value={title}
-                  onPress={() => this.clickOnATitle(title)}
-                >
-                  <Text style={titleStyle} value={title.name}>{title.name}</Text>
-                </TouchableHighlight>
-                <TouchableHighlight
-                  activeOpacity={0.5}
-                  underlayColor={'white'}
-                  value={title}
-                  onPress={() => this.clickOnATitle(title)}
-                >
-                  <Image
-                    source={rightArrow}
-                    style={rightArrowStyle}
-                    alt="right arrow"
-                  />
-                </TouchableHighlight>
-              </CardSection>
+              <Swipeout key={index} right={swipeButts}>
+                <CardSection key={index} style={{ padding: 20 }}>
+                  <TouchableHighlight
+                    activeOpacity={0.5}
+                    underlayColor={'white'}
+                    value={title}
+                    onPress={() => this.clickOnATitle(title)}
+                  >
+                    <Text style={titleStyle} value={title.name}>{title.name}</Text>
+                  </TouchableHighlight>
+                  <TouchableHighlight
+                    activeOpacity={0.5}
+                    underlayColor={'white'}
+                    value={title}
+                    onPress={() => this.clickOnATitle(title)}
+                  >
+                    <Image
+                      source={rightArrow}
+                      style={rightArrowStyle}
+                      alt="right arrow"
+                    />
+                  </TouchableHighlight>
+                </CardSection>
+              </Swipeout>
             );
           })}
           <Button onPress={this.createAList.bind(this)}>
@@ -98,5 +116,5 @@ const mapStateToProps = ({ list }) => {
 };
 
 export default connect(mapStateToProps, {
-  titleClicked, createListClicked, importLists
+  titleClicked, createListClicked, importLists, deleteList
 })(ListChooser);

@@ -1,7 +1,10 @@
 <<<<<<< a9b9e1d02d111c312fb1074a92a8399342cc0b53
 // Sends trigger and calls functions
+<<<<<<< bf8d43499a4b0429574ca656a4f16f0361afd80c
 
 // import { fetch } from 'react-native';
+=======
+>>>>>>> Delete list
 import { Actions } from 'react-native-router-flux';
 import axios from 'axios';
 =======
@@ -15,7 +18,8 @@ import {
   IMPORT_LISTS,
   ADD_LIST_TO_DB,
   DELETE_ITEM,
-  LIST_NAME_CHANGED
+  LIST_NAME_CHANGED,
+  DELETE_LIST
 } from './types';
 
 /////////////////////////////////////////////////////////////
@@ -24,7 +28,7 @@ import {
 ////////////////////////////////////////////////////////////
 
 // USE HTTPS WHEN MAKING AN AJAX CALL
-const listUrl = 'https://1c26e2f9.ngrok.io/api/';
+const listUrl = 'https://618de498.ngrok.io/api/';
 
 
 // Goes to hunting list for the list title that was clicked on
@@ -110,11 +114,24 @@ export const addListToDB = (listName) => {
 };
 
 // Deletes an item in the DB
-export const deleteItem = (item) => {
-  console.log('item in deleteItem', item);
-  return {
-    type: DELETE_ITEM,
-    payload: item
+export const deleteItem = (item, list) => {
+  console.log('item in deleteItem', item, list);
+  return (dispatch) => {
+    axios({
+      method: 'delete',
+      url: `${listUrl}items/${item.id}/${list.id}`
+    })
+    .then(response => {
+      console.log('response', response.data);
+      goToHuntingList(response.data.items);
+      dispatch({
+        type: DELETE_ITEM,
+        payload: response.data
+      });
+    })
+    .catch(error => {
+      console.log('error in addListToDB call', error);
+    });
   };
 };
 
@@ -123,6 +140,30 @@ export const listNameChanged = (name) => {
   return {
     type: LIST_NAME_CHANGED,
     payload: name
+  };
+};
+
+// Deletes a list from the DB
+export const deleteList = (listName) => {
+  // PULL IN WHOLE LIST
+  // SEND BILLY THE LIST ID
+  console.log('listName', listName);
+  return (dispatch) => {
+    axios({
+      method: 'delete',
+      url: `${listUrl}lists/${listName.id}`
+    })
+    .then(response => {
+      console.log('response', response.data);
+      goToListChooser();
+      dispatch({
+        type: DELETE_LIST,
+        payload: response.data
+      });
+    })
+    .catch(error => {
+      console.log('error in addListToDB call', error);
+    });
   };
 };
 
@@ -149,4 +190,8 @@ const goToHuntingList = (title) => {
   console.log('goToHuntingList', title);
   Actions.huntingList(title);
 >>>>>>> ListChooser buttons go to HuntingList
+};
+
+const goToListChooser = () => {
+  Actions.listChooser();
 };
