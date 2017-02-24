@@ -3,7 +3,7 @@ const AWS = require('aws-sdk');
 const firebase = require('./firebaseConfig');
 const headers = require('./headers');
 
-AWS.config.loadFromPath('../aws-config.json');
+AWS.config.loadFromPath('../../aws-config.json');
 //import { headers, firebase } from './config';
 
 const vision = gcloud.vision({
