@@ -3,7 +3,7 @@ import {
   Dimensions,
   StyleSheet,
   Text,
-  Vibration, 
+  Vibration,
   ImageStore
 } from 'react-native';
 import Camera from 'react-native-camera';
@@ -38,8 +38,8 @@ class CameraFrame extends Component {
             });
           })
         })
-          
-        
+
+
   }
 
   render() {
@@ -51,7 +51,7 @@ class CameraFrame extends Component {
         style={styles.preview}
         aspect={Camera.constants.Aspect.fill}
         captureTarget={Camera.constants.CaptureTarget.temp}
-        >
+      >
         <Text style={styles.header}>List Item Found...</Text>
         <Text style={styles.capture} onPress={this.takePicture.bind(this)}>SNAP THE PIC!!</Text>
       </Camera>
@@ -84,7 +84,7 @@ const styles = StyleSheet.create({
     padding: 10,
     margin: 20,
     marginBottom: 400
-  }, 
+  },
 
 });
 

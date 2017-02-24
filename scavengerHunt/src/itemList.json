@@ -1,7 +1,7 @@
 [
-  { "name": "Red Bull", "found": "false" },
-  { "name": "Swedish Fish", "found": "false" },
-  { "name": "Gummy Bears", "found": "true" },
-  { "name": "Cheez-its", "found": "false" },
-  { "name": "Canadian Maple Leaf Cup With A Yellow Lid", "found": "true" }
+  { "name": "Red Bull", "found": "false", "list_id": 1 },
+  { "name": "Swedish Fish", "found": "false", "list_id": 2 },
+  { "name": "Gummy Bears", "found": "true", "list_id": 2 },
+  { "name": "Cheez-its", "found": "false", "list_id": 3 },
+  { "name": "Canadian Maple Leaf Cup With A Yellow Lid", "found": "true", "list_id": 1 }
 ]

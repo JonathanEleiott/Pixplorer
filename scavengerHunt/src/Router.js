@@ -5,6 +5,7 @@ import { Scene, Router, Actions } from 'react-native-router-flux';
 import LoginForm from './components/LoginForm';
 import HuntingList from './components/HuntingList';
 import ListChooser from './components/ListChooser';
+import CreateList from './components/CreateList';
 import CameraFrame from './components/CameraFrame';
 
 
@@ -14,19 +15,21 @@ const RouterComponent = () => {
     <Router sceneStyle={{ paddingTop: 65 }}>
       <Scene key="main">
         <Scene
-          onRight={() => Actions.huntingList()}
-          rightTitle="Hunt Now"
           key="listChooser"
           component={ListChooser}
           title="Choose A List"
-          
+
         />
         <Scene
-          onRight={() => Actions.cameraFrame()}
-          rightTitle="CAMERA"
+          onBack={() => Actions.listChooser()}
           key="huntingList"
           component={HuntingList}
           title="Hunting List"
+        />
+        <Scene
+          key="createList"
+          component={CreateList}
+          title="Create A List"
         />
         <Scene
           key="cameraFrame"
@@ -38,7 +41,7 @@ const RouterComponent = () => {
       <Scene key="auth">
         <Scene key="login" component={LoginForm} title="Please Login" />
       </Scene>
-    </Router>
+    </Router >
   );
 };
 

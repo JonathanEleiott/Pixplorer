@@ -1,3 +1,5 @@
+// Creates a loading spinner
+
 import React from 'react';
 import { View, ActivityIndicator } from 'react-native';
 

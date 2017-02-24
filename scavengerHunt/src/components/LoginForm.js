@@ -1,5 +1,4 @@
 // Creates a form for authentication
-  // Includes 2 input tags (email, password) and 2 buttons (log in, sign up)
 
 import React, { Component } from 'react';
 import { Text } from 'react-native';
@@ -9,27 +8,31 @@ import { emailChanged, passwordChanged, loginUser, signupUser } from '../actions
 
 
 class LoginForm extends Component {
-
+  // Updates email state/props to what the user has typed in the email box
   onEmailChange(text) {
     this.props.emailChanged(text);
   }
 
+  // Updates password state/props to what the user has typed in the password box
   onPasswordChange(text) {
     this.props.passwordChanged(text);
   }
 
+  // Sends AJAX request to log in the user
   loginButtonPress() {
     const { email, password } = this.props;
 
     this.props.loginUser({ email, password });
   }
 
+  // Sends AJAX request to sign up the user
   signupButtonPress() {
     const { email, password } = this.props;
 
     this.props.signupUser({ email, password });
   }
 
+  // Shows the loading spinner while AJAX request is sent
   renderLoginButton() {
     if (this.props.loading) {
       return <Spinner size="large" />;
@@ -42,6 +45,7 @@ class LoginForm extends Component {
     );
   }
 
+  // Shows the loading spinner while AJAX request is sent
   renderSignupButton() {
     if (this.props.loading) {
       return <Spinner size="large" />;
