@@ -2,12 +2,12 @@
 
 import React from 'react';
 import { Scene, Router } from 'react-native-router-flux';
+import { Actions } from 'react-redux';
 import LoginForm from './components/LoginForm';
 import HuntingList from './components/HuntingList';
 import ListChooser from './components/ListChooser';
 import CreateList from './components/CreateList';
 import CameraFrame from './components/CameraFrame';
-
 
 //TODO: MAke sure to put the components back! Right now it goes straight to camera!!!
 const RouterComponent = () => {
