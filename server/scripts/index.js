@@ -78,6 +78,10 @@ app.get('/api/items', (req, res) => {
   requestHandlerAPI.items(req, res);
 });
 
+app.delete('/api/items/:item_id/:list_id', (req, res) => {
+  requestHandlerAPI.itemsDelete(req, res);
+});
+
 app.get('/api/all', (req, res) => {
   requestHandlerAPI.all(req, res);
 });
