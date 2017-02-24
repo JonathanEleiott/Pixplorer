@@ -18,6 +18,7 @@ class HuntingList extends Component {
 
   // Displays item with checked/unchecked box based on if it has been found yet
   listTitle(item, bool) {
+    console.log('listTitle', item, bool);
     if (this.props.title && bool) {
       return (
         <CardSection style={{ borderBottomWidth: 0, padding: 20 }}>
@@ -69,6 +70,7 @@ class HuntingList extends Component {
 
   // Returns listTitle based on whether the item has been found or not
   foundItemChecker(foundItem, item) {
+    console.log('foundItemChecker');
     if (foundItem === true) {
       return (
         this.listTitle(item, true)
@@ -94,6 +96,8 @@ class HuntingList extends Component {
       onPress: this.deleteItem.bind(this)
     }];
 
+    console.log('props', this.props.title);
+
     if (this.props.title.items) {
       return this.props.title.items.map((item, index) => {
         return (
@@ -110,7 +114,7 @@ class HuntingList extends Component {
     return (
       <ScrollView>
         <Card>
-          { this.renderList.bind(this) }
+          { this.renderList() }
       <Button onPress={this.addItemToList.bind(this)}>Add Item</Button>
       </Card>
     </ScrollView>
