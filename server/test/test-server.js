@@ -8,7 +8,7 @@ var should = chai.should();
 
 var generateParams = function(method, endpoint, optionalParams, optionalUrl) {
   optionalParams = optionalParams || '';
-  optionalUrl = optionalUrl || 'http://54.218.118.52:8080/';
+  optionalUrl = optionalUrl || 'http://198.199.94.223:8080/';
   return {
     method: method,
       uri: optionalUrl + endpoint,
@@ -273,13 +273,14 @@ describe('AUTH', function() {
 describe('IMAGE UPLOAD', function() {
 
   it('it should post an image to the server', function(done) {
+    var axiosParams = generateParams('post', 'postImage', '');
 
     var processData = function(data) {
       var imageData =  new Buffer(data).toString('base64');
       axios({
-        method: 'post',
+        method: axiosParams.method,
         responseType: 'arraybuffer',
-        url: 'http://localhost:8080/postImage',
+        url: axiosParams.uri,
         data: {imageBuffer: imageData}
       })
       .then(function(response) {
