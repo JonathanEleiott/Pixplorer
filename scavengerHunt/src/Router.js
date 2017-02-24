@@ -8,7 +8,6 @@ import ListChooser from './components/ListChooser';
 import CreateList from './components/CreateList';
 import CameraFrame from './components/CameraFrame';
 
-
 //TODO: MAke sure to put the components back! Right now it goes straight to camera!!!
 const RouterComponent = () => {
   return (
@@ -20,10 +19,9 @@ const RouterComponent = () => {
           title="Choose A List"
         />
         <Scene
-          onBack={() => Actions.listChooser()}
           key="huntingList"
           component={HuntingList}
-          title="Hunting List"
+          onBack={() => Actions.listChooser()}
         />
         <Scene
           key="createList"
@@ -35,6 +33,9 @@ const RouterComponent = () => {
           component={CameraFrame}
           title="Camera"
         />
+      </Scene>
+      <Scene key="auth">
+        <Scene key="login" component={LoginForm} title="Please Login" />
       </Scene>
       <Scene key="auth">
         <Scene key="login" component={LoginForm} title="Please Login" />

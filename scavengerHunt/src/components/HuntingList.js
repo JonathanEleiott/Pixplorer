@@ -85,21 +85,20 @@ class HuntingList extends Component {
   // Makes an AJAX call to change an item from active to inactive
   deleteItem(item) {
     console.log('delete this item');
-    this.props.deleteItem(item);
+    this.props.deleteItem(item, this.props.title);
   }
 
   renderList() {
-    const swipeButtons = [{
-      key: Math.random(),
-      text: 'Delete',
-      backgroundColor: 'red',
-      onPress: this.deleteItem.bind(this)
-    }];
-
     console.log('props', this.props.title);
 
     if (this.props.title.items) {
       return this.props.title.items.map((item, index) => {
+        const swipeButtons = [{
+          key: Math.random(),
+          text: 'Delete',
+          backgroundColor: 'red',
+          onPress: () => this.deleteItem(item)
+        }];
         return (
           <Swipeout key={index} right={swipeButtons}>
             { this.foundItemChecker(item.foundItem, item) }
