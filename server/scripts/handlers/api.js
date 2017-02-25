@@ -134,7 +134,8 @@ module.exports = {
       {
         name: req.body.name,
         description: req.body.desc, 
-        list_id: req.body.listId
+        list_id: req.body.listId, 
+        image: req.body.image
       })
       .save()
       .then((model) => {

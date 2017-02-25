@@ -39,7 +39,7 @@ class CameraFrame extends Component {
         listId: this.props.listId,
         name: this.state.newItemName,
         desc: this.state.newItemDesc,
-        url: this.state.newItemURL
+        image: this.state.newItemURL
       };
 
       // Step 1
@@ -71,13 +71,16 @@ class CameraFrame extends Component {
           console.log('Image Size:', imageData.length);
           axios({
               method: 'post',
-              responseType: 'arraybuffer',
+              //responseType: 'arraybuffer',
               url: 'http://localhost:8080/postImage',
               //url: 'http://198.199.94.223:8080/postImage',
               data: { imageBuffer: imageData }
             })
             .then((response) => {
-              console.log('Image sent to server:', response.data);
+              console.log('SUCCESS: Image sent to server:', response.data.Location);
+              this.setState({
+                newItemURL: response.data.Location
+              });
             })
             .catch((error) => {
               console.log('Error sending image to server', error);
