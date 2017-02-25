@@ -28,46 +28,21 @@ class HuntingList extends Component {
   // Displays item with checked/unchecked box based on if it has been found yet
   listTitle(item, bool) {
     console.log('listTitle', item, bool);
-    const { nameStyle, descriptionStyle } = styles;
     if (this.props.title && bool) {
       return (
-        <CardSection style={{ borderBottomWidth: 0, padding: 20 }}>
-          <Image
-            source={checkedCheckbox}
-            style={{ width: 30, height: 30 }}
-            alt="checked checkbox"
-          />
-          <Text
-            style={nameStyle}
-            onPress={this.uncheckedBoxClicked.bind(this)}
-          >{ `${item.name} ${'\n'}` }
-          <Text
-              style={descriptionStyle}
-          >{`${item.description}`}
-          </Text>
-          </Text>
-        </CardSection>
+        <Image
+          source={checkedCheckbox}
+          style={{ width: 30, height: 30 }}
+          alt="checked checkbox"
+        />
       );
     } else if (this.props.title) {
       return (
-        <CardSection style={{ borderBottomWidth: 0, padding: 20, height: 120 }}>
-          <Image
-            source={emptyCheckbox}
-            style={{ width: 30, height: 30 }}
-            alt="empty checkbox"
-          />
-          <Text
-            style={nameStyle}
-            onPress={() => this.uncheckedBoxClicked(item)}
-          >{ `${item.name} ${'\n'}` }
-          <CardSection style={{ paddingLeft: 25, width: 300, height: 300 }}>
-            <Text
-                style={descriptionStyle}
-            >{`${item.description}`}
-            </Text>
-          </CardSection>
-          </Text>
-        </CardSection>
+        <Image
+          source={emptyCheckbox}
+          style={{ width: 30, height: 30 }}
+          alt="empty checkbox"
+        />
       );
     }
   }
@@ -103,6 +78,7 @@ class HuntingList extends Component {
 
   renderList() {
     console.log('props', this.props.title);
+    const { nameStyle, descriptionStyle } = styles;
 
     if (this.props.title.items) {
       return this.props.title.items.map((item, index) => {
@@ -114,7 +90,18 @@ class HuntingList extends Component {
         }];
         return (
           <Swipeout key={index} right={swipeButtons}>
+          <CardSection style={{ borderBottomWidth: 0, padding: 20, height: 100 }}>
             { this.isComplete(item.complete, item) }
+            <Text
+              style={nameStyle}
+              onPress={() => this.uncheckedBoxClicked()}
+            >{ `${item.name} ${'\n'}` }
+            <Text
+              style={descriptionStyle}
+            >{`${item.description}`}
+            </Text>
+            </Text>
+          </CardSection>
           </Swipeout>
         );
       });
