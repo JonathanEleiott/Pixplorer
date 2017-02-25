@@ -42,7 +42,7 @@ export default (state = INITIAL_STATE, action) => {
       return { ...state, lists: action.payload };
     // Doesn't do any prop updates yet :)
     case ADD_LIST_TO_DB:
-      return { ...state, listName: action.payload };
+      return { ...state, title: action.payload };
     // Updates props to not include this item
     case DELETE_ITEM:
       return { ...state, title: action.payload };
@@ -56,7 +56,7 @@ export default (state = INITIAL_STATE, action) => {
 
     // Added By Bill  - step 9
     case ADD_ITEM_TO_LIST:
-      return { ...state, title: action.payload }; 
+      return { ...state, title: action.payload };
 
     default:
       return state;
