@@ -27,7 +27,6 @@ class HuntingList extends Component {
 
   // Displays item with checked/unchecked box based on if it has been found yet
   listTitle(item, bool) {
-    console.log('listTitle', item, bool);
     if (this.props.title && bool) {
       return (
         <Image
@@ -94,7 +93,7 @@ class HuntingList extends Component {
             { this.isComplete(item.complete, item) }
             <Text
               style={nameStyle}
-              onPress={() => this.uncheckedBoxClicked()}
+              onPress={() => this.uncheckedBoxClicked(item)}
             >{ `${item.name} ${'\n'}` }
             <Text
               style={descriptionStyle}
