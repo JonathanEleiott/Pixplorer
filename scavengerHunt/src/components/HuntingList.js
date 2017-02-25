@@ -15,9 +15,15 @@ import checkedCheckbox from '../images/checkedCheckbox.png';
 ////////////////////////////////////////////////////////
 
 class HuntingList extends Component {
+  constructor() {
+    super();
+    this.uncheckedBoxClicked = this.uncheckedBoxClicked.bind(this);
+  }
+
   /////////////////////////////////////////////////////
   // FONT STYLES IN BOTH CHECKED AND UNCHECKED BOXES //
   /////////////////////////////////////////////////////
+
 
   // Displays item with checked/unchecked box based on if it has been found yet
   listTitle(item, bool) {
@@ -52,8 +58,8 @@ class HuntingList extends Component {
           />
           <Text
             style={nameStyle}
-            onPress={this.uncheckedBoxClicked.bind(this)}
-          >{ `${item.name}` }
+            onPress={() => this.uncheckedBoxClicked(item)}
+          >{ `${item.name} ${'\n'}` }
           <CardSection style={{ paddingLeft: 25, width: 300, height: 300 }}>
             <Text
                 style={descriptionStyle}
@@ -72,8 +78,8 @@ class HuntingList extends Component {
     }
 
   // Goes to the camera screen to take a picture of the item that the user found
-  uncheckedBoxClicked() {
-    this.props.clickedUncheckedBox(this.props.title);
+  uncheckedBoxClicked(item) {
+    this.props.clickedUncheckedBox(item);
   }
 
   // Returns listTitle based on whether the item has been found or not

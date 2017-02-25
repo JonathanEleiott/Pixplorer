@@ -39,7 +39,7 @@ export default (state = INITIAL_STATE, action) => {
       return { ...state, title: action.payload };
     // Sets title prop for camera
     case CLICKED_UNCHECKED_BOX:
-      return { ...state, title: action.payload };
+      return { ...state, item: action.payload };
     // Updates lists prop for choose list component
     case IMPORT_LISTS:
       return { ...state, lists: action.payload };

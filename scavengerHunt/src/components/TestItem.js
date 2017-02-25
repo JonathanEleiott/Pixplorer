@@ -4,18 +4,18 @@ import {
   Dimensions,
   StyleSheet,
   Text,
-  View,
+  View, 
   Vibration
 } from 'react-native';
 import Camera from 'react-native-camera';
 import axios from 'axios';
 import RNFetchBlob from 'react-native-fetch-blob';
-import { Card, CardSection, Button, Input } from './mostCommon';
+//import { Card, CardSection, Button, Input } from './mostCommon';
 
 // Step 2
 import { addItemToList } from '../actions';
 
-class CameraFrame extends Component {
+class TestItem extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -23,28 +23,17 @@ class CameraFrame extends Component {
       newItemName: '',
       newItemDesc: '',
       newItemURL: '',
-      newItemListId: null
+      newItemListId: null,
+      currentList: null
     };
-
+    console.log('PROPS', props.item);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   handleSubmit() {
-      console.log('FORM SUBMITTED - List ID:', this.props.listId);
-      console.log('Name:', this.state.newItemName);
-      console.log('Desc:', this.state.newItemDesc);
-      console.log('URL:', this.state.newItemURL);
-
-      const item = {
-        listId: this.props.listId,
-        name: this.state.newItemName,
-        desc: this.state.newItemDesc,
-        image: this.state.newItemURL
-      };
-
       // Step 1
       // Add item to Database and redirect user to updated list
-      this.props.addItemToList(1, item);
+      this.props.addItemToList(2, this.state.currentList);
   }
 
   openCamera() {
@@ -61,7 +50,7 @@ class CameraFrame extends Component {
         console.log('DATA IMG:', data.path);
 
         this.setState({
-          status: 3,
+          status: 3, 
           newItemURL: data.path
         });
 
@@ -69,16 +58,18 @@ class CameraFrame extends Component {
         .then((imageData) => {
           // handle the data ..
           console.log('Image Size:', imageData.length);
+          console.log('Start S3 Upload');
           axios({
               method: 'post',
-              url: 'https://0d85f7f0.ngrok.io/postImage',
+              url: 'https://0d85f7f0.ngrok.io/api/items/found',
               //url: 'http://198.199.94.223:8080/postImage',
-              data: { imageBuffer: imageData }
+              data: { item: this.props.item, imageBuffer: imageData }
             })
             .then((response) => {
-              console.log('SUCCESS: Image sent to server:', response.data.Location);
+              console.log('SUCCESS: Image sent to server:', response.data);
               this.setState({
-                newItemURL: response.data.Location
+                currentList: response.data,
+                status: 4, 
               });
             })
             .catch((error) => {
@@ -90,32 +81,22 @@ class CameraFrame extends Component {
 
   renderForm() {
     return (
-      <Card>
-        <CardSection>
-          <Input
-            label="Item Name"
-            placeholder="Golden Gate Bridge"
-            onChangeText={(text) => this.setState({ newItemName: text })}
-            value={this.state.newItemName}
-            maxLength={28}
-          />
-        </CardSection>
+      <View style={styles.splash}>
+        <Text style={styles.splashHeader}>FOUND!</Text>
+        <Text style={styles.splashText}>
+          Good Job...
+        </Text>
+     
+        <Text style={styles.capture} onPress={this.handleSubmit}>Next!</Text>
+      </View>
+    );
+  }
 
-        <CardSection>
-          <Input
-            label="Description"
-            placeholder="Grab a shot of this iconic landmark!"
-            onChangeText={(text) => this.setState({ newItemDesc: text })}
-            value={this.state.newItemDesc}
-            maxLength={60}
-          />
-        </CardSection>
-        <CardSection>
-          <Button onPress={this.handleSubmit}>
-            Save Item
-          </Button>
-        </CardSection>
-      </Card>
+  renderAnalyzing() {
+    return (
+      <View style={styles.analyzing}>
+        <Text style={styles.splashHeader}>Analyzing...</Text>
+      </View>
     );
   }
 
@@ -138,7 +119,7 @@ class CameraFrame extends Component {
   renderSplash() {
     return (
       <View style={styles.splash}>
-      <Text style={styles.splashHeader}>Add an Item</Text>
+        <Text style={styles.splashHeader}>Found an Item</Text>
         <Text style={styles.splashText}>
           Step 1: Take a Photo
         </Text>
@@ -164,6 +145,12 @@ class CameraFrame extends Component {
         </View>
       );
     } else if (this.state.status === 3) {
+      return (
+        <View style={styles.containerForm}>
+          {this.renderAnalyzing()}
+        </View>
+      );
+    } else if (this.state.status === 4) {
       return (
         <View style={styles.containerForm}>
           {this.renderForm()}
@@ -204,9 +191,16 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#F5FCFF',
-  },
+  }, 
   containerForm: {
     flex: 1,
+  }, 
+  analyzing: {
+    flex: 1,
+    justifyContent: 'center',
+    alignSelf: 'stretch',
+    alignItems: 'center',
+    backgroundColor: '#49cc52'
   },
   splash: {
     flex: 1,
@@ -245,4 +239,4 @@ const mapStateToProps = ({ list }) => {
 };
 
 // step 4
-export default connect(mapStateToProps, { addItemToList })(CameraFrame);
+export default connect(mapStateToProps, { addItemToList })(TestItem);

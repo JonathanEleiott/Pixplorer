@@ -57,11 +57,11 @@ export const addItem = (title) => {
 };
 
 // Goes to camera so that user can "find" an item
-export const clickedUncheckedBox = (title) => {
-  goToCamera(title);
+export const clickedUncheckedBox = (item) => {
+  goToTestItem(item);
   return {
     type: CLICKED_UNCHECKED_BOX,
-    payload: title
+    payload: item
   };
 };
 
@@ -172,16 +172,27 @@ export const listNameChanged = (name) => {
 
 // BILL
 // STEP 6
-export const addItemToList = (item) => {
+export const addItemToList = (type = 1, itemOrList) => {
   loading();
+  if (type === 2) {
+    const list = itemOrList;
+    return (dispatch) => {
+      dispatch({
+        type: ADD_ITEM_TO_LIST,
+        payload: list
+      });
+      goToHuntingList(list.items, list.name);
+    };
+  }
+
   return (dispatch) => {
+    const item = itemOrList;
     axios({
       method: 'post',
       url: `${listUrl}items`,
       data: item
     })
     .then(response => {
-      console.log('response', response.data);
       goToHuntingList(response.data.items, response.data.name);
       dispatch({
         type: ADD_ITEM_TO_LIST,
@@ -230,4 +241,14 @@ export const success = () => {
   return {
     type: SUCCESS
   };
+};
+
+// Goes to the camera screen
+const goToTestItem = (item) => {
+  console.log('goToTestItem', item);
+  ////////////////////////////////////
+  // CHANGE TO Actions.camera() //////
+  // IF YOU DON'T WANT A BACK BUTON //
+  ////////////////////////////////////
+  Actions.testItem({ item: item });
 };
