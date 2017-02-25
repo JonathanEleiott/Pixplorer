@@ -9,7 +9,8 @@ import {
   ADD_LIST_TO_DB,
   DELETE_ITEM,
   LIST_NAME_CHANGED,
-  DELETE_LIST
+  DELETE_LIST,
+  ADD_ITEM_TO_LIST // Added by bill - step 8
 } from '../actions/types';
 
 const INITIAL_STATE = {
@@ -48,9 +49,15 @@ export default (state = INITIAL_STATE, action) => {
     // Updates list name prop based on what the user has passed in
     case LIST_NAME_CHANGED:
       return { ...state, listName: action.payload };
+
     // Updates lists without deleted list
     case DELETE_LIST:
       return { ...state, lists: action.payload };
+
+    // Added By Bill  - step 9
+    case ADD_ITEM_TO_LIST:
+      return { ...state, title: action.payload }; 
+
     default:
       return state;
   }

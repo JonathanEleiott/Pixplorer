@@ -16,3 +16,7 @@ export const ADD_LIST_TO_DB = 'add_list_to_db';
 export const DELETE_ITEM = 'delete_item';
 export const LIST_NAME_CHANGED = 'list_name_changed';
 export const DELETE_LIST = 'delete_list';
+
+// Bill Added - step 7
+export const ADD_ITEM_TO_LIST = 'add_item_to_list';
+

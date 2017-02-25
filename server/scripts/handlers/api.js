@@ -123,7 +123,35 @@ module.exports = {
             res.send('An error occured');
           });
   }, 
+  // Create New list
+  itemsCreate: (req, res) => { 
+    console.log(`Serving ${req.method} request for ${req.url} (handlers/api.itemsCreate)`);
 
+    console.log('body:', req.body);
+    //const newName = req.body.listName ? req.body.listName : 'Hello Jon.';
+
+    new Item(
+      {
+        name: req.body.name,
+        description: req.body.desc, 
+        list_id: req.body.listId
+      })
+      .save()
+      .then((model) => {
+        console.log('model:', model);
+        return model.get('id');
+      })
+      .then(() => {
+        return new List({ id: req.body.listId })
+          .fetch({ withRelated: ['items'] })
+          .then((list) => { 
+            res.send(list.toJSON());
+          }).catch((error) => {
+            console.log(error);
+            res.send('An error occured');
+          });
+      });
+  },
   itemsDelete: (req, res) => { 
     console.log(`Serving ${req.method} request for ${req.url} (handlers/api.itemsDelete)`);
 
