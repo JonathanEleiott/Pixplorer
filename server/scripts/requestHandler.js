@@ -108,7 +108,8 @@ module.exports = {
         sendResponse(res, 404, '', 'Error');
       } if (data) {
         console.log('Upload Success ', data.Location);
-        sendResponse(res, 201, headers, 'Image successfuly saved!');
+        //sendResponse(res, 201, headers, 'Image successfuly saved!');
+        res.json(data);
       }
     });   
   },
