@@ -25,7 +25,7 @@ module.exports = {
           if (!result) {
             result = new this.userData(query);
           }
-        }
+        } 
 
         result.save((error, document) => {
           if (!error) {
