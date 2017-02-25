@@ -82,6 +82,10 @@ app.post('/api/items', (req, res) => {
   requestHandlerAPI.itemsCreate(req, res);
 });
 
+app.post('/api/items/found', (req, res) => {
+  requestHandlerAPI.itemsFound(req, res);
+});
+
 app.delete('/api/items/:item_id/:list_id', (req, res) => {
   requestHandlerAPI.itemsDelete(req, res);
 });

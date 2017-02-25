@@ -181,6 +181,37 @@ module.exports = {
             res.send('An error occured');
           });
   },
+  itemsFound: (req, res) => { 
+    console.log(`Serving ${req.method} request for ${req.url} (handlers/api.itemsFound)`);
+
+    console.log('BODY', req.body.item);
+
+
+    const itemId = req.body.item.id;
+    const listId = req.body.item.list_id;
+    console.log('ID ON SERVER', itemId);
+    new Item({ id: itemId })
+      .save({ complete: 1 }, { patch: true })
+      .then(() => {
+            console.log('Item Deleted:', itemId);
+
+            new List({ id: listId })
+              .fetch({ withRelated: ['items'] })
+              .then((list) => { 
+                res.send(list.toJSON());
+              }).catch((error) => {
+                console.log(error);
+                res.send('An error occured');
+              });
+          }).catch((error) => {
+            console.log(error);
+            res.send('An error occured');
+          })
+      .catch((error) => {
+            console.log(error);
+            res.send('An error occured');
+          });
+  },
   // Return ALL lists, with ALL related items nested
   all: (req, res) => { 
     console.log(`Serving ${req.method} request for ${req.url} (handlers/api.all)`);
