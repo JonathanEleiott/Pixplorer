@@ -59,7 +59,7 @@ class HuntingList extends Component {
           <Text
             style={nameStyle}
             onPress={this.uncheckedBoxClicked.bind(this)}
-          >{ `${item.name}` }
+          >{ `${item.name} ` }
           <CardSection style={{ paddingLeft: 25, width: 300, height: 300 }}>
             <Text
                 style={descriptionStyle}
