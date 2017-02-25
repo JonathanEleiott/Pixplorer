@@ -12,7 +12,7 @@ import {
   ADD_LIST_TO_DB,
   DELETE_ITEM,
   LIST_NAME_CHANGED,
-  DELETE_LIST, 
+  DELETE_LIST,
   ADD_ITEM_TO_LIST // Added by Bill - Step 5
 } from './types';
 
@@ -87,7 +87,7 @@ export const importLists = () => {
 
 // Attempts to add a new list to the DB and sends user to the new lists hunting list
 export const addListToDB = (listName) => {
-  return () => {
+  return (dispatch) => {
     axios({
       method: 'post',
       url: `${listUrl}lists`,
@@ -96,10 +96,10 @@ export const addListToDB = (listName) => {
     .then(response => {
       console.log('response', response.data);
       goToHuntingList(response.data.items, response.data.name);
-      return {
+      dispatch({
         type: ADD_LIST_TO_DB,
         payload: response.data
-      };
+      });
     })
     .catch(error => {
       console.log('error in addListToDB call', error);
