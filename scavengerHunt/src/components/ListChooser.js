@@ -13,11 +13,6 @@ import { titleClicked, createListClicked, importLists, deleteList } from '../act
 // import listOfHunts from '../listOfHunts.json'; /////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 
-///////////////////////////////////////////////////////////////////////////////
-// LIST OF HUNTS IS A HARDCODED JSON FILE!!! REPLACE WITH AJAX CALL TO DB... //
-// import listOfHunts from '../listOfHunts.json';//////////////////////////////
-///////////////////////////////////////////////////////////////////////////////
-
 class ListChooser extends Component {
 
   // Sets lists to all the lists in the DB
@@ -37,7 +32,6 @@ class ListChooser extends Component {
 
   //Deletes a list from the DB
   deleteListFromDB(listName) {
-    console.log('listName in deleteListFromDB', listName);
     this.props.deleteList(listName);
   }
 
@@ -53,10 +47,7 @@ class ListChooser extends Component {
               key: Math.random(),
               text: 'Delete',
               backgroundColor: 'red',
-              onPress: () => {
-                console.log('propsLists', this.props.lists);
-                this.deleteListFromDB(title);
-              }
+              onPress: () => this.deleteListFromDB(title)
             }];
             return (
               <Swipeout key={index} right={swipeButts}>
