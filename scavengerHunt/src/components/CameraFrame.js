@@ -71,7 +71,6 @@ class CameraFrame extends Component {
           console.log('Image Size:', imageData.length);
           axios({
               method: 'post',
-              //responseType: 'arraybuffer',
               url: 'http://localhost:8080/postImage',
               //url: 'http://198.199.94.223:8080/postImage',
               data: { imageBuffer: imageData }
