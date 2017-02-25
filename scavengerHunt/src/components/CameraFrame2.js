@@ -60,14 +60,15 @@ class CameraFrame extends Component {
           console.log('Image Size:', imageData.length);
           axios({
               method: 'post',
-              url: 'http://localhost:8080/api/items/found',
+              url: 'https://0d85f7f0.ngrok.io/api/items/found',
               //url: 'http://198.199.94.223:8080/postImage',
               data: { item: this.props.item, imageBuffer: imageData }
             })
             .then((response) => {
               console.log('SUCCESS: Image sent to server:', response.data);
               this.setState({
-                currentList: response.data
+                currentList: response.data,
+                status: 4, 
               });
             })
             .catch((error) => {
@@ -86,6 +87,14 @@ class CameraFrame extends Component {
         </Text>
      
         <Text style={styles.capture} onPress={this.handleSubmit}>Next!</Text>
+      </View>
+    );
+  }
+
+  renderAnalyzing() {
+    return (
+      <View style={styles.splash}>
+        <Text style={styles.splashHeader}>Analyzing...</Text>
       </View>
     );
   }
@@ -137,6 +146,12 @@ class CameraFrame extends Component {
     } else if (this.state.status === 3) {
       return (
         <View style={styles.containerForm}>
+          {this.renderAnalyzing()}
+        </View>
+      );
+    } else if (this.state.status === 4) {
+      return (
+        <View style={styles.containerAnalyzing}>
           {this.renderForm()}
         </View>
       );
@@ -179,6 +194,10 @@ const styles = StyleSheet.create({
   containerForm: {
     flex: 1,
   }, 
+  containerAnalyzing: {
+    flex: 1,
+    backgroundColor: '#ccc',
+  },
   splash: {
     flex: 1,
     justifyContent: 'center',

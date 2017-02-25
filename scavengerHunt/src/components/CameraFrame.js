@@ -71,7 +71,7 @@ class CameraFrame extends Component {
           console.log('Image Size:', imageData.length);
           axios({
               method: 'post',
-              url: 'http://localhost:8080/postImage',
+              url: 'https://0d85f7f0.ngrok.io/postImage',
               //url: 'http://198.199.94.223:8080/postImage',
               data: { imageBuffer: imageData }
             })
