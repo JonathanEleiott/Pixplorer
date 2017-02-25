@@ -13,7 +13,9 @@ import {
   DELETE_ITEM,
   LIST_NAME_CHANGED,
   DELETE_LIST,
-  ADD_ITEM_TO_LIST // Added by Bill - Step 5
+  ADD_ITEM_TO_LIST, // Added by Bill - Step 5
+  SUCCESS,
+  LOADING
 } from './types';
 
 /////////////////////////////////////////////////////////////
@@ -22,7 +24,7 @@ import {
 ////////////////////////////////////////////////////////////
 
 // USE HTTPS WHEN MAKING AN AJAX CALL
-const listUrl = 'https://618de498.ngrok.io/api/';
+const listUrl = 'https://0d85f7f0.ngrok.io/api/';
 
 
 // Goes to hunting list for the list title that was clicked on
@@ -66,7 +68,7 @@ export const clickedUncheckedBox = (title) => {
 // Imports all the lists from the DB
 export const importLists = () => {
   console.log('importLists');
-
+  loading();
   return (dispatch) => {
     axios({
       method: 'get',
@@ -78,6 +80,7 @@ export const importLists = () => {
         type: IMPORT_LISTS,
         payload: response.data
       });
+      success();
     })
     .catch(error => {
       console.log('error', error);
@@ -87,6 +90,7 @@ export const importLists = () => {
 
 // Attempts to add a new list to the DB and sends user to the new lists hunting list
 export const addListToDB = (listName) => {
+  loading();
   return (dispatch) => {
     axios({
       method: 'post',
@@ -100,6 +104,7 @@ export const addListToDB = (listName) => {
         type: ADD_LIST_TO_DB,
         payload: response.data
       });
+      success();
     })
     .catch(error => {
       console.log('error in addListToDB call', error);
@@ -110,6 +115,7 @@ export const addListToDB = (listName) => {
 // Deletes an item in the DB
 export const deleteItem = (item, list) => {
   console.log('item in deleteItem', item, list);
+  loading();
   return (dispatch) => {
     axios({
       method: 'delete',
@@ -122,6 +128,7 @@ export const deleteItem = (item, list) => {
         type: DELETE_ITEM,
         payload: response.data
       });
+      success();
     })
     .catch(error => {
       console.log('error in addListToDB call', error);
@@ -134,6 +141,7 @@ export const deleteList = (listName) => {
   // PULL IN WHOLE LIST
   // SEND BILLY THE LIST ID
   console.log('listName', listName);
+  loading();
   return (dispatch) => {
     axios({
       method: 'delete',
@@ -146,6 +154,7 @@ export const deleteList = (listName) => {
         type: DELETE_LIST,
         payload: response.data
       });
+      success();
     })
     .catch(error => {
       console.log('error in addListToDB call', error);
@@ -164,6 +173,7 @@ export const listNameChanged = (name) => {
 // BILL
 // STEP 6
 export const addItemToList = (item) => {
+  loading();
   return (dispatch) => {
     axios({
       method: 'post',
@@ -177,6 +187,7 @@ export const addItemToList = (item) => {
         type: ADD_ITEM_TO_LIST,
         payload: response.data
       });
+      success();
     })
     .catch(error => {
       console.log('Error in addItemToList call', error);
@@ -207,4 +218,16 @@ const goToCamera = (title) => {
   // IF YOU DON'T WANT A BACK BUTON //
   ////////////////////////////////////
   Actions.cameraFrame({ listId: title.id });
+};
+
+export const loading = () => {
+  return {
+    type: LOADING
+  };
+};
+
+export const success = () => {
+  return {
+    type: SUCCESS
+  };
 };

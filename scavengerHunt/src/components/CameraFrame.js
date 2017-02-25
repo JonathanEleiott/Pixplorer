@@ -4,7 +4,7 @@ import {
   Dimensions,
   StyleSheet,
   Text,
-  View, 
+  View,
   Vibration
 } from 'react-native';
 import Camera from 'react-native-camera';
@@ -61,7 +61,7 @@ class CameraFrame extends Component {
         console.log('DATA IMG:', data.path);
 
         this.setState({
-          status: 3, 
+          status: 3,
           newItemURL: data.path
         });
 
@@ -202,10 +202,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#F5FCFF',
-  }, 
+  },
   containerForm: {
     flex: 1,
-  }, 
+  },
   splash: {
     flex: 1,
     justifyContent: 'center',
