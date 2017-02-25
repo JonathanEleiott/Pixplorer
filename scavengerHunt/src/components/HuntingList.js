@@ -69,9 +69,9 @@ class HuntingList extends Component {
   }
 
   // Returns listTitle based on whether the item has been found or not
-  foundItemChecker(foundItem, item) {
+  isComplete(complete, item) {
     console.log('foundItemChecker');
-    if (foundItem === true) {
+    if (complete === 1) {
       return (
         this.listTitle(item, true)
       );
@@ -101,7 +101,7 @@ class HuntingList extends Component {
         }];
         return (
           <Swipeout key={index} right={swipeButtons}>
-            { this.foundItemChecker(item.foundItem, item) }
+            { this.isComplete(item.complete, item) }
           </Swipeout>
         );
       });

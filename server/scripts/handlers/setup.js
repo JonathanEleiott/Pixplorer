@@ -41,6 +41,8 @@ module.exports = {
             table.increments().primary();
             table.string('name');
             table.string('description');
+            table.string('image');
+            table.boolean('complete').defaultTo(false);
             table.timestamps();
             table.integer('list_id').unsigned().references('lists.id');
         })
