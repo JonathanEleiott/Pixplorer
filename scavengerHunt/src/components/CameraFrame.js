@@ -97,6 +97,7 @@ class CameraFrame extends Component {
             placeholder="Golden Gate Bridge"
             onChangeText={(text) => this.setState({ newItemName: text })}
             value={this.state.newItemName}
+            maxLength={28}
           />
         </CardSection>
 
@@ -106,6 +107,7 @@ class CameraFrame extends Component {
             placeholder="Grab a shot of this iconic landmark!"
             onChangeText={(text) => this.setState({ newItemDesc: text })}
             value={this.state.newItemDesc}
+            maxLength={60}
           />
         </CardSection>
         <CardSection>

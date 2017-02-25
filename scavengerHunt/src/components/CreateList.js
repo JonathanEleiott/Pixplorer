@@ -27,6 +27,7 @@ class CreateList extends Component {
             placeholder="My Hunt"
             onChangeText={this.onListNameChange.bind(this)}
             value={this.props.huntName}
+            maxLength={28}
           />
         </CardSection>
         <CardSection>

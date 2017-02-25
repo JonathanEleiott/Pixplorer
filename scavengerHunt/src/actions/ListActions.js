@@ -213,7 +213,7 @@ const goToCreateList = () => {
 
 // Goes to the list choosing page
 const goToListChooser = () => {
-  Actions.listChooser();
+  Actions.listChooser({ showDelete: false });
 };
 
 // Goes to the hunting list screen

@@ -50,7 +50,7 @@ class HuntingList extends Component {
       );
     } else if (this.props.title) {
       return (
-        <CardSection style={{ borderBottomWidth: 0, padding: 20, height: 100 }}>
+        <CardSection style={{ borderBottomWidth: 0, padding: 20, height: 120 }}>
           <Image
             source={emptyCheckbox}
             style={{ width: 30, height: 30 }}
@@ -98,7 +98,6 @@ class HuntingList extends Component {
 
   // Makes an AJAX call to change an item from active to inactive
   deleteItem(item) {
-    console.log('delete this item');
     this.props.deleteItem(item, this.props.title);
   }
 
