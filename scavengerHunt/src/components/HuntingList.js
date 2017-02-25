@@ -15,10 +15,14 @@ import checkedCheckbox from '../images/checkedCheckbox.png';
 ////////////////////////////////////////////////////////
 
 class HuntingList extends Component {
+  /////////////////////////////////////////////////////
+  // FONT STYLES IN BOTH CHECKED AND UNCHECKED BOXES //
+  /////////////////////////////////////////////////////
 
   // Displays item with checked/unchecked box based on if it has been found yet
   listTitle(item, bool) {
     console.log('listTitle', item, bool);
+    const { nameStyle, descriptionStyle } = styles;
     if (this.props.title && bool) {
       return (
         <CardSection style={{ borderBottomWidth: 0, padding: 20 }}>
@@ -28,31 +32,35 @@ class HuntingList extends Component {
             alt="checked checkbox"
           />
           <Text
-            style={{
-              paddingLeft: 10,
-              fontSize: 20,
-              width: 250,
-              color: 'green'
-            }}
-          >{ item.name }</Text>
+            style={nameStyle}
+            onPress={this.uncheckedBoxClicked.bind(this)}
+          >{ `${item.name} ${'\n'}` }
+          <Text
+              style={descriptionStyle}
+          >{`${item.description}`}
+          </Text>
+          </Text>
         </CardSection>
       );
     } else if (this.props.title) {
       return (
-        <CardSection style={{ borderBottomWidth: 0, padding: 20 }}>
+        <CardSection style={{ borderBottomWidth: 0, padding: 20, height: 100 }}>
           <Image
             source={emptyCheckbox}
             style={{ width: 30, height: 30 }}
             alt="empty checkbox"
           />
           <Text
-            style={{
-              paddingLeft: 10,
-              fontSize: 20,
-              width: 250
-            }}
+            style={nameStyle}
             onPress={this.uncheckedBoxClicked.bind(this)}
-          >{ item.name }</Text>
+          >{ `${item.name} ${'\n'}` }
+          <CardSection style={{ paddingLeft: 25, width: 300, height: 300 }}>
+            <Text
+                style={descriptionStyle}
+            >{`${item.description}`}
+            </Text>
+          </CardSection>
+          </Text>
         </CardSection>
       );
     }
@@ -120,6 +128,18 @@ class HuntingList extends Component {
     );
   }
 }
+
+const styles = {
+  nameStyle: {
+    paddingLeft: 10,
+    fontSize: 20,
+    maxWidth: 300
+  },
+  descriptionStyle: {
+    fontSize: 16,
+    color: '#666'
+  }
+};
 
 const mapStateToProps = ({ list }) => {
   const { title } = list;
