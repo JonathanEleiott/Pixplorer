@@ -7,7 +7,7 @@ import HuntingList from './components/HuntingList';
 import ListChooser from './components/ListChooser';
 import CreateList from './components/CreateList';
 import CameraFrame from './components/CameraFrame';
-import CameraFrame2 from './components/CameraFrame2';
+import TestItem from './components/TestItem';
 
 //TODO: MAke sure to put the components back! Right now it goes straight to camera!!!
 const RouterComponent = () => {
@@ -35,8 +35,8 @@ const RouterComponent = () => {
           title="Add Item"
         />
         <Scene
-          key="cameraFrame2"
-          component={CameraFrame2}
+          key="testItem"
+          component={TestItem}
           title="Found Item"
         />
       </Scene>

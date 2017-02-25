@@ -44,7 +44,7 @@ class CameraFrame extends Component {
 
       // Step 1
       // Add item to Database and redirect user to updated list
-      this.props.addItemToList(item);
+      this.props.addItemToList(1, item);
   }
 
   openCamera() {

@@ -10,12 +10,12 @@ import {
 import Camera from 'react-native-camera';
 import axios from 'axios';
 import RNFetchBlob from 'react-native-fetch-blob';
-import { Card, CardSection, Button, Input } from './mostCommon';
+//import { Card, CardSection, Button, Input } from './mostCommon';
 
 // Step 2
 import { addItemToList } from '../actions';
 
-class CameraFrame extends Component {
+class TestItem extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -33,7 +33,7 @@ class CameraFrame extends Component {
   handleSubmit() {
       // Step 1
       // Add item to Database and redirect user to updated list
-      this.props.addItemToList(null, 2, this.state.currentList);
+      this.props.addItemToList(2, this.state.currentList);
   }
 
   openCamera() {
@@ -58,6 +58,7 @@ class CameraFrame extends Component {
         .then((imageData) => {
           // handle the data ..
           console.log('Image Size:', imageData.length);
+          console.log('Start S3 Upload');
           axios({
               method: 'post',
               url: 'https://0d85f7f0.ngrok.io/api/items/found',
@@ -93,7 +94,7 @@ class CameraFrame extends Component {
 
   renderAnalyzing() {
     return (
-      <View style={styles.splash}>
+      <View style={styles.analyzing}>
         <Text style={styles.splashHeader}>Analyzing...</Text>
       </View>
     );
@@ -151,7 +152,7 @@ class CameraFrame extends Component {
       );
     } else if (this.state.status === 4) {
       return (
-        <View style={styles.containerAnalyzing}>
+        <View style={styles.containerForm}>
           {this.renderForm()}
         </View>
       );
@@ -194,9 +195,12 @@ const styles = StyleSheet.create({
   containerForm: {
     flex: 1,
   }, 
-  containerAnalyzing: {
+  analyzing: {
     flex: 1,
-    backgroundColor: '#ccc',
+    justifyContent: 'center',
+    alignSelf: 'stretch',
+    alignItems: 'center',
+    backgroundColor: '#49cc52'
   },
   splash: {
     flex: 1,
@@ -235,4 +239,4 @@ const mapStateToProps = ({ list }) => {
 };
 
 // step 4
-export default connect(mapStateToProps, { addItemToList })(CameraFrame);
+export default connect(mapStateToProps, { addItemToList })(TestItem);
