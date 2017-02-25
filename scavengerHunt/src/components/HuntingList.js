@@ -93,7 +93,7 @@ class HuntingList extends Component {
             { this.isComplete(item.complete, item) }
             <Text
               style={nameStyle}
-              onPress={() => this.uncheckedBoxClicked()}
+              onPress={() => this.uncheckedBoxClicked(item)}
             >{ `${item.name} ${'\n'}` }
             <Text
               style={descriptionStyle}
