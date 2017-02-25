@@ -100,7 +100,6 @@ module.exports = {
 
     axios({
         method: 'post',
-        responseType: 'arraybuffer',
         url: 'http://localhost:8084/setImage',
         data: { imageBuffer: imageData }
       })
@@ -109,7 +108,7 @@ module.exports = {
         sendResponse(res, 201, headers, 'Image successfuly saved!');
       })
       .catch((error) => {
-        console.log('AXIOS ERROR', error);
+        console.log('AXIOS ERROR');
         sendResponse(res, 404, '', 'Error');
       });  
   },

@@ -281,7 +281,7 @@ describe('IMAGE UPLOAD', function() {
         method: axiosParams.method,
         responseType: 'arraybuffer',
         url: axiosParams.uri,
-        data: {imageBuffer: imageData}
+        data: { imageBuffer: imageData }
       })
       .then(function(response) {
         expect(response.status).to.equal(201);
@@ -297,7 +297,7 @@ describe('IMAGE UPLOAD', function() {
       if (err) throw err;
       processData(data);
     });
-   
+  
   });
 
 });
