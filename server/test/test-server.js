@@ -272,14 +272,39 @@ var generateParams = function(method, endpoint, optionalParams, optionalUrl) {
 describe('IMAGE UPLOAD', function() {
   
 
-  it('it should post an image to the server', function(done) {
-    var axiosParams = generateParams('post', 'postImage', '');
+  // it('it should post an set a reference image', function(done) {
+  //   var axiosParams = generateParams('post', 'postImage', '');
+
+  //   var processData = function(data) {
+  //     var imageData =  new Buffer(data).toString('base64');
+  //     axios({
+  //       method: axiosParams.method,
+  //       url: axiosParams.uri,
+  //       data: { imageBuffer: imageData }
+  //     })
+  //     .then(function(response) {
+  //       expect(response.status).to.equal(201);
+  //       done();
+  //     })
+  //     .catch(function(error) {
+  //       console.log('error');
+  //       done();
+  //     });
+  //   };
+    
+  //   fs.readFile('computer1.jpg', function(err, data) {
+  //     if (err) throw err;
+  //     processData(data);
+  //   });
+  // });
+
+  it('it should compare an image to the reference image', function(done) {
+    var axiosParams = generateParams('post', 'compareImage', '');
 
     var processData = function(data) {
       var imageData =  new Buffer(data).toString('base64');
       axios({
         method: axiosParams.method,
-        responseType: 'arraybuffer',
         url: axiosParams.uri,
         data: { imageBuffer: imageData }
       })
@@ -293,11 +318,10 @@ describe('IMAGE UPLOAD', function() {
       });
     };
     
-    fs.readFile('red-bull-image.jpg', function(err, data) {
+    fs.readFile('computer2.jpg', function(err, data) {
       if (err) throw err;
       processData(data);
     });
-  
   });
 
 });

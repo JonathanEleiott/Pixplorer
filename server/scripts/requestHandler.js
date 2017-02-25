@@ -113,6 +113,26 @@ module.exports = {
       });  
   },
 
+  compareImage: (req, res) => {
+    //http://localhost:8084/imageMockRoute
+    console.log(`Serving ${req.method} request for ${req.url} (inside requestHandler.compareImage)`);
+    const randomImageName = `${Math.random()}.jpg`;
+    const imageData = new Buffer(req.body.imageBuffer, 'base64');
+
+    axios({
+        method: 'post',
+        url: 'http://localhost:8084/compareImage',
+        data: { imageBuffer: imageData }
+      })
+      .then((response) => {
+        console.log('image successfuly posted');
+        sendResponse(res, 201, headers, 'Image successfuly saved!');
+      })
+      .catch((error) => {
+        console.log('AXIOS ERROR');
+        sendResponse(res, 404, '', 'Error');
+      });  
+  },
   gVision: (req, res) => {
     console.log(`Serving ${req.method} request for ${req.url} (inside requestHandler.gVision)`);
     // The name of the image file to annotate

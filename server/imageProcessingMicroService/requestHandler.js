@@ -10,6 +10,10 @@ module.exports = {
 
   setImage: (req, res) => {
     setImageHandler(req, res);
+  },
+
+  compareImage: (req, res) => {
+    compareImageHandler(req, res);
   }
 };
 
