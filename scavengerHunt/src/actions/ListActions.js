@@ -12,7 +12,8 @@ import {
   ADD_LIST_TO_DB,
   DELETE_ITEM,
   LIST_NAME_CHANGED,
-  DELETE_LIST
+  DELETE_LIST, 
+  ADD_ITEM_TO_LIST // Added by Bill - Step 5
 } from './types';
 
 /////////////////////////////////////////////////////////////
@@ -160,6 +161,29 @@ export const listNameChanged = (name) => {
   };
 };
 
+// BILL
+// STEP 6
+export const addItemToList = (item) => {
+  return (dispatch) => {
+    axios({
+      method: 'post',
+      url: `${listUrl}items`,
+      data: item
+    })
+    .then(response => {
+      console.log('response', response.data);
+      goToHuntingList(response.data.items, response.data.name);
+      dispatch({
+        type: ADD_ITEM_TO_LIST,
+        payload: response.data
+      });
+    })
+    .catch(error => {
+      console.log('Error in addItemToList call', error);
+    });
+  };
+};
+
 // Goes to the create a list screen
 const goToCreateList = () => {
   Actions.createList();
@@ -182,5 +206,5 @@ const goToCamera = (title) => {
   // CHANGE TO Actions.camera() //////
   // IF YOU DON'T WANT A BACK BUTON //
   ////////////////////////////////////
-  Actions.cameraFrame();
+  Actions.cameraFrame({ listId: title.id });
 };

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import {
   Dimensions,
   StyleSheet,
@@ -11,13 +12,39 @@ import axios from 'axios';
 import RNFetchBlob from 'react-native-fetch-blob';
 import { Card, CardSection, Button, Input } from './mostCommon';
 
+// Step 2
+import { addItemToList } from '../actions';
+
 class CameraFrame extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      status: 1
+      status: 1,
+      newItemName: '',
+      newItemDesc: '',
+      newItemURL: '',
+      newItemListId: null
     };
-    console.log('CameraFrame Props:', props);
+
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  handleSubmit() {
+      console.log('FORM SUBMITTED - List ID:', this.props.listId);
+      console.log('Name:', this.state.newItemName);
+      console.log('Desc:', this.state.newItemDesc);
+      console.log('URL:', this.state.newItemURL);
+
+      const item = {
+        listId: this.props.listId,
+        name: this.state.newItemName,
+        desc: this.state.newItemDesc,
+        url: this.state.newItemURL
+      };
+
+      // Step 1
+      // Add item to Database and redirect user to updated list
+      this.props.addItemToList(item);
   }
 
   openCamera() {
@@ -33,6 +60,11 @@ class CameraFrame extends Component {
         Vibration.vibrate();
         console.log('DATA IMG:', data.path);
 
+        this.setState({
+          status: 3, 
+          newItemURL: data.path
+        });
+
         RNFetchBlob.fs.readFile(data.path, 'base64')
         .then((imageData) => {
           // handle the data ..
@@ -40,7 +72,8 @@ class CameraFrame extends Component {
           axios({
               method: 'post',
               responseType: 'arraybuffer',
-              url: 'http://198.199.94.223:8080/postImage',
+              url: 'http://localhost:8080/postImage',
+              //url: 'http://198.199.94.223:8080/postImage',
               data: { imageBuffer: imageData }
             })
             .then((response) => {
@@ -51,6 +84,35 @@ class CameraFrame extends Component {
             });
           });
         });
+  }
+
+  renderForm() {
+    return (
+      <Card>
+        <CardSection>
+          <Input
+            label="Item Name"
+            placeholder="Golden Gate Bridge"
+            onChangeText={(text) => this.setState({ newItemName: text })}
+            value={this.state.newItemName}
+          />
+        </CardSection>
+
+        <CardSection>
+          <Input
+            label="Description"
+            placeholder="Grab a shot of this iconic landmark!"
+            onChangeText={(text) => this.setState({ newItemDesc: text })}
+            value={this.state.newItemDesc}
+          />
+        </CardSection>
+        <CardSection>
+          <Button onPress={this.handleSubmit}>
+            Save Item
+          </Button>
+        </CardSection>
+      </Card>
+    );
   }
 
   renderCamera() {
@@ -97,6 +159,12 @@ class CameraFrame extends Component {
         {this.renderCamera()}
         </View>
       );
+    } else if (this.state.status === 3) {
+      return (
+        <View style={styles.containerForm}>
+          {this.renderForm()}
+        </View>
+      );
     }
   }
 }
@@ -133,6 +201,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#F5FCFF',
   }, 
+  containerForm: {
+    flex: 1,
+  }, 
   splash: {
     flex: 1,
     justifyContent: 'center',
@@ -163,4 +234,11 @@ const styles = StyleSheet.create({
 
 });
 
-export default CameraFrame;
+// step 3
+const mapStateToProps = ({ list }) => {
+  const { title } = list;
+  return { title };
+};
+
+// step 4
+export default connect(mapStateToProps, { addItemToList })(CameraFrame);
