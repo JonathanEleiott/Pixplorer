@@ -18,13 +18,15 @@ import {
   LOADING
 } from './types';
 
+import config from '../config.js';
+
 /////////////////////////////////////////////////////////////
 // THIS IS A TEST JSON FILE!!! SWITCH TO DB WHEN READY... //
 // import testDB from '../testDB.json'; ////////////////////
 ////////////////////////////////////////////////////////////
 
 // USE HTTPS WHEN MAKING AN AJAX CALL
-const listUrl = 'https://0d85f7f0.ngrok.io/api/';
+const listUrl = config.mainServer;
 
 
 // Goes to hunting list for the list title that was clicked on
@@ -72,7 +74,7 @@ export const importLists = () => {
   return (dispatch) => {
     axios({
       method: 'get',
-      url: `${listUrl}all`
+      url: `${listUrl}/api/all`
     })
     .then(response => {
       console.log('axios success', response.data);
@@ -94,7 +96,7 @@ export const addListToDB = (listName) => {
   return (dispatch) => {
     axios({
       method: 'post',
-      url: `${listUrl}lists`,
+      url: `${listUrl}/api/lists`,
       data: listName
     })
     .then(response => {
@@ -119,7 +121,7 @@ export const deleteItem = (item, list) => {
   return (dispatch) => {
     axios({
       method: 'delete',
-      url: `${listUrl}items/${item.id}/${list.id}`
+      url: `${listUrl}/api/items/${item.id}/${list.id}`
     })
     .then(response => {
       console.log('response', response.data);
@@ -145,7 +147,7 @@ export const deleteList = (listName) => {
   return (dispatch) => {
     axios({
       method: 'delete',
-      url: `${listUrl}lists/${listName.id}`
+      url: `${listUrl}/api/lists/${listName.id}`
     })
     .then(response => {
       console.log('response', response.data);
@@ -189,7 +191,7 @@ export const addItemToList = (type = 1, itemOrList) => {
     const item = itemOrList;
     axios({
       method: 'post',
-      url: `${listUrl}items`,
+      url: `${listUrl}/api/items`,
       data: item
     })
     .then(response => {

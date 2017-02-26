@@ -1,17 +1,6 @@
 const headers = require('../headers');
 
-const knex = require('knex')({
-  client: 'mysql',
-  connection: {
-    host: '127.0.0.1',
-    user: 'root',
-    password: '',
-    database: 'thesis',
-    charset: 'utf8'
-  }
-});
-
-const bookshelf = require('bookshelf')(knex);
+const bookshelf = require('../bookshelf');
 
 // Our Models
 const List = bookshelf.Model.extend({
