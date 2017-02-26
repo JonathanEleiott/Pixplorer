@@ -105,10 +105,10 @@ module.exports = {
       })
       .then((response) => {
         console.log('image successfuly posted');
-        sendResponse(res, 201, headers, 'Image successfuly saved!');
+        sendResponse(res, 201, headers, response.data);
       })
       .catch((error) => {
-        console.log('AXIOS ERROR');
+        console.log('AXIOS ERROR', error);
         sendResponse(res, 404, '', 'Error');
       });  
   },
@@ -122,11 +122,11 @@ module.exports = {
     axios({
         method: 'post',
         url: 'http://localhost:8084/compareImage',
-        data: { imageBuffer: imageData }
+        data: { imageBuffer: imageData, referenceImageId: req.body.referenceImageId }
       })
       .then((response) => {
         console.log('image successfuly posted');
-        sendResponse(res, 201, headers, 'Image successfuly saved!');
+        sendResponse(res, 201, headers, response.data);
       })
       .catch((error) => {
         console.log('AXIOS ERROR');

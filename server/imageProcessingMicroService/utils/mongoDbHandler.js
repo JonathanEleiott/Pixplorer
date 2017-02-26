@@ -4,14 +4,13 @@ const Schema = mongoose.Schema;
 mongoose.connect('mongodb://localhost/test');
 
 const usersSchema = new Schema({
-  username: { type: String, required: true, unique: true },
-  imageLabel: { type: String, required: true, unique: true },
   s3ImageLocation: String,
   GoogleVisionResultLabels: String,
 }, { collection: 'img' });
 
 const compareImageLabels = function (referenceImageFromDBLabels, newImageLabels) {
   referenceImageFromDBLabels = JSON.parse(referenceImageFromDBLabels);
+  // newImageLabels = JSON.parse(newImageLabels);
   const comaprisonObjectFilter = {};
   let similarityScore = 0;
 
@@ -27,40 +26,46 @@ const compareImageLabels = function (referenceImageFromDBLabels, newImageLabels)
   console.log('Similarity Score: ', similarityScore / referenceImageFromDBLabels.length);
   return similarityScore / referenceImageFromDBLabels.length >= 0.5;
 };
+const model = mongoose.model('UserData', usersSchema);
 
 module.exports = {
-  userData: mongoose.model('UserData', usersSchema),
+  userData: model,
 
-  setImage: function (username, imageLabel, fieldToUpdate, data) {
-    const query = { imageLabel, username };
-    const update = { [fieldToUpdate]: JSON.stringify(data) };
+  setImage: (s3ImageLocation, GoogleVisionResultLabels, respond) => {
+    console.log('ANALYZE', respond);
+    const query = {};
+    const update = { s3ImageLocation: JSON.stringify(s3ImageLocation), GoogleVisionResultLabels: JSON.stringify(GoogleVisionResultLabels) };
     const options = { upsert: true, new: true, setDefaultsOnInsert: true };
 
     // Find the document
-    this.userData.findOneAndUpdate(query, update, options, (error, result) => {
-        console.log('RESULT', result);
-        result = result || new this.userData(query);
+    model.findOneAndUpdate(query, update, options, (error, result) => {
+        // console.log('RESULT', result);
+        result = result || new model(query);
         
-        result.save((error, success) => {
-          if (error) {
-            console.log('ERROR on SAVE', error);
-          } else {
-            console.log('SUCCESS on SAVE', success);
+        result.save((error, savedEntry) => {
+          if (error && respond) {
+            respond(404, 'Error saving the image!');
+          } else if (respond) {
+            respond(201, savedEntry.id);
           }
         });
     });
   },
 
-  compareImage: function(username, imageLabel, fieldToUpdate, data, callback) {
-    const query = { imageLabel };
-    this.userData.findOne(query, {}, (err, imageFromDB) => {
+  compareImage: (comparisonImageId, googleImageLabelsToCompare, respond) => {
+    const query = { _id: comparisonImageId };
+    model.findOne(query, {}, (err, imageFromDB) => {
       if (err) {
-        console.log('Error finding the image', error);
-        callback(404, 'Error finding the image!');
+        console.log('Error finding the image', err);
+        respond(404, 'Error finding the image!');
       } else {
-        console.log('Image Found!', 'FROM MONGO: ', imageFromDB.GoogleVisionResultLabels, 'FROM GOOGLE: ', data);
-        console.log('IMAGES ARE THE SAME: ', compareImageLabels(imageFromDB.GoogleVisionResultLabels, data));
-        callback(200, 'IMAGE FOUND!');
+        console.log(imageFromDB);
+        const comparison = compareImageLabels(imageFromDB.GoogleVisionResultLabels, googleImageLabelsToCompare);
+        if (comparison) {
+          respond(201, 'Images are the same!');
+        } else {
+          respond(404, 'Images are not the same!');
+        }
       }
     });
   }

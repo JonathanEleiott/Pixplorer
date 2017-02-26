@@ -11,29 +11,31 @@ const getImageBuffer = function (imageFromRequestBody) {
 module.exports = (req, res) => {
     console.log(`Serving ${req.method} request for ${req.url} (inside requestHandler.postImage)`);
     const imageBuffer = getImageBuffer(req.body.imageBuffer);
-    const imageLabel = req.body.imageLabel || 'Red Bull Can';
-    const username = req.body.username || 'Dan';
 
-    // const newUser = new updateMongo.userData(item);
-    const sendToS3andGoogleVision = function (username) {
-      uploadImageToS3(imageBuffer, (s3ImageLocation) => {
-        if (s3ImageLocation[0] === 'error') {
-          console.log('Error storing to S3');
-          sendResponse(res, 404, headers, 'Error storing to S3');
-        } else {
-         mongoHandler.setImage(username, imageLabel, 's3ImageLocation', s3ImageLocation[1]);
-        }
-      });
+    const sendToGoogleVision = function(s3ImageLocation) {
+      analyzeImageViaGoogleVision(imageBuffer, (googleImageLabels) => {
+        if (googleImageLabels[0] === 'error') {
 
-      analyzeImageViaGoogleVision(imageBuffer, (resultLabels) => {
-        if (resultLabels[0] === 'error') {
           console.log('Error storing to S3');
-          sendResponse(res, 404, headers, 'Error storing to S3');
         } else {
-         mongoHandler.setImage(username, imageLabel, 'GoogleVisionResultLabels', resultLabels[1]);
+         mongoHandler.setImage(
+          s3ImageLocation, 
+          googleImageLabels[1],
+          (statusCode, message) => {
+            console.log('ANALYZE');
+            console.log(sendResponse);
+            sendResponse(res, statusCode, headers, message);
+          });
         }
       });
     };
-
-    sendToS3andGoogleVision(username);
+    
+    // const newUser = new updateMongo.userData(item);
+    uploadImageToS3(imageBuffer, (s3ImageLocation) => {
+      if (s3ImageLocation[0] === 'error') {
+        console.log('Error storing to S3');
+      } else {
+        sendToGoogleVision(s3ImageLocation[1]);
+      }
+    });
 };

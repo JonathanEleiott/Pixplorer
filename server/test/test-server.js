@@ -271,11 +271,11 @@ var generateParams = function(method, endpoint, optionalParams, optionalUrl) {
 
 describe('IMAGE UPLOAD', function() {
   
-
-  // it('it should post an set a reference image', function(done) {
+  // it('it should set a reference image', function(done) {
   //   var axiosParams = generateParams('post', 'postImage', '');
 
   //   var processData = function(data) {
+
   //     var imageData =  new Buffer(data).toString('base64');
   //     axios({
   //       method: axiosParams.method,
@@ -283,11 +283,13 @@ describe('IMAGE UPLOAD', function() {
   //       data: { imageBuffer: imageData }
   //     })
   //     .then(function(response) {
+  //       console.log(response.data);
   //       expect(response.status).to.equal(201);
+  //       expect(response.data).to.exist;
   //       done();
   //     })
   //     .catch(function(error) {
-  //       console.log('error');
+  //       console.log('error', error);
   //       done();
   //     });
   //   };
@@ -306,10 +308,11 @@ describe('IMAGE UPLOAD', function() {
       axios({
         method: axiosParams.method,
         url: axiosParams.uri,
-        data: { imageBuffer: imageData }
+        data: { imageBuffer: imageData, referenceImageId: '58b22e4ae51d24475e3961c0' }
       })
       .then(function(response) {
         expect(response.status).to.equal(201);
+        expect(response.data).to.equal('Images are the same!');
         done();
       })
       .catch(function(error) {
@@ -323,6 +326,5 @@ describe('IMAGE UPLOAD', function() {
       processData(data);
     });
   });
-
 });
 
