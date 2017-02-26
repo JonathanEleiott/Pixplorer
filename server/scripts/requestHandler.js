@@ -1,5 +1,6 @@
 const gcloud = require('google-cloud');
 const AWS = require('aws-sdk');
+const axios = require('axios');
 const firebase = require('./firebaseConfig');
 const headers = require('./headers');
 
@@ -13,6 +14,7 @@ const vision = gcloud.vision({
 const s3 = new AWS.S3();
 
 const sendResponse = function (res, statusCode, headersSent, responseMessage) {
+  console.log(responseMessage);
   res.writeHead(statusCode, headersSent);
   res.end(responseMessage);
 };
@@ -92,28 +94,46 @@ module.exports = {
   },
   
   postImage: (req, res) => {
+    //http://localhost:8084/imageMockRoute
     console.log(`Serving ${req.method} request for ${req.url} (inside requestHandler.postImage)`);
     const randomImageName = `${Math.random()}.jpg`;
-    const imageBuffer = new Buffer(req.body.imageBuffer, 'base64');
+    const imageData = new Buffer(req.body.imageBuffer, 'base64');
 
-    const params = {
-      Bucket: 'image-upload-folder',
-      Key: randomImageName,
-      Body: imageBuffer
-    };
-
-    s3.upload(params, (err, data) => {
-      if (err) {
-        console.log('Upload Error ', err);
+    axios({
+        method: 'post',
+        url: 'http://54.202.3.62:8084/setImage',
+        data: { imageBuffer: imageData }
+      })
+      .then((response) => {
+        console.log('image successfuly posted', response.data);
+        sendResponse(res, 201, headers, response.data);
+      })
+      .catch((error) => {
+        console.log('AXIOS ERROR', error);
         sendResponse(res, 404, '', 'Error');
-      } if (data) {
-        console.log('Upload Success ', data.Location);
-        //sendResponse(res, 201, headers, 'Image successfuly saved!');
-        res.json(data);
-      }
-    });   
+      });  
   },
 
+  compareImage: (req, res) => {
+    //http://localhost:8084/imageMockRoute
+    console.log(`Serving ${req.method} request for ${req.url} (inside requestHandler.compareImage)`);
+    const randomImageName = `${Math.random()}.jpg`;
+    const imageData = new Buffer(req.body.imageBuffer, 'base64');
+
+    axios({
+        method: 'post',
+        url: 'http://54.202.3.62:8084/compareImage',
+        data: { imageBuffer: imageData, referenceImageId: req.body.referenceImageId }
+      })
+      .then((response) => {
+        console.log('image successfuly posted', response);
+        sendResponse(res, 201, headers, response.data);
+      })
+      .catch((error) => {
+        console.log('AXIOS ERROR');
+        sendResponse(res, 404, '', 'Error');
+      });  
+  },
   gVision: (req, res) => {
     console.log(`Serving ${req.method} request for ${req.url} (inside requestHandler.gVision)`);
     // The name of the image file to annotate
