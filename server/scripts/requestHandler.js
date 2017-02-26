@@ -14,6 +14,7 @@ const vision = gcloud.vision({
 const s3 = new AWS.S3();
 
 const sendResponse = function (res, statusCode, headersSent, responseMessage) {
+  console.log(responseMessage);
   res.writeHead(statusCode, headersSent);
   res.end(responseMessage);
 };
@@ -100,11 +101,11 @@ module.exports = {
 
     axios({
         method: 'post',
-        url: 'http://localhost:8084/setImage',
+        url: 'http://54.202.3.62:8084/setImage',
         data: { imageBuffer: imageData }
       })
       .then((response) => {
-        console.log('image successfuly posted');
+        console.log('image successfuly posted', response.data);
         sendResponse(res, 201, headers, response.data);
       })
       .catch((error) => {
@@ -121,11 +122,11 @@ module.exports = {
 
     axios({
         method: 'post',
-        url: 'http://localhost:8084/compareImage',
+        url: 'http://54.202.3.62:8084/compareImage',
         data: { imageBuffer: imageData, referenceImageId: req.body.referenceImageId }
       })
       .then((response) => {
-        console.log('image successfuly posted');
+        console.log('image successfuly posted', response);
         sendResponse(res, 201, headers, response.data);
       })
       .catch((error) => {

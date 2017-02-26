@@ -1,10 +1,10 @@
-var chai = require('chai');
+// var chai = require('chai');
 var fs = require('fs');
 var request = require('request');
 var expect = require('chai').expect;
 var axios = require('axios');
 var bodyParser = require('body-parser');
-var should = chai.should();
+// var should = chai.should();
 
 var generateParams = function(method, endpoint, optionalParams, optionalUrl) {
   optionalParams = optionalParams || '';
@@ -271,46 +271,50 @@ var generateParams = function(method, endpoint, optionalParams, optionalUrl) {
 
 describe('IMAGE UPLOAD', function() {
   
-  // it('it should set a reference image', function(done) {
-  //   var axiosParams = generateParams('post', 'postImage', '');
+  it('it should set a reference image', function(done) {
+    this.timeout(3500);
+    var axiosParams = generateParams('post', 'postImage', '', 'http://54.218.118.52:8080/');
 
-  //   var processData = function(data) {
+    var processData = function(data) {
 
-  //     var imageData =  new Buffer(data).toString('base64');
-  //     axios({
-  //       method: axiosParams.method,
-  //       url: axiosParams.uri,
-  //       data: { imageBuffer: imageData }
-  //     })
-  //     .then(function(response) {
-  //       console.log(response.data);
-  //       expect(response.status).to.equal(201);
-  //       expect(response.data).to.exist;
-  //       done();
-  //     })
-  //     .catch(function(error) {
-  //       console.log('error', error);
-  //       done();
-  //     });
-  //   };
+      var imageData =  new Buffer(data).toString('base64');
+      axios({
+        method: axiosParams.method,
+        url: axiosParams.uri,
+        data: { imageBuffer: imageData }
+      })
+      .then(function(response) {
+        console.log(response.data);
+        expect(response.status).to.equal(201);
+        expect(response.data).to.exist;
+        done();
+      })
+      .catch(function(error) {
+        console.log('error');
+        done();
+      });
+    };
     
-  //   fs.readFile('computer1.jpg', function(err, data) {
-  //     if (err) throw err;
-  //     processData(data);
-  //   });
-  // });
+    fs.readFile('radiator1.jpg', function(err, data) {
+      if (err) throw err;
+      processData(data);
+    });
+  });
 
   it('it should compare an image to the reference image', function(done) {
-    var axiosParams = generateParams('post', 'compareImage', '');
+    this.timeout(3500);
+    
+    var axiosParams = generateParams('post', 'compareImage', '', 'http://54.218.118.52:8080/');
 
     var processData = function(data) {
       var imageData =  new Buffer(data).toString('base64');
       axios({
         method: axiosParams.method,
         url: axiosParams.uri,
-        data: { imageBuffer: imageData, referenceImageId: '58b22e4ae51d24475e3961c0' }
+        data: { imageBuffer: imageData, referenceImageId: '58b24214c18b2a940524367c' }
       })
       .then(function(response) {
+        console.log(response.data, response.status);
         expect(response.status).to.equal(201);
         expect(response.data).to.equal('Images are the same!');
         done();
@@ -321,7 +325,7 @@ describe('IMAGE UPLOAD', function() {
       });
     };
     
-    fs.readFile('computer2.jpg', function(err, data) {
+    fs.readFile('radiator2.jpg', function(err, data) {
       if (err) throw err;
       processData(data);
     });
