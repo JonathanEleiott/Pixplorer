@@ -2,7 +2,8 @@
   "extends": "rallycoding",
   "rules": {
       "arrow-body-style": 0,
-      "semi": 2
+      "semi": 2,
+      'max-len': 120
     },
     "parserOptions": {
         "ecmaVersion": 6,
