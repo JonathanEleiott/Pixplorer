@@ -10,6 +10,7 @@ import {
 import Camera from 'react-native-camera';
 import axios from 'axios';
 import RNFetchBlob from 'react-native-fetch-blob';
+import config from '../config.js';
 //import { Card, CardSection, Button, Input } from './mostCommon';
 
 // Step 2
@@ -61,7 +62,7 @@ class TestItem extends Component {
           console.log('Start S3 Upload');
           axios({
               method: 'post',
-              url: 'https://0d85f7f0.ngrok.io/api/items/found',
+              url: `${config.mainServer}/api/items/found`,
               //url: 'http://198.199.94.223:8080/postImage',
               data: { item: this.props.item, imageBuffer: imageData }
             })

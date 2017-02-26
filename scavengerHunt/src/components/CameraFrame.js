@@ -11,6 +11,7 @@ import Camera from 'react-native-camera';
 import axios from 'axios';
 import RNFetchBlob from 'react-native-fetch-blob';
 import { Card, CardSection, Button, Input } from './mostCommon';
+import config from '../config.js';
 
 // Step 2
 import { addItemToList } from '../actions';
@@ -71,7 +72,7 @@ class CameraFrame extends Component {
           console.log('Image Size:', imageData.length);
           axios({
               method: 'post',
-              url: 'https://0d85f7f0.ngrok.io/postImage',
+              url: `${config.mainServer}/postImage`,
               //url: 'http://198.199.94.223:8080/postImage',
               data: { imageBuffer: imageData }
             })
