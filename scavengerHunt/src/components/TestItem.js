@@ -60,18 +60,51 @@ class TestItem extends Component {
           // handle the data ..
           console.log('Image Size:', imageData.length);
           console.log('Start S3 Upload');
+          console.log('referenceImageId:', this.props.item.image);
           axios({
               method: 'post',
-              url: `${config.mainServer}/api/items/found`,
-              //url: 'http://198.199.94.223:8080/postImage',
-              data: { item: this.props.item, imageBuffer: imageData }
+              url: 'http://54.218.118.52:8080/compareImage',
+              //url: `${config.mainServer}/api/items/found`,
+              //url: 'http://198.199.94.223:8080/postImage',compareImage
+              data: { imageBuffer: imageData, referenceImageId: this.props.item.image }
             })
             .then((response) => {
-              console.log('SUCCESS: Image sent to server:', response.data);
-              this.setState({
-                currentList: response.data,
-                status: 4, 
-              });
+              console.log('COMPARE RESPONSE:', response.data);
+              
+              if (response.data === 'Images are the same!') {
+                console.log('we have a match, now save to db');
+
+                axios({
+                    method: 'post',
+                    //url: 'http://54.218.118.52:8080/api/found',
+                    url: `${config.mainServer}/api/items/found`,
+                    //url: 'http://198.199.94.223:8080/postImage',compareImage
+                    data: { item: this.props.item, complete: 1 }
+                  }).then((responseDB) => {
+                    this.setState({
+                      currentList: responseDB.data,
+                      status: 4, 
+                    });
+                  }).catch((error) => {
+                    console.log('Error saving to DB', error);
+                  });
+              } else {
+                console.log('no match');
+                axios({
+                    method: 'post',
+                    //url: 'http://54.218.118.52:8080/api/found',
+                    url: `${config.mainServer}/api/items/found`,
+                    //url: 'http://198.199.94.223:8080/postImage',compareImage
+                    data: { item: this.props.item, complete: 0 }
+                  }).then((responseDB) => {
+                    this.setState({
+                      currentList: responseDB.data,
+                      status: 5, 
+                    });
+                  }).catch((error) => {
+                    console.log('Error saving to DB', error);
+                  });
+              }  
             })
             .catch((error) => {
               console.log('Error sending image to server', error);
@@ -80,12 +113,25 @@ class TestItem extends Component {
         });
   }
 
-  renderForm() {
+  renderNoMatch() {
+    return (
+      <View style={styles.splash}>
+        <Text style={styles.splashHeader}>NOT A MATCH!</Text>
+        <Text style={styles.splashText}>
+          :(
+        </Text>
+     
+        <Text style={styles.capture} onPress={this.handleSubmit}>Continue</Text>
+      </View>
+    );
+  }
+
+  renderMatch() {
     return (
       <View style={styles.splash}>
         <Text style={styles.splashHeader}>FOUND!</Text>
         <Text style={styles.splashText}>
-          Good Job...
+          :)
         </Text>
      
         <Text style={styles.capture} onPress={this.handleSubmit}>Next!</Text>
@@ -154,7 +200,13 @@ class TestItem extends Component {
     } else if (this.state.status === 4) {
       return (
         <View style={styles.containerForm}>
-          {this.renderForm()}
+          {this.renderMatch()}
+        </View>
+      );
+    } else if (this.state.status === 5) {
+      return (
+        <View style={styles.containerForm}>
+          {this.renderNoMatch()}
         </View>
       );
     }
@@ -229,6 +281,13 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: '#fff',
     marginBottom: 5,
+  },
+  noMatch: {
+    flex: 1,
+    justifyContent: 'center',
+    alignSelf: 'stretch',
+    alignItems: 'center',
+    backgroundColor: 'red'
   },
 
 });
