@@ -1,6 +1,8 @@
 # Project Name
+Skavenger
 
 > Pithy project description
+Exploring the world with friends one picture at a time.
 
 ## Team
 
