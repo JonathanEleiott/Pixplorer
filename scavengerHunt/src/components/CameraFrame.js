@@ -72,14 +72,14 @@ class CameraFrame extends Component {
           console.log('Image Size:', imageData.length);
           axios({
               method: 'post',
-              url: `${config.mainServer}/postImage`,
+              url: 'http://54.218.118.52:8080/postImage',
               //url: 'http://198.199.94.223:8080/postImage',
               data: { imageBuffer: imageData }
             })
             .then((response) => {
-              console.log('SUCCESS: Image sent to server:', response.data.Location);
+              console.log('SUCCESS: Image sent to server:', response.data);
               this.setState({
-                newItemURL: response.data.Location
+                newItemURL: response.data
               });
             })
             .catch((error) => {
