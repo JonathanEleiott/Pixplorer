@@ -1,8 +1,12 @@
 // Sends trigger and calls functions
 
-// import { fetch } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import axios from 'axios';
+
+////////////////////////////////////////////
+// NEED TO CHANGE TITLE TO BETTER VERBAGE //
+// USE LIST AND ITEM INSTEAD ///////////////
+////////////////////////////////////////////
 import {
   TITLE_CLICKED,
   CREATE_LIST_CLICKED,
@@ -252,5 +256,5 @@ const goToTestItem = (item) => {
   // CHANGE TO Actions.camera() //////
   // IF YOU DON'T WANT A BACK BUTON //
   ////////////////////////////////////
-  Actions.testItem({ item: item });
+  Actions.testItem({ item });
 };

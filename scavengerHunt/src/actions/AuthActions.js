@@ -30,6 +30,10 @@ export const passwordChanged = (text) => {
 };
 
 // Sends AJAX request to log in the user
+//////////////////////////////////////////
+// RESPONSE NEEDS TO SEND CORRECT USER, //
+// NOT 'globalUser' OR 'user' ////////////
+//////////////////////////////////////////
 export const loginUser = ({ email, password }) => {
   return (dispatch) => {
     dispatch({ type: LOGIN_USER });
@@ -43,7 +47,7 @@ export const loginUser = ({ email, password }) => {
       }
     })
     .then(response => {
-      console.log(response);
+      console.log('loginUser response', response);
       loginUserSuccess(dispatch, 'globalUser');
     })
     .catch(response => {
@@ -54,6 +58,10 @@ export const loginUser = ({ email, password }) => {
 };
 
 // Sends AJAX request to sign up the user
+//////////////////////////////////////////
+// RESPONSE NEEDS TO SEND CORRECT USER, //
+// NOT 'user' ////////////////////////////
+//////////////////////////////////////////
 export const signupUser = ({ email, password }) => {
   return (dispatch) => {
     dispatch({ type: SIGNUP_USER });
@@ -77,10 +85,9 @@ export const signupUser = ({ email, password }) => {
   };
 };
 
-// Sets the user if the log in was successful
+// Sets the user if the log in was successful and directs them to next page
 const loginUserSuccess = (dispatch, user) => {
   dispatch({ type: LOGIN_USER_SUCCESS, payload: user });
-
   Actions.main();
 };
 
