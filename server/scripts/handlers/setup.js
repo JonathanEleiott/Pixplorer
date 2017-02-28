@@ -1,5 +1,14 @@
-const bookshelf = require('../bookshelf');
-
+const knex = require('knex')({
+  client: 'mysql',
+  connection: {
+    host: 'localhost',
+    user: 'root',
+    password: 'MyNewPass',  // set a password if needed
+    database: 'thesis',  // Be sure to create DB on server
+    charset: 'utf8'
+  }
+});
+const bookshelf = require('bookshelf')(knex);
 // Our Models
 const List = bookshelf.Model.extend({
   tableName: 'lists',
