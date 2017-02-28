@@ -1,4 +1,4 @@
-// Shows a list of hunting items based on which list was clicked
+// Shows a list of items items based on which list was clicked
 
 import React, { Component } from 'react';
 import { Image, Text, ScrollView } from 'react-native';
@@ -14,20 +14,15 @@ import checkedCheckbox from '../images/checkedCheckbox.png';
 // import itemList from '../itemList.json'; /////////////
 ////////////////////////////////////////////////////////
 
-class HuntingList extends Component {
+class ItemsList extends Component {
   constructor() {
     super();
     this.uncheckedBoxClicked = this.uncheckedBoxClicked.bind(this);
   }
 
-  /////////////////////////////////////////////////////
-  // FONT STYLES IN BOTH CHECKED AND UNCHECKED BOXES //
-  /////////////////////////////////////////////////////
-
-
   // Displays item with checked/unchecked box based on if it has been found yet
   listTitle(item, bool) {
-    if (this.props.title && bool) {
+    if (this.props.list && bool) {
       return (
         <Image
           source={checkedCheckbox}
@@ -35,7 +30,7 @@ class HuntingList extends Component {
           alt="checked checkbox"
         />
       );
-    } else if (this.props.title) {
+    } else if (this.props.list) {
       return (
         <Image
           source={emptyCheckbox}
@@ -48,7 +43,7 @@ class HuntingList extends Component {
 
   // Goes to the camera screen to take a picture of the item to add to DB
   addItemToList() {
-      this.props.addItem(this.props.title);
+      this.props.addItem(this.props.list);
     }
 
   // Goes to the camera screen to take a picture of the item that the user found
@@ -58,7 +53,6 @@ class HuntingList extends Component {
 
   // Returns listTitle based on whether the item has been found or not
   isComplete(complete, item) {
-    console.log('foundItemChecker');
     if (complete === 1) {
       return (
         this.listTitle(item, true)
@@ -72,15 +66,14 @@ class HuntingList extends Component {
 
   // Makes an AJAX call to change an item from active to inactive
   deleteItem(item) {
-    this.props.deleteItem(item, this.props.title);
+    this.props.deleteItem(item, this.props.list);
   }
 
   renderList() {
-    console.log('props', this.props.title);
     const { nameStyle, descriptionStyle } = styles;
 
-    if (this.props.title.items) {
-      return this.props.title.items.map((item, index) => {
+    if (this.props.list.items) {
+      return this.props.list.items.map((item, index) => {
         const swipeButtons = [{
           key: Math.random(),
           text: 'Delete',
@@ -93,7 +86,11 @@ class HuntingList extends Component {
             { this.isComplete(item.complete, item) }
             <Text
               style={nameStyle}
-              onPress={() => this.uncheckedBoxClicked(item)}
+              onPress={() => {
+                if (item.complete === 0) {
+                  this.uncheckedBoxClicked(item);
+                }
+              }}
             >{ `${item.name} ${'\n'}` }
             <Text
               style={descriptionStyle}
@@ -132,12 +129,12 @@ const styles = {
   }
 };
 
-const mapStateToProps = ({ list }) => {
-  const { title } = list;
+const mapStateToProps = ({ core }) => {
+  const { list } = core;
 
-  return { title };
+  return { list };
 };
 
 export default connect(mapStateToProps, {
   addItem, clickedUncheckedBox, deleteItem
-})(HuntingList);
+})(ItemsList);

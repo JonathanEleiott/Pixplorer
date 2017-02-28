@@ -3,8 +3,8 @@
 import React from 'react';
 import { Scene, Router, Actions } from 'react-native-router-flux';
 import LoginForm from './components/LoginForm';
-import HuntingList from './components/HuntingList';
-import ListChooser from './components/ListChooser';
+import ItemsList from './components/ItemsList';
+import SubscribedList from './components/SubscribedList';
 import CreateList from './components/CreateList';
 import CameraFrame from './components/CameraFrame';
 import TestItem from './components/TestItem';
@@ -15,14 +15,14 @@ const RouterComponent = () => {
     <Router sceneStyle={{ paddingTop: 65 }}>
       <Scene key="main">
         <Scene
-          key="listChooser"
-          component={ListChooser}
+          key="subscribedList"
+          component={SubscribedList}
           title="Choose A List"
         />
         <Scene
-          key="huntingList"
-          component={HuntingList}
-          onBack={() => Actions.listChooser()}
+          key="itemsList"
+          component={ItemsList}
+          onBack={() => Actions.subscribedList()}
         />
         <Scene
           key="createList"

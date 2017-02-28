@@ -4,7 +4,7 @@ import {
   Dimensions,
   StyleSheet,
   Text,
-  View, 
+  View,
   Vibration
 } from 'react-native';
 import Camera from 'react-native-camera';
@@ -14,7 +14,7 @@ import config from '../config.js';
 //import { Card, CardSection, Button, Input } from './mostCommon';
 
 // Step 2
-import { addItemToList } from '../actions';
+import { manageItem } from '../actions';
 
 class TestItem extends Component {
   constructor(props) {
@@ -34,7 +34,7 @@ class TestItem extends Component {
   handleSubmit() {
       // Step 1
       // Add item to Database and redirect user to updated list
-      this.props.addItemToList(2, this.state.currentList);
+      this.props.manageItem(2, this.state.currentList);
   }
 
   openCamera() {
@@ -51,7 +51,7 @@ class TestItem extends Component {
         console.log('DATA IMG:', data.path);
 
         this.setState({
-          status: 3, 
+          status: 3,
           newItemURL: data.path
         });
 
@@ -70,7 +70,7 @@ class TestItem extends Component {
             })
             .then((response) => {
               console.log('COMPARE RESPONSE:', response.data);
-              
+
               if (response.data === 'Images are the same!') {
                 console.log('we have a match, now save to db');
 
@@ -83,7 +83,7 @@ class TestItem extends Component {
                   }).then((responseDB) => {
                     this.setState({
                       currentList: responseDB.data,
-                      status: 4, 
+                      status: 4,
                     });
                   }).catch((error) => {
                     console.log('Error saving to DB', error);
@@ -99,12 +99,12 @@ class TestItem extends Component {
                   }).then((responseDB) => {
                     this.setState({
                       currentList: responseDB.data,
-                      status: 5, 
+                      status: 5,
                     });
                   }).catch((error) => {
                     console.log('Error saving to DB', error);
                   });
-              }  
+              }
             })
             .catch((error) => {
               console.log('Error sending image to server', error);
@@ -120,7 +120,7 @@ class TestItem extends Component {
         <Text style={styles.splashText}>
           :(
         </Text>
-     
+
         <Text style={styles.capture} onPress={this.handleSubmit}>Continue</Text>
       </View>
     );
@@ -133,7 +133,7 @@ class TestItem extends Component {
         <Text style={styles.splashText}>
           :)
         </Text>
-     
+
         <Text style={styles.capture} onPress={this.handleSubmit}>Next!</Text>
       </View>
     );
@@ -244,10 +244,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#F5FCFF',
-  }, 
+  },
   containerForm: {
     flex: 1,
-  }, 
+  },
   analyzing: {
     flex: 1,
     justifyContent: 'center',
@@ -293,10 +293,10 @@ const styles = StyleSheet.create({
 });
 
 // step 3
-const mapStateToProps = ({ list }) => {
-  const { title } = list;
-  return { title };
+const mapStateToProps = ({ core }) => {
+  const { list } = core;
+  return { list };
 };
 
 // step 4
-export default connect(mapStateToProps, { addItemToList })(TestItem);
+export default connect(mapStateToProps, { manageItem })(TestItem);

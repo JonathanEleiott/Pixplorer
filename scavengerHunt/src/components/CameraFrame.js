@@ -11,10 +11,12 @@ import Camera from 'react-native-camera';
 import axios from 'axios';
 import RNFetchBlob from 'react-native-fetch-blob';
 import { Card, CardSection, Button, Input } from './mostCommon';
-import config from '../config.js';
+// For main server url ///////////////
+import config from '../config.js'; //
+/////////////////////////////////////
 
 // Step 2
-import { addItemToList } from '../actions';
+import { manageItem } from '../actions';
 
 class CameraFrame extends Component {
   constructor(props) {
@@ -45,7 +47,7 @@ class CameraFrame extends Component {
 
       // Step 1
       // Add item to Database and redirect user to updated list
-      this.props.addItemToList(1, item);
+      this.props.manageItem(1, item);
   }
 
   openCamera() {
@@ -240,10 +242,10 @@ const styles = StyleSheet.create({
 });
 
 // step 3
-const mapStateToProps = ({ list }) => {
-  const { title } = list;
-  return { title };
+const mapStateToProps = ({ core }) => {
+  const { list } = core;
+  return { list };
 };
 
 // step 4
-export default connect(mapStateToProps, { addItemToList })(CameraFrame);
+export default connect(mapStateToProps, { manageItem })(CameraFrame);

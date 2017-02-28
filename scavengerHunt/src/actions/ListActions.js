@@ -1,10 +1,14 @@
 // Sends trigger and calls functions
 
-// import { fetch } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import axios from 'axios';
+
+////////////////////////////////////////////
+// NEED TO CHANGE TITLE TO BETTER VERBAGE //
+// USE LIST AND ITEM INSTEAD ///////////////
+////////////////////////////////////////////
 import {
-  TITLE_CLICKED,
+  LIST_TITLE_CLICKED,
   CREATE_LIST_CLICKED,
   ADD_ITEM,
   CLICKED_UNCHECKED_BOX,
@@ -13,7 +17,7 @@ import {
   DELETE_ITEM,
   LIST_NAME_CHANGED,
   DELETE_LIST,
-  ADD_ITEM_TO_LIST, // Added by Bill - Step 5
+  MANAGE_ITEM, // Added by Bill - Step 5
   SUCCESS,
   LOADING
 } from './types';
@@ -29,14 +33,13 @@ import config from '../config.js';
 const listUrl = config.mainServer;
 
 
-// Goes to hunting list for the list title that was clicked on
-  // Sets clicked title to state/props
-export const titleClicked = (title) => {
-  console.log('title', title);
-  goToHuntingList(title, title.name);
+// Goes to items list for the list list that was clicked on
+  // Sets clicked list to state/props
+export const listTitleClicked = (list) => {
+  goToItemsList(list, list.name);
   return {
-    type: TITLE_CLICKED,
-    payload: title
+    type: LIST_TITLE_CLICKED,
+    payload: list
   };
 };
 
@@ -50,11 +53,11 @@ export const createListClicked = () => {
 };
 
 // Goes to camera so that user can add an item
-export const addItem = (title) => {
-  goToCamera(title);
+export const addItem = (list) => {
+  goToCamera(list);
   return {
     type: ADD_ITEM,
-    payload: title
+    payload: list
   };
 };
 
@@ -69,7 +72,9 @@ export const clickedUncheckedBox = (item) => {
 
 // Imports all the lists from the DB
 export const importLists = () => {
-  console.log('importLists');
+  ///////////////////////////////////////////////////
+  // NEED TO SET UP LOADING SCREEN FOR AXIOS CALLS //
+  ///////////////////////////////////////////////////
   loading();
   return (dispatch) => {
     axios({
@@ -77,11 +82,13 @@ export const importLists = () => {
       url: `${listUrl}/api/all`
     })
     .then(response => {
-      console.log('axios success', response.data);
       dispatch({
         type: IMPORT_LISTS,
         payload: response.data
       });
+      /////////////////////////////////////////////////////
+      // NEED TO TAKE AWAY LOADING SCREEN FOR AXIOS CALL //
+      /////////////////////////////////////////////////////
       success();
     })
     .catch(error => {
@@ -90,8 +97,11 @@ export const importLists = () => {
   };
 };
 
-// Attempts to add a new list to the DB and sends user to the new lists hunting list
+// Attempts to add a new list to the DB and sends user to the new lists item list
 export const addListToDB = (listName) => {
+  ///////////////////////////////////////////////////
+  // NEED TO SET UP LOADING SCREEN FOR AXIOS CALLS //
+  ///////////////////////////////////////////////////
   loading();
   return (dispatch) => {
     axios({
@@ -100,12 +110,14 @@ export const addListToDB = (listName) => {
       data: listName
     })
     .then(response => {
-      console.log('response', response.data);
-      goToHuntingList(response.data.items, response.data.name);
+      goToItemsList(response.data.items, response.data.name);
       dispatch({
         type: ADD_LIST_TO_DB,
         payload: response.data
       });
+      /////////////////////////////////////////////////////
+      // NEED TO TAKE AWAY LOADING SCREEN FOR AXIOS CALL //
+      /////////////////////////////////////////////////////
       success();
     })
     .catch(error => {
@@ -116,7 +128,9 @@ export const addListToDB = (listName) => {
 
 // Deletes an item in the DB
 export const deleteItem = (item, list) => {
-  console.log('item in deleteItem', item, list);
+  ///////////////////////////////////////////////////
+  // NEED TO SET UP LOADING SCREEN FOR AXIOS CALLS //
+  ///////////////////////////////////////////////////
   loading();
   return (dispatch) => {
     axios({
@@ -124,12 +138,14 @@ export const deleteItem = (item, list) => {
       url: `${listUrl}/api/items/${item.id}/${list.id}`
     })
     .then(response => {
-      console.log('response', response.data);
-      goToHuntingList(response.data.items, response.data.name);
+      goToItemsList(response.data.items, response.data.name);
       dispatch({
         type: DELETE_ITEM,
         payload: response.data
       });
+      /////////////////////////////////////////////////////
+      // NEED TO TAKE AWAY LOADING SCREEN FOR AXIOS CALL //
+      /////////////////////////////////////////////////////
       success();
     })
     .catch(error => {
@@ -140,9 +156,9 @@ export const deleteItem = (item, list) => {
 
 // Deletes a list from the DB
 export const deleteList = (listName) => {
-  // PULL IN WHOLE LIST
-  // SEND BILLY THE LIST ID
-  console.log('listName', listName);
+  ///////////////////////////////////////////////////
+  // NEED TO SET UP LOADING SCREEN FOR AXIOS CALLS //
+  ///////////////////////////////////////////////////
   loading();
   return (dispatch) => {
     axios({
@@ -150,12 +166,14 @@ export const deleteList = (listName) => {
       url: `${listUrl}/api/lists/${listName.id}`
     })
     .then(response => {
-      console.log('response', response.data);
-      goToListChooser();
+      goToSubscribedList();
       dispatch({
         type: DELETE_LIST,
         payload: response.data
       });
+      /////////////////////////////////////////////////////
+      // NEED TO TAKE AWAY LOADING SCREEN FOR AXIOS CALL //
+      /////////////////////////////////////////////////////
       success();
     })
     .catch(error => {
@@ -174,16 +192,19 @@ export const listNameChanged = (name) => {
 
 // BILL
 // STEP 6
-export const addItemToList = (type = 1, itemOrList) => {
+export const manageItem = (type = 1, itemOrList) => {
+  ///////////////////////////////////////////////////
+  // NEED TO SET UP LOADING SCREEN FOR AXIOS CALLS //
+  ///////////////////////////////////////////////////
   loading();
   if (type === 2) {
     const list = itemOrList;
     return (dispatch) => {
       dispatch({
-        type: ADD_ITEM_TO_LIST,
+        type: MANAGE_ITEM,
         payload: list
       });
-      goToHuntingList(list.items, list.name);
+      goToItemsList(list.items, list.name);
     };
   }
 
@@ -195,15 +216,18 @@ export const addItemToList = (type = 1, itemOrList) => {
       data: item
     })
     .then(response => {
-      goToHuntingList(response.data.items, response.data.name);
+      goToItemsList(response.data.items, response.data.name);
       dispatch({
-        type: ADD_ITEM_TO_LIST,
+        type: MANAGE_ITEM,
         payload: response.data
       });
+      /////////////////////////////////////////////////////
+      // NEED TO TAKE AWAY LOADING SCREEN FOR AXIOS CALL //
+      /////////////////////////////////////////////////////
       success();
     })
     .catch(error => {
-      console.log('Error in addItemToList call', error);
+      console.log('Error in manageItem call', error);
     });
   };
 };
@@ -214,23 +238,32 @@ const goToCreateList = () => {
 };
 
 // Goes to the list choosing page
-const goToListChooser = () => {
-  Actions.listChooser({ showDelete: false });
+const goToSubscribedList = () => {
+  Actions.subscribedList({ showDelete: false });
 };
 
-// Goes to the hunting list screen
-const goToHuntingList = (list, name) => {
-  Actions.huntingList({ list, getTitle: () => name });
+// Goes to the items list screen
+const goToItemsList = (list, name) => {
+  Actions.itemsList({ list, getTitle: () => name });
 };
 
 // Goes to the camera screen
-const goToCamera = (title) => {
-  console.log('goToCamera', title);
+const goToCamera = (list) => {
   ////////////////////////////////////
   // CHANGE TO Actions.camera() //////
   // IF YOU DON'T WANT A BACK BUTON //
   ////////////////////////////////////
-  Actions.cameraFrame({ listId: title.id });
+  Actions.cameraFrame({ listId: list.id });
+};
+
+// Goes to the camera screen
+const goToTestItem = (item) => {
+  console.log('goToTestItem', item);
+  ////////////////////////////////////
+  // CHANGE TO Actions.camera() //////
+  // IF YOU DON'T WANT A BACK BUTON //
+  ////////////////////////////////////
+  Actions.testItem({ item });
 };
 
 export const loading = () => {
@@ -243,14 +276,4 @@ export const success = () => {
   return {
     type: SUCCESS
   };
-};
-
-// Goes to the camera screen
-const goToTestItem = (item) => {
-  console.log('goToTestItem', item);
-  ////////////////////////////////////
-  // CHANGE TO Actions.camera() //////
-  // IF YOU DON'T WANT A BACK BUTON //
-  ////////////////////////////////////
-  Actions.testItem({ item: item });
 };

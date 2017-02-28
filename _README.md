@@ -1,6 +1,8 @@
 # Project Name
+Skavenger
 
 > Pithy project description
+Exploring the world with friends one picture at a time.
 
 ## Team
 
@@ -23,12 +25,10 @@
 > Some usage instructions
 
 ## Requirements
-
-- Node 0.10.x
-- Redis 2.6.x
-- Postgresql 9.1.x
-- etc
-- etc
+"react": "15.4.2",
+"react-native": "0.41.2",
+"redux": "^3.6.0",
+"firebase": "3.6.9"
 
 ## Development
 
