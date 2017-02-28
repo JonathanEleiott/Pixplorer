@@ -12,6 +12,7 @@ import axios from 'axios';
 import RNFetchBlob from 'react-native-fetch-blob';
 import config from '../config.js';
 import { manageItem } from '../actions';
+import { Analyzing } from './manageItem';
 
 class CompareItem extends Component {
   constructor(props) {
@@ -122,14 +123,6 @@ class CompareItem extends Component {
     );
   }
 
-  renderAnalyzing() {
-    return (
-      <View style={styles.analyzing}>
-        <Text style={styles.splashHeader}>Analyzing...</Text>
-      </View>
-    );
-  }
-
   renderCamera() {
     return (
       <Camera
@@ -176,9 +169,7 @@ class CompareItem extends Component {
       );
     } else if (this.state.status === 3) {
       return (
-        <View style={styles.containerForm}>
-          {this.renderAnalyzing()}
-        </View>
+        <Analyzing />
       );
     } else if (this.state.status === 4) {
       return (

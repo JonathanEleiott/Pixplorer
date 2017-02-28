@@ -11,6 +11,7 @@ import Camera from 'react-native-camera';
 import axios from 'axios';
 import RNFetchBlob from 'react-native-fetch-blob';
 import { Card, CardSection, Button, Input } from './mostCommon';
+import { Analyzing } from './manageItem';
 // For main server url ///////////////
 import config from '../config.js'; //
 /////////////////////////////////////
@@ -118,14 +119,6 @@ class AddItem extends Component {
     );
   }
 
-  renderAnalyzing() {
-    return (
-      <View style={styles.analyzing}>
-        <Text style={styles.splashHeader}>Analyzing...</Text>
-      </View>
-    );
-  }
-
   renderCamera() {
     return (
       <Camera
@@ -172,9 +165,7 @@ class AddItem extends Component {
       );
     } else if (this.state.status === 3) {
       return (
-        <View style={styles.containerForm}>
-          {this.renderAnalyzing()}
-        </View>
+        <Analyzing />
       );
     } else if (this.state.status === 4) {
       return (
@@ -220,13 +211,6 @@ const styles = StyleSheet.create({
   },
   containerForm: {
     flex: 1,
-  },
-  analyzing: {
-    flex: 1,
-    justifyContent: 'center',
-    alignSelf: 'stretch',
-    alignItems: 'center',
-    backgroundColor: '#7c48cc'
   },
   splash: {
     flex: 1,
