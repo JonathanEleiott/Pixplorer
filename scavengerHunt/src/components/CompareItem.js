@@ -11,12 +11,10 @@ import Camera from 'react-native-camera';
 import axios from 'axios';
 import RNFetchBlob from 'react-native-fetch-blob';
 import config from '../config.js';
-//import { Card, CardSection, Button, Input } from './mostCommon';
-
-// Step 2
 import { manageItem } from '../actions';
+import { Analyzing, Match, NoMatch, Instructions } from './subcomponents';
 
-class TestItem extends Component {
+class CompareItem extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -27,13 +25,12 @@ class TestItem extends Component {
       newItemListId: null,
       currentList: null
     };
-    console.log('PROPS', props.item);
+
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.openCamera = this.openCamera.bind(this);
   }
 
   handleSubmit() {
-      // Step 1
-      // Add item to Database and redirect user to updated list
       this.props.manageItem(2, this.state.currentList);
   }
 
@@ -44,11 +41,9 @@ class TestItem extends Component {
   }
 
   takePicture() {
-    console.log('PRESSED');
     this.camera.capture()
       .then((data) => {
         Vibration.vibrate();
-        console.log('DATA IMG:', data.path);
 
         this.setState({
           status: 3,
@@ -57,30 +52,21 @@ class TestItem extends Component {
 
         RNFetchBlob.fs.readFile(data.path, 'base64')
         .then((imageData) => {
-          // handle the data ..
-          console.log('Image Size:', imageData.length);
-          console.log('Start S3 Upload');
-          console.log('referenceImageId:', this.props.item.image);
           axios({
               method: 'post',
-              url: 'http://54.218.118.52:8080/compareImage',
-              //url: `${config.mainServer}/api/items/found`,
-              //url: 'http://198.199.94.223:8080/postImage',compareImage
+              url: `${config.mainServer}/compareImage`,
               data: { imageBuffer: imageData, referenceImageId: this.props.item.image }
             })
             .then((response) => {
-              console.log('COMPARE RESPONSE:', response.data);
-
               if (response.data === 'Images are the same!') {
+                // MATCH
                 console.log('we have a match, now save to db');
-
                 axios({
                     method: 'post',
-                    //url: 'http://54.218.118.52:8080/api/found',
                     url: `${config.mainServer}/api/items/found`,
-                    //url: 'http://198.199.94.223:8080/postImage',compareImage
                     data: { item: this.props.item, complete: 1 }
                   }).then((responseDB) => {
+                    console.log('completed item saved to db');
                     this.setState({
                       currentList: responseDB.data,
                       status: 4,
@@ -89,12 +75,11 @@ class TestItem extends Component {
                     console.log('Error saving to DB', error);
                   });
               } else {
+                // NO MATCH  
                 console.log('no match');
                 axios({
                     method: 'post',
-                    //url: 'http://54.218.118.52:8080/api/found',
                     url: `${config.mainServer}/api/items/found`,
-                    //url: 'http://198.199.94.223:8080/postImage',compareImage
                     data: { item: this.props.item, complete: 0 }
                   }).then((responseDB) => {
                     this.setState({
@@ -113,40 +98,6 @@ class TestItem extends Component {
         });
   }
 
-  renderNoMatch() {
-    return (
-      <View style={styles.splash}>
-        <Text style={styles.splashHeader}>NOT A MATCH!</Text>
-        <Text style={styles.splashText}>
-          :(
-        </Text>
-
-        <Text style={styles.capture} onPress={this.handleSubmit}>Continue</Text>
-      </View>
-    );
-  }
-
-  renderMatch() {
-    return (
-      <View style={styles.splash}>
-        <Text style={styles.splashHeader}>FOUND!</Text>
-        <Text style={styles.splashText}>
-          :)
-        </Text>
-
-        <Text style={styles.capture} onPress={this.handleSubmit}>Next!</Text>
-      </View>
-    );
-  }
-
-  renderAnalyzing() {
-    return (
-      <View style={styles.analyzing}>
-        <Text style={styles.splashHeader}>Analyzing...</Text>
-      </View>
-    );
-  }
-
   renderCamera() {
     return (
       <Camera
@@ -163,26 +114,17 @@ class TestItem extends Component {
     );
   }
 
-  renderSplash() {
-    return (
-      <View style={styles.splash}>
-        <Text style={styles.splashHeader}>Found an Item</Text>
-        <Text style={styles.splashText}>
-          Step 1: Take a Photo
-        </Text>
-        <Text style={styles.splashInstructions}>
-          Your first step is to take a photo, then you will give it a name.
-        </Text>
-        <Text style={styles.capture} onPress={this.openCamera.bind(this)}>OK, I GOT IT!</Text>
-      </View>
-    );
-  }
-
   render() {
     if (this.state.status === 1) {
       return (
         <View style={styles.container}>
-        {this.renderSplash()}
+          <Instructions 
+            openCamera={this.openCamera}
+            header={'Found an Item!'}
+            subheader={'Step 1: Take a Photo'}
+            text={'Take a photo of the item and we will check for a match.'}
+            buttonText={'OK, I GOT IT!'}
+          />
         </View>
       );
     } else if (this.state.status === 2) {
@@ -193,21 +135,15 @@ class TestItem extends Component {
       );
     } else if (this.state.status === 3) {
       return (
-        <View style={styles.containerForm}>
-          {this.renderAnalyzing()}
-        </View>
+        <Analyzing />
       );
     } else if (this.state.status === 4) {
       return (
-        <View style={styles.containerForm}>
-          {this.renderMatch()}
-        </View>
+        <Match buttonOneAction={this.handleSubmit} />
       );
     } else if (this.state.status === 5) {
       return (
-        <View style={styles.containerForm}>
-          {this.renderNoMatch()}
-        </View>
+        <NoMatch buttonOneAction={this.handleSubmit} buttonTwoAction={this.openCamera} />
       );
     }
   }
@@ -244,59 +180,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#F5FCFF',
-  },
-  containerForm: {
-    flex: 1,
-  },
-  analyzing: {
-    flex: 1,
-    justifyContent: 'center',
-    alignSelf: 'stretch',
-    alignItems: 'center',
-    backgroundColor: '#49cc52'
-  },
-  splash: {
-    flex: 1,
-    justifyContent: 'center',
-    alignSelf: 'stretch',
-    alignItems: 'center',
-    backgroundColor: '#4b7ccc'
-  },
-  splashHeader: {
-    flex: 0,
-    color: 'white',
-    backgroundColor: 'transparent',
-    fontSize: 28,
-    padding: 10,
-    margin: 20,
-    marginBottom: 200
-  },
-  splashText: {
-    color: '#fff',
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 0,
-  },
-  splashInstructions: {
-    textAlign: 'center',
-    color: '#fff',
-    marginBottom: 5,
-  },
-  noMatch: {
-    flex: 1,
-    justifyContent: 'center',
-    alignSelf: 'stretch',
-    alignItems: 'center',
-    backgroundColor: 'red'
-  },
+  },  
 
 });
 
-// step 3
 const mapStateToProps = ({ core }) => {
   const { list } = core;
   return { list };
 };
 
-// step 4
-export default connect(mapStateToProps, { manageItem })(TestItem);
+export default connect(mapStateToProps, { manageItem })(CompareItem);
