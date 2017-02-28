@@ -11,7 +11,7 @@ import Camera from 'react-native-camera';
 import axios from 'axios';
 import RNFetchBlob from 'react-native-fetch-blob';
 import { Card, CardSection, Button, Input } from './mostCommon';
-import { Analyzing } from './manageItem';
+import { Analyzing, Instructions } from './manageItem';
 // For main server url ///////////////
 import config from '../config.js'; //
 /////////////////////////////////////
@@ -30,13 +30,10 @@ class AddItem extends Component {
     };
 
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.openCamera = this.openCamera.bind(this);
   }
 
   handleSubmit() {
-      console.log('FORM SUBMITTED - List ID:', this.props.listId);
-      console.log('Name:', this.state.newItemName);
-      console.log('Desc:', this.state.newItemDesc);
-      console.log('URL:', this.state.newItemURL);
 
       const item = {
         listId: this.props.listId,
@@ -44,6 +41,8 @@ class AddItem extends Component {
         desc: this.state.newItemDesc,
         image: this.state.newItemURL
       };
+
+      this.openCamera = this.openCamera.bind(this);
 
       // Step 1
       // Add item to Database and redirect user to updated list
@@ -135,27 +134,16 @@ class AddItem extends Component {
     );
   }
 
-  renderSplash() {
-    return (
-      <View style={styles.splash}>
-      <Text style={styles.splashHeader}>Add an Item</Text>
-        <Text style={styles.splashText}>
-          Step 1: Take a Photo
-        </Text>
-        <Text style={styles.splashInstructions}>
-          Your first step is to take a photo, then you will give it a name.
-        </Text>
-        <Text style={styles.capture} onPress={this.openCamera.bind(this)}>OK, I GOT IT!</Text>
-      </View>
-    );
-  }
-
   render() {
     if (this.state.status === 1) {
       return (
-        <View style={styles.container}>
-        {this.renderSplash()}
-        </View>
+        <Instructions 
+          openCamera={this.openCamera}
+          header={'Add an Item'}
+          subheader={'Step 1: Take a Photo'}
+          text={'Your first step is to take a photo, then you will give it a name.'}
+          buttonText={'OK, I GOT IT!'}
+        />
       );
     } else if (this.state.status === 2) {
       return (
@@ -212,41 +200,12 @@ const styles = StyleSheet.create({
   containerForm: {
     flex: 1,
   },
-  splash: {
-    flex: 1,
-    justifyContent: 'center',
-    alignSelf: 'stretch',
-    alignItems: 'center',
-    backgroundColor: '#4b7ccc'
-  },
-  splashHeader: {
-    flex: 0,
-    color: 'white',
-    backgroundColor: 'transparent',
-    fontSize: 28,
-    padding: 10,
-    margin: 20,
-    marginBottom: 200
-  },
-  splashText: {
-    color: '#fff',
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 0,
-  },
-  splashInstructions: {
-    textAlign: 'center',
-    color: '#fff',
-    marginBottom: 5,
-  },
 
 });
 
-// step 3
 const mapStateToProps = ({ core }) => {
   const { list } = core;
   return { list };
 };
 
-// step 4
 export default connect(mapStateToProps, { manageItem })(AddItem);

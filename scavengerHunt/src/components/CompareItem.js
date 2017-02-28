@@ -12,7 +12,7 @@ import axios from 'axios';
 import RNFetchBlob from 'react-native-fetch-blob';
 import config from '../config.js';
 import { manageItem } from '../actions';
-import { Analyzing } from './manageItem';
+import { Analyzing, Match, NoMatch, Instructions } from './manageItem';
 
 class CompareItem extends Component {
   constructor(props) {
@@ -27,6 +27,7 @@ class CompareItem extends Component {
     };
 
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.openCamera = this.openCamera.bind(this);
   }
 
   handleSubmit() {
@@ -57,7 +58,7 @@ class CompareItem extends Component {
               data: { imageBuffer: imageData, referenceImageId: this.props.item.image }
             })
             .then((response) => {
-              if (response.data === 'Images are the same!') {
+              if (response.data === 'Images are the sameddd!') {
                 // MATCH
                 console.log('we have a match, now save to db');
                 axios({
@@ -97,32 +98,6 @@ class CompareItem extends Component {
         });
   }
 
-  renderNoMatch() {
-    return (
-      <View style={styles.splashNoMatch}>
-        <Text style={styles.splashHeader}>NOT A MATCH!</Text>
-        <Text style={styles.splashTextBig}>
-          :(
-        </Text>
-     
-        <Text style={styles.capture} onPress={this.handleSubmit}>Continue</Text>
-      </View>
-    );
-  }
-
-  renderMatch() {
-    return (
-      <View style={styles.splashMatch}>
-        <Text style={styles.splashHeader}>FOUND!</Text>
-        <Text style={styles.splashTextBig}>
-          :)
-        </Text>
-     
-        <Text style={styles.capture} onPress={this.handleSubmit}>Next!</Text>
-      </View>
-    );
-  }
-
   renderCamera() {
     return (
       <Camera
@@ -139,26 +114,17 @@ class CompareItem extends Component {
     );
   }
 
-  renderSplash() {
-    return (
-      <View style={styles.splash}>
-        <Text style={styles.splashHeader}>Found an Item</Text>
-        <Text style={styles.splashText}>
-          Step 1: Take a Photo
-        </Text>
-        <Text style={styles.splashInstructions}>
-          Your first step is to take a photo, then you will give it a name.
-        </Text>
-        <Text style={styles.capture} onPress={this.openCamera.bind(this)}>OK, I GOT IT!</Text>
-      </View>
-    );
-  }
-
   render() {
     if (this.state.status === 1) {
       return (
         <View style={styles.container}>
-        {this.renderSplash()}
+          <Instructions 
+            openCamera={this.openCamera}
+            header={'Found an Item!'}
+            subheader={'Step 1: Take a Photo'}
+            text={'Take a photo of the item and we will check for a match.'}
+            buttonText={'OK, I GOT IT!'}
+          />
         </View>
       );
     } else if (this.state.status === 2) {
@@ -173,15 +139,11 @@ class CompareItem extends Component {
       );
     } else if (this.state.status === 4) {
       return (
-        <View style={styles.containerForm}>
-          {this.renderMatch()}
-        </View>
+        <Match handleSubmit={this.handleSubmit} />
       );
     } else if (this.state.status === 5) {
       return (
-        <View style={styles.containerForm}>
-          {this.renderNoMatch()}
-        </View>
+        <NoMatch handleSubmit={this.handleSubmit} />
       );
     }
   }
@@ -218,71 +180,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#F5FCFF',
-  }, 
-  containerForm: {
-    flex: 1,
-  }, 
-  analyzing: {
-    flex: 1,
-    justifyContent: 'center',
-    alignSelf: 'stretch',
-    alignItems: 'center',
-    backgroundColor: '#7c48cc'
-  },
-  splash: {
-    flex: 1,
-    justifyContent: 'center',
-    alignSelf: 'stretch',
-    alignItems: 'center',
-    backgroundColor: '#4b7ccc'
-  },
-  splashHeader: {
-    flex: 0,
-    color: 'white',
-    backgroundColor: 'transparent',
-    fontSize: 36,
-    padding: 10,
-    margin: 20,
-    marginBottom: 160
-  },
-  splashText: {
-    color: '#fff',
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 0,
-  },
-  splashInstructions: {
-    textAlign: 'center',
-    color: '#fff',
-    marginBottom: 5,
-  },
-  noMatch: {
-    flex: 1,
-    justifyContent: 'center',
-    alignSelf: 'stretch',
-    alignItems: 'center',
-    backgroundColor: 'red'
-  },
-  splashMatch: {
-    flex: 1,
-    justifyContent: 'center',
-    alignSelf: 'stretch',
-    alignItems: 'center',
-    backgroundColor: '#49cc52'
-  },
-  splashNoMatch: {
-    flex: 1,
-    justifyContent: 'center',
-    alignSelf: 'stretch',
-    alignItems: 'center',
-    backgroundColor: 'red'
-  },
-  splashTextBig: {
-    color: '#fff',
-    fontSize: 120,
-    textAlign: 'center',
-    marginBottom: 40,
-  },
+  },  
 
 });
 
