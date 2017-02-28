@@ -10,13 +10,14 @@ import {
 import Camera from 'react-native-camera';
 import axios from 'axios';
 import RNFetchBlob from 'react-native-fetch-blob';
-import config from '../config.js';
-//import { Card, CardSection, Button, Input } from './mostCommon';
+import { Card, CardSection, Button, Input } from './mostCommon';
+// For main server url ///////////////
+import config from '../config.js'; //
+/////////////////////////////////////
 
-// Step 2
 import { manageItem } from '../actions';
 
-class TestItem extends Component {
+class AddItem extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -24,17 +25,28 @@ class TestItem extends Component {
       newItemName: '',
       newItemDesc: '',
       newItemURL: '',
-      newItemListId: null,
-      currentList: null
+      newItemListId: null
     };
-    console.log('PROPS', props.item);
+
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   handleSubmit() {
+      console.log('FORM SUBMITTED - List ID:', this.props.listId);
+      console.log('Name:', this.state.newItemName);
+      console.log('Desc:', this.state.newItemDesc);
+      console.log('URL:', this.state.newItemURL);
+
+      const item = {
+        listId: this.props.listId,
+        name: this.state.newItemName,
+        desc: this.state.newItemDesc,
+        image: this.state.newItemURL
+      };
+
       // Step 1
       // Add item to Database and redirect user to updated list
-      this.props.manageItem(2, this.state.currentList);
+      this.props.manageItem(1, item);
   }
 
   openCamera() {
@@ -52,59 +64,21 @@ class TestItem extends Component {
 
         this.setState({
           status: 3,
-          newItemURL: data.path
         });
 
         RNFetchBlob.fs.readFile(data.path, 'base64')
         .then((imageData) => {
-          // handle the data ..
-          console.log('Image Size:', imageData.length);
-          console.log('Start S3 Upload');
-          console.log('referenceImageId:', this.props.item.image);
           axios({
               method: 'post',
-              url: 'http://54.218.118.52:8080/compareImage',
-              //url: `${config.mainServer}/api/items/found`,
-              //url: 'http://198.199.94.223:8080/postImage',compareImage
-              data: { imageBuffer: imageData, referenceImageId: this.props.item.image }
+              url: `${config.mainServer}/postImage`,
+              data: { imageBuffer: imageData }
             })
             .then((response) => {
-              console.log('COMPARE RESPONSE:', response.data);
-
-              if (response.data === 'Images are the same!') {
-                console.log('we have a match, now save to db');
-
-                axios({
-                    method: 'post',
-                    //url: 'http://54.218.118.52:8080/api/found',
-                    url: `${config.mainServer}/api/items/found`,
-                    //url: 'http://198.199.94.223:8080/postImage',compareImage
-                    data: { item: this.props.item, complete: 1 }
-                  }).then((responseDB) => {
-                    this.setState({
-                      currentList: responseDB.data,
-                      status: 4,
-                    });
-                  }).catch((error) => {
-                    console.log('Error saving to DB', error);
-                  });
-              } else {
-                console.log('no match');
-                axios({
-                    method: 'post',
-                    //url: 'http://54.218.118.52:8080/api/found',
-                    url: `${config.mainServer}/api/items/found`,
-                    //url: 'http://198.199.94.223:8080/postImage',compareImage
-                    data: { item: this.props.item, complete: 0 }
-                  }).then((responseDB) => {
-                    this.setState({
-                      currentList: responseDB.data,
-                      status: 5,
-                    });
-                  }).catch((error) => {
-                    console.log('Error saving to DB', error);
-                  });
-              }
+              console.log('SUCCESS: Image sent to server:', response.data);
+              this.setState({
+                status: 4,
+                newItemURL: response.data
+              });
             })
             .catch((error) => {
               console.log('Error sending image to server', error);
@@ -113,29 +87,34 @@ class TestItem extends Component {
         });
   }
 
-  renderNoMatch() {
+  renderForm() {
     return (
-      <View style={styles.splash}>
-        <Text style={styles.splashHeader}>NOT A MATCH!</Text>
-        <Text style={styles.splashText}>
-          :(
-        </Text>
+      <Card>
+        <CardSection>
+          <Input
+            label="Item Name"
+            placeholder="Golden Gate Bridge"
+            onChangeText={(text) => this.setState({ newItemName: text })}
+            value={this.state.newItemName}
+            maxLength={28}
+          />
+        </CardSection>
 
-        <Text style={styles.capture} onPress={this.handleSubmit}>Continue</Text>
-      </View>
-    );
-  }
-
-  renderMatch() {
-    return (
-      <View style={styles.splash}>
-        <Text style={styles.splashHeader}>FOUND!</Text>
-        <Text style={styles.splashText}>
-          :)
-        </Text>
-
-        <Text style={styles.capture} onPress={this.handleSubmit}>Next!</Text>
-      </View>
+        <CardSection>
+          <Input
+            label="Description"
+            placeholder="Grab a shot of this iconic landmark!"
+            onChangeText={(text) => this.setState({ newItemDesc: text })}
+            value={this.state.newItemDesc}
+            maxLength={60}
+          />
+        </CardSection>
+        <CardSection>
+          <Button onPress={this.handleSubmit}>
+            Save Item
+          </Button>
+        </CardSection>
+      </Card>
     );
   }
 
@@ -166,7 +145,7 @@ class TestItem extends Component {
   renderSplash() {
     return (
       <View style={styles.splash}>
-        <Text style={styles.splashHeader}>Found an Item</Text>
+      <Text style={styles.splashHeader}>Add an Item</Text>
         <Text style={styles.splashText}>
           Step 1: Take a Photo
         </Text>
@@ -200,13 +179,7 @@ class TestItem extends Component {
     } else if (this.state.status === 4) {
       return (
         <View style={styles.containerForm}>
-          {this.renderMatch()}
-        </View>
-      );
-    } else if (this.state.status === 5) {
-      return (
-        <View style={styles.containerForm}>
-          {this.renderNoMatch()}
+          {this.renderForm()}
         </View>
       );
     }
@@ -253,7 +226,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignSelf: 'stretch',
     alignItems: 'center',
-    backgroundColor: '#49cc52'
+    backgroundColor: '#7c48cc'
   },
   splash: {
     flex: 1,
@@ -282,13 +255,6 @@ const styles = StyleSheet.create({
     color: '#fff',
     marginBottom: 5,
   },
-  noMatch: {
-    flex: 1,
-    justifyContent: 'center',
-    alignSelf: 'stretch',
-    alignItems: 'center',
-    backgroundColor: 'red'
-  },
 
 });
 
@@ -299,4 +265,4 @@ const mapStateToProps = ({ core }) => {
 };
 
 // step 4
-export default connect(mapStateToProps, { manageItem })(TestItem);
+export default connect(mapStateToProps, { manageItem })(AddItem);

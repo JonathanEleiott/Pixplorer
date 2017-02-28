@@ -10,15 +10,10 @@ import {
 import Camera from 'react-native-camera';
 import axios from 'axios';
 import RNFetchBlob from 'react-native-fetch-blob';
-import { Card, CardSection, Button, Input } from './mostCommon';
-// For main server url ///////////////
-import config from '../config.js'; //
-/////////////////////////////////////
-
-// Step 2
+import config from '../config.js';
 import { manageItem } from '../actions';
 
-class CameraFrame extends Component {
+class CompareItem extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -26,28 +21,15 @@ class CameraFrame extends Component {
       newItemName: '',
       newItemDesc: '',
       newItemURL: '',
-      newItemListId: null
+      newItemListId: null,
+      currentList: null
     };
 
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   handleSubmit() {
-      console.log('FORM SUBMITTED - List ID:', this.props.listId);
-      console.log('Name:', this.state.newItemName);
-      console.log('Desc:', this.state.newItemDesc);
-      console.log('URL:', this.state.newItemURL);
-
-      const item = {
-        listId: this.props.listId,
-        name: this.state.newItemName,
-        desc: this.state.newItemDesc,
-        image: this.state.newItemURL
-      };
-
-      // Step 1
-      // Add item to Database and redirect user to updated list
-      this.props.manageItem(1, item);
+      this.props.manageItem(2, this.state.currentList);
   }
 
   openCamera() {
@@ -57,11 +39,9 @@ class CameraFrame extends Component {
   }
 
   takePicture() {
-    console.log('PRESSED');
     this.camera.capture()
       .then((data) => {
         Vibration.vibrate();
-        console.log('DATA IMG:', data.path);
 
         this.setState({
           status: 3,
@@ -70,19 +50,44 @@ class CameraFrame extends Component {
 
         RNFetchBlob.fs.readFile(data.path, 'base64')
         .then((imageData) => {
-          // handle the data ..
-          console.log('Image Size:', imageData.length);
           axios({
               method: 'post',
-              url: 'http://54.218.118.52:8080/postImage',
-              //url: 'http://198.199.94.223:8080/postImage',
-              data: { imageBuffer: imageData }
+              url: `${config.mainServer}/compareImage`,
+              data: { imageBuffer: imageData, referenceImageId: this.props.item.image }
             })
             .then((response) => {
-              console.log('SUCCESS: Image sent to server:', response.data);
-              this.setState({
-                newItemURL: response.data
-              });
+              if (response.data === 'Images are the same!') {
+                // MATCH
+                console.log('we have a match, now save to db');
+                axios({
+                    method: 'post',
+                    url: `${config.mainServer}/api/items/found`,
+                    data: { item: this.props.item, complete: 1 }
+                  }).then((responseDB) => {
+                    console.log('completed item saved to db');
+                    this.setState({
+                      currentList: responseDB.data,
+                      status: 4,
+                    });
+                  }).catch((error) => {
+                    console.log('Error saving to DB', error);
+                  });
+              } else {
+                // NO MATCH  
+                console.log('no match');
+                axios({
+                    method: 'post',
+                    url: `${config.mainServer}/api/items/found`,
+                    data: { item: this.props.item, complete: 0 }
+                  }).then((responseDB) => {
+                    this.setState({
+                      currentList: responseDB.data,
+                      status: 5,
+                    });
+                  }).catch((error) => {
+                    console.log('Error saving to DB', error);
+                  });
+              }
             })
             .catch((error) => {
               console.log('Error sending image to server', error);
@@ -91,34 +96,37 @@ class CameraFrame extends Component {
         });
   }
 
-  renderForm() {
+  renderNoMatch() {
     return (
-      <Card>
-        <CardSection>
-          <Input
-            label="Item Name"
-            placeholder="Golden Gate Bridge"
-            onChangeText={(text) => this.setState({ newItemName: text })}
-            value={this.state.newItemName}
-            maxLength={28}
-          />
-        </CardSection>
+      <View style={styles.splashNoMatch}>
+        <Text style={styles.splashHeader}>NOT A MATCH!</Text>
+        <Text style={styles.splashTextBig}>
+          :(
+        </Text>
+     
+        <Text style={styles.capture} onPress={this.handleSubmit}>Continue</Text>
+      </View>
+    );
+  }
 
-        <CardSection>
-          <Input
-            label="Description"
-            placeholder="Grab a shot of this iconic landmark!"
-            onChangeText={(text) => this.setState({ newItemDesc: text })}
-            value={this.state.newItemDesc}
-            maxLength={60}
-          />
-        </CardSection>
-        <CardSection>
-          <Button onPress={this.handleSubmit}>
-            Save Item
-          </Button>
-        </CardSection>
-      </Card>
+  renderMatch() {
+    return (
+      <View style={styles.splashMatch}>
+        <Text style={styles.splashHeader}>FOUND!</Text>
+        <Text style={styles.splashTextBig}>
+          :)
+        </Text>
+     
+        <Text style={styles.capture} onPress={this.handleSubmit}>Next!</Text>
+      </View>
+    );
+  }
+
+  renderAnalyzing() {
+    return (
+      <View style={styles.analyzing}>
+        <Text style={styles.splashHeader}>Analyzing...</Text>
+      </View>
     );
   }
 
@@ -141,7 +149,7 @@ class CameraFrame extends Component {
   renderSplash() {
     return (
       <View style={styles.splash}>
-      <Text style={styles.splashHeader}>Add an Item</Text>
+        <Text style={styles.splashHeader}>Found an Item</Text>
         <Text style={styles.splashText}>
           Step 1: Take a Photo
         </Text>
@@ -169,7 +177,19 @@ class CameraFrame extends Component {
     } else if (this.state.status === 3) {
       return (
         <View style={styles.containerForm}>
-          {this.renderForm()}
+          {this.renderAnalyzing()}
+        </View>
+      );
+    } else if (this.state.status === 4) {
+      return (
+        <View style={styles.containerForm}>
+          {this.renderMatch()}
+        </View>
+      );
+    } else if (this.state.status === 5) {
+      return (
+        <View style={styles.containerForm}>
+          {this.renderNoMatch()}
         </View>
       );
     }
@@ -207,9 +227,16 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#F5FCFF',
-  },
+  }, 
   containerForm: {
     flex: 1,
+  }, 
+  analyzing: {
+    flex: 1,
+    justifyContent: 'center',
+    alignSelf: 'stretch',
+    alignItems: 'center',
+    backgroundColor: '#7c48cc'
   },
   splash: {
     flex: 1,
@@ -222,10 +249,10 @@ const styles = StyleSheet.create({
     flex: 0,
     color: 'white',
     backgroundColor: 'transparent',
-    fontSize: 28,
+    fontSize: 36,
     padding: 10,
     margin: 20,
-    marginBottom: 200
+    marginBottom: 160
   },
   splashText: {
     color: '#fff',
@@ -238,14 +265,39 @@ const styles = StyleSheet.create({
     color: '#fff',
     marginBottom: 5,
   },
+  noMatch: {
+    flex: 1,
+    justifyContent: 'center',
+    alignSelf: 'stretch',
+    alignItems: 'center',
+    backgroundColor: 'red'
+  },
+  splashMatch: {
+    flex: 1,
+    justifyContent: 'center',
+    alignSelf: 'stretch',
+    alignItems: 'center',
+    backgroundColor: '#49cc52'
+  },
+  splashNoMatch: {
+    flex: 1,
+    justifyContent: 'center',
+    alignSelf: 'stretch',
+    alignItems: 'center',
+    backgroundColor: 'red'
+  },
+  splashTextBig: {
+    color: '#fff',
+    fontSize: 120,
+    textAlign: 'center',
+    marginBottom: 40,
+  },
 
 });
 
-// step 3
 const mapStateToProps = ({ core }) => {
   const { list } = core;
   return { list };
 };
 
-// step 4
-export default connect(mapStateToProps, { manageItem })(CameraFrame);
+export default connect(mapStateToProps, { manageItem })(CompareItem);

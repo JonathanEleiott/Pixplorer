@@ -54,7 +54,7 @@ export const createListClicked = () => {
 
 // Goes to camera so that user can add an item
 export const addItem = (list) => {
-  goToCamera(list);
+  goToAddItem(list);
   return {
     type: ADD_ITEM,
     payload: list
@@ -63,7 +63,7 @@ export const addItem = (list) => {
 
 // Goes to camera so that user can "find" an item
 export const clickedUncheckedBox = (item) => {
-  goToTestItem(item);
+  goToCompareItem(item);
   return {
     type: CLICKED_UNCHECKED_BOX,
     payload: item
@@ -247,23 +247,23 @@ const goToItemsList = (list, name) => {
   Actions.itemsList({ list, getTitle: () => name });
 };
 
-// Goes to the camera screen
-const goToCamera = (list) => {
+// Goes to the add an item
+const goToAddItem = (list) => {
   ////////////////////////////////////
-  // CHANGE TO Actions.camera() //////
+  // CHANGE TO Actions.addItem() //////
   // IF YOU DON'T WANT A BACK BUTON //
   ////////////////////////////////////
-  Actions.cameraFrame({ listId: list.id });
+  Actions.addItem({ listId: list.id });
 };
 
 // Goes to the camera screen
-const goToTestItem = (item) => {
-  console.log('goToTestItem', item);
+const goToCompareItem = (item) => {
+  console.log('goToCompareItem', item);
   ////////////////////////////////////
   // CHANGE TO Actions.camera() //////
   // IF YOU DON'T WANT A BACK BUTON //
   ////////////////////////////////////
-  Actions.testItem({ item });
+  Actions.compareItem({ item });
 };
 
 export const loading = () => {

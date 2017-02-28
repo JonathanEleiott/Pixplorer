@@ -6,8 +6,8 @@ import LoginForm from './components/LoginForm';
 import ItemsList from './components/ItemsList';
 import SubscribedList from './components/SubscribedList';
 import CreateList from './components/CreateList';
-import CameraFrame from './components/CameraFrame';
-import TestItem from './components/TestItem';
+import AddItem from './components/AddItem';
+import CompareItem from './components/CompareItem';
 
 //TODO: MAke sure to put the components back! Right now it goes straight to camera!!!
 const RouterComponent = () => {
@@ -30,13 +30,13 @@ const RouterComponent = () => {
           title="Create A List"
         />
         <Scene
-          key="cameraFrame"
-          component={CameraFrame}
+          key="addItem"
+          component={AddItem}
           title="Add Item"
         />
         <Scene
-          key="testItem"
-          component={TestItem}
+          key="compareItem"
+          component={CompareItem}
           title="Found Item"
         />
       </Scene>
