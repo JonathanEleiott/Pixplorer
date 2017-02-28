@@ -3,16 +3,18 @@
 import { Actions } from 'react-native-router-flux';
 import axios from 'axios';
 
-////////////////////////////////////////////
-// NEED TO CHANGE TITLE TO BETTER VERBAGE //
-// USE LIST AND ITEM INSTEAD ///////////////
-////////////////////////////////////////////
+///////////////////////////////////////////////////////
+// SUCCESS AND LOADING DO NOT CURRENTLY DO ANYTHING, //
+// BUT THEY ARE SET UP IF WE WANT TO MAKE A LOADING ///
+// INDICATOR //////////////////////////////////////////
+///////////////////////////////////////////////////////
 import {
   LIST_TITLE_CLICKED,
   CREATE_LIST_CLICKED,
   ADD_ITEM,
   CLICKED_UNCHECKED_BOX,
-  IMPORT_LISTS,
+  IMPORT_ALL_LISTS,
+  IMPORT_USER_LISTS,
   ADD_LIST_TO_DB,
   DELETE_ITEM,
   LIST_NAME_CHANGED,
@@ -35,8 +37,8 @@ const listUrl = config.mainServer;
 
 // Goes to items list for the list list that was clicked on
   // Sets clicked list to state/props
-export const listTitleClicked = (list) => {
-  goToItemsList(list, list.name);
+export const listTitleClicked = (list, origin) => {
+  goToItemsList(list, list.name, origin);
   return {
     type: LIST_TITLE_CLICKED,
     payload: list
@@ -71,10 +73,7 @@ export const clickedUncheckedBox = (item) => {
 };
 
 // Imports all the lists from the DB
-export const importLists = () => {
-  ///////////////////////////////////////////////////
-  // NEED TO SET UP LOADING SCREEN FOR AXIOS CALLS //
-  ///////////////////////////////////////////////////
+export const importAllLists = () => {
   loading();
   return (dispatch) => {
     axios({
@@ -83,12 +82,32 @@ export const importLists = () => {
     })
     .then(response => {
       dispatch({
-        type: IMPORT_LISTS,
+        type: IMPORT_ALL_LISTS,
         payload: response.data
       });
-      /////////////////////////////////////////////////////
-      // NEED TO TAKE AWAY LOADING SCREEN FOR AXIOS CALL //
-      /////////////////////////////////////////////////////
+      success();
+    })
+    .catch(error => {
+      console.log('error', error);
+    });
+  };
+};
+
+//////////////////////////////////////////////////////////////////
+// CURRENTLY LOADS ALL LISTS, BUT NEEDS TO CHANGE TO USER LISTS //
+//////////////////////////////////////////////////////////////////
+export const importUserLists = () => {
+  loading();
+  return (dispatch) => {
+    axios({
+      method: 'get',
+      url: `${listUrl}/api/all`
+    })
+    .then(response => {
+      dispatch({
+        type: IMPORT_ALL_LISTS,
+        payload: response.data
+      });
       success();
     })
     .catch(error => {
@@ -99,9 +118,6 @@ export const importLists = () => {
 
 // Attempts to add a new list to the DB and sends user to the new lists item list
 export const addListToDB = (listName) => {
-  ///////////////////////////////////////////////////
-  // NEED TO SET UP LOADING SCREEN FOR AXIOS CALLS //
-  ///////////////////////////////////////////////////
   loading();
   return (dispatch) => {
     axios({
@@ -110,14 +126,11 @@ export const addListToDB = (listName) => {
       data: listName
     })
     .then(response => {
-      goToItemsList(response.data.items, response.data.name);
+      goToItemsList(response.data.items, response.data.name, 'subscribedList');
       dispatch({
         type: ADD_LIST_TO_DB,
         payload: response.data
       });
-      /////////////////////////////////////////////////////
-      // NEED TO TAKE AWAY LOADING SCREEN FOR AXIOS CALL //
-      /////////////////////////////////////////////////////
       success();
     })
     .catch(error => {
@@ -128,9 +141,6 @@ export const addListToDB = (listName) => {
 
 // Deletes an item in the DB
 export const deleteItem = (item, list) => {
-  ///////////////////////////////////////////////////
-  // NEED TO SET UP LOADING SCREEN FOR AXIOS CALLS //
-  ///////////////////////////////////////////////////
   loading();
   return (dispatch) => {
     axios({
@@ -138,14 +148,11 @@ export const deleteItem = (item, list) => {
       url: `${listUrl}/api/items/${item.id}/${list.id}`
     })
     .then(response => {
-      goToItemsList(response.data.items, response.data.name);
+      goToItemsList(response.data.items, response.data.name, 'subscribedList');
       dispatch({
         type: DELETE_ITEM,
         payload: response.data
       });
-      /////////////////////////////////////////////////////
-      // NEED TO TAKE AWAY LOADING SCREEN FOR AXIOS CALL //
-      /////////////////////////////////////////////////////
       success();
     })
     .catch(error => {
@@ -156,9 +163,6 @@ export const deleteItem = (item, list) => {
 
 // Deletes a list from the DB
 export const deleteList = (listName) => {
-  ///////////////////////////////////////////////////
-  // NEED TO SET UP LOADING SCREEN FOR AXIOS CALLS //
-  ///////////////////////////////////////////////////
   loading();
   return (dispatch) => {
     axios({
@@ -171,9 +175,6 @@ export const deleteList = (listName) => {
         type: DELETE_LIST,
         payload: response.data
       });
-      /////////////////////////////////////////////////////
-      // NEED TO TAKE AWAY LOADING SCREEN FOR AXIOS CALL //
-      /////////////////////////////////////////////////////
       success();
     })
     .catch(error => {
@@ -193,9 +194,6 @@ export const listNameChanged = (name) => {
 // BILL
 // STEP 6
 export const manageItem = (type = 1, itemOrList) => {
-  ///////////////////////////////////////////////////
-  // NEED TO SET UP LOADING SCREEN FOR AXIOS CALLS //
-  ///////////////////////////////////////////////////
   loading();
   if (type === 2) {
     const list = itemOrList;
@@ -204,7 +202,7 @@ export const manageItem = (type = 1, itemOrList) => {
         type: MANAGE_ITEM,
         payload: list
       });
-      goToItemsList(list.items, list.name);
+      goToItemsList(list.items, list.name, 'subscribedList');
     };
   }
 
@@ -216,14 +214,11 @@ export const manageItem = (type = 1, itemOrList) => {
       data: item
     })
     .then(response => {
-      goToItemsList(response.data.items, response.data.name);
+      goToItemsList(response.data.items, response.data.name, 'subscribedList');
       dispatch({
         type: MANAGE_ITEM,
         payload: response.data
       });
-      /////////////////////////////////////////////////////
-      // NEED TO TAKE AWAY LOADING SCREEN FOR AXIOS CALL //
-      /////////////////////////////////////////////////////
       success();
     })
     .catch(error => {
@@ -243,8 +238,12 @@ const goToSubscribedList = () => {
 };
 
 // Goes to the items list screen
-const goToItemsList = (list, name) => {
-  Actions.itemsList({ list, getTitle: () => name });
+const goToItemsList = (list, name, destination) => {
+  Actions.itemsList({
+    list,
+    getTitle: () => name,
+    onBack: () => Actions[destination]()
+  });
 };
 
 // Goes to the add an item

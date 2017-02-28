@@ -7,6 +7,7 @@ import SubscribedList from './components/SubscribedList';
 import CreateList from './components/CreateList';
 import CreateItem from './components/CreateItem';
 import CompareItem from './components/CompareItem';
+import GlobalList from './components/GlobalList';
 
 const RouterComponent = () => {
   return (
@@ -19,12 +20,17 @@ const RouterComponent = () => {
         <Scene
           key="subscribedList"
           component={SubscribedList}
-          title="Choose A List"
+          title="Subscribed Lists"
         />
         <Scene
           key="itemsList"
           component={ItemsList}
+        />
+        <Scene
+          key="globalList"
+          component={GlobalList}
           onBack={() => Actions.subscribedList()}
+          title="Global Lists"
         />
         <Scene
           key="createList"
