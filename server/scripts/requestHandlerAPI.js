@@ -3,9 +3,9 @@ const headers = require('./headers');
 const knex = require('knex')({
   client: 'mysql',
   connection: {
-    host: '127.0.0.1',
+    host: 'localhost',
     user: 'root',
-    password: '',
+    password: 'OgmW/90sBZ!+',
     database: 'thesis',
     charset: 'utf8'
   }
