@@ -8,7 +8,7 @@ const Match = (props) => {
       <Text style={styles.splashTextBig}>
         :)
       </Text>
-      <Text style={styles.capture} onPress={props.handleSubmit}>Next!</Text>
+      <Text style={styles.button} onPress={props.buttonOneAction}>Next!</Text>
     </View>
   );
 };
@@ -20,24 +20,15 @@ const NoMatch = (props) => {
       <Text style={styles.splashTextBig}>
         :(
       </Text>
-    
-      <Text style={styles.capture} onPress={props.handleSubmit}>Continue</Text>
+      <View style={styles.buttonContainer}>
+        <Text style={styles.button} onPress={props.buttonOneAction}>Back to List</Text>
+        <Text style={styles.button} onPress={props.buttonTwoAction}>Try Again</Text>
+      </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  
-  capture: {
-    flex: 0,
-    backgroundColor: '#fff',
-    borderRadius: 5,
-    color: '#000',
-    padding: 10,
-    margin: 40,
-    fontSize: 20,
-  },
-  
   splashHeader: {
     flex: 0,
     color: 'white',
@@ -74,7 +65,20 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginBottom: 40,
   },
-
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    alignSelf: 'flex-end'
+  },
+  button: {
+    flex: 0,
+    backgroundColor: '#fff',
+    borderRadius: 5,
+    color: '#000',
+    padding: 10,
+    margin: 40,
+    fontSize: 20,
+  },
 });
 
 export { Match, NoMatch };

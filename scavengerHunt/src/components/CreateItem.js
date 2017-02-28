@@ -11,14 +11,14 @@ import Camera from 'react-native-camera';
 import axios from 'axios';
 import RNFetchBlob from 'react-native-fetch-blob';
 import { Card, CardSection, Button, Input } from './mostCommon';
-import { Analyzing, Instructions } from './manageItem';
+import { Analyzing, Instructions } from './subcomponents';
 // For main server url ///////////////
 import config from '../config.js'; //
 /////////////////////////////////////
 
 import { manageItem } from '../actions';
 
-class AddItem extends Component {
+class CreateItem extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -208,4 +208,4 @@ const mapStateToProps = ({ core }) => {
   return { list };
 };
 
-export default connect(mapStateToProps, { manageItem })(AddItem);
+export default connect(mapStateToProps, { manageItem })(CreateItem);

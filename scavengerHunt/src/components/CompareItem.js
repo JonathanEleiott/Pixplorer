@@ -12,7 +12,7 @@ import axios from 'axios';
 import RNFetchBlob from 'react-native-fetch-blob';
 import config from '../config.js';
 import { manageItem } from '../actions';
-import { Analyzing, Match, NoMatch, Instructions } from './manageItem';
+import { Analyzing, Match, NoMatch, Instructions } from './subcomponents';
 
 class CompareItem extends Component {
   constructor(props) {
@@ -58,7 +58,7 @@ class CompareItem extends Component {
               data: { imageBuffer: imageData, referenceImageId: this.props.item.image }
             })
             .then((response) => {
-              if (response.data === 'Images are the sameddd!') {
+              if (response.data === 'Images are the same!') {
                 // MATCH
                 console.log('we have a match, now save to db');
                 axios({
@@ -139,11 +139,11 @@ class CompareItem extends Component {
       );
     } else if (this.state.status === 4) {
       return (
-        <Match handleSubmit={this.handleSubmit} />
+        <Match buttonOneAction={this.handleSubmit} />
       );
     } else if (this.state.status === 5) {
       return (
-        <NoMatch handleSubmit={this.handleSubmit} />
+        <NoMatch buttonOneAction={this.handleSubmit} buttonTwoAction={this.openCamera} />
       );
     }
   }

@@ -54,7 +54,7 @@ export const createListClicked = () => {
 
 // Goes to camera so that user can add an item
 export const addItem = (list) => {
-  goToAddItem(list);
+  goToCreateItem(list);
   return {
     type: ADD_ITEM,
     payload: list
@@ -248,12 +248,12 @@ const goToItemsList = (list, name) => {
 };
 
 // Goes to the add an item
-const goToAddItem = (list) => {
+const goToCreateItem = (list) => {
   ////////////////////////////////////
-  // CHANGE TO Actions.addItem() //////
+  // CHANGE TO Actions.createItem() //////
   // IF YOU DON'T WANT A BACK BUTON //
   ////////////////////////////////////
-  Actions.addItem({ listId: list.id });
+  Actions.createItem({ listId: list.id });
 };
 
 // Goes to the camera screen
