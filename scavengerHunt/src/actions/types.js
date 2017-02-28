@@ -7,7 +7,7 @@ export const SIGNUP_USER = 'signup_user';
 export const LOGIN_USER_SUCCESS = 'login_user_sucess';
 export const LOGIN_USER_FAIL = 'login_user_fail';
 
-export const TITLE_CLICKED = 'title_clicked';
+export const LIST_TITLE_CLICKED = 'list_title_clicked';
 export const CREATE_LIST_CLICKED = 'create_list_clicked';
 export const ADD_ITEM = 'add_item';
 export const CLICKED_UNCHECKED_BOX = 'clicked_unchecked_box';
@@ -20,4 +20,4 @@ export const LOADING = 'loading';
 export const SUCCESS = 'success';
 
 // Bill Added - step 7
-export const ADD_ITEM_TO_LIST = 'add_item_to_list';
+export const MANAGE_ITEM = 'manage_item';

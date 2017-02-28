@@ -6,23 +6,23 @@ import { connect } from 'react-redux';
 import Swipeout from '@maintained-repos/react-native-swipeout';
 import { Card, CardSection, Button } from './mostCommon';
 import rightArrow from '../images/rightArrow.png';
-import { titleClicked, createListClicked, importLists, deleteList } from '../actions';
+import { listTitleClicked, createListClicked, importLists, deleteList } from '../actions';
 
 ///////////////////////////////////////////////////////////////////////////////
 // LIST OF HUNTS IS A HARDCODED JSON FILE!!! REPLACE WITH AJAX CALL TO DB... //
 // import listOfHunts from '../listOfHunts.json'; /////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 
-class ListChooser extends Component {
+class SubscribedList extends Component {
 
   // Sets lists to all the lists in the DB
   componentWillMount() {
     this.props.importLists();
   }
 
-  // Goes to hunting list for that title
-  clickOnATitle(title) {
-    this.props.titleClicked(title);
+  // Goes to items list for that list
+  clickOnATitle(list) {
+    this.props.listTitleClicked(list);
   }
 
   // Goes to create a list screen
@@ -36,18 +36,16 @@ class ListChooser extends Component {
   }
 
   render() {
-    console.log('props', this.props);
-
     return (
       <ScrollView>
         <Card>
-          { this.props.lists.map((title, index) => {
-            const { titleStyle, rightArrowStyle } = styles;
+          { this.props.allLists.map((list, index) => {
+            const { listStyle, rightArrowStyle } = styles;
             const swipeButts = [{
               key: Math.random(),
               text: 'Delete',
               backgroundColor: 'red',
-              onPress: () => this.deleteListFromDB(title)
+              onPress: () => this.deleteListFromDB(list)
             }];
             return (
               <Swipeout key={index} right={swipeButts}>
@@ -55,16 +53,16 @@ class ListChooser extends Component {
                   <TouchableHighlight
                     activeOpacity={0.5}
                     underlayColor={'white'}
-                    value={title}
-                    onPress={() => this.clickOnATitle(title)}
+                    value={list}
+                    onPress={() => this.clickOnATitle(list)}
                   >
-                    <Text style={titleStyle} value={title.name}>{title.name}</Text>
+                    <Text style={listStyle} value={list.name}>{list.name}</Text>
                   </TouchableHighlight>
                   <TouchableHighlight
                     activeOpacity={0.5}
                     underlayColor={'white'}
-                    value={title}
-                    onPress={() => this.clickOnATitle(title)}
+                    value={list}
+                    onPress={() => this.clickOnATitle(list)}
                   >
                     <Image
                       source={rightArrow}
@@ -86,7 +84,7 @@ class ListChooser extends Component {
 }
 
 const styles = {
-  titleStyle: {
+  listStyle: {
     fontSize: 20,
     width: 300
   },
@@ -100,12 +98,12 @@ const styles = {
   }
 };
 
-const mapStateToProps = ({ list }) => {
-  const { title, lists } = list;
+const mapStateToProps = ({ core }) => {
+  const { list, allLists } = core;
 
-  return { title, lists };
+  return { list, allLists };
 };
 
 export default connect(mapStateToProps, {
-  titleClicked, createListClicked, importLists, deleteList
-})(ListChooser);
+  listTitleClicked, createListClicked, importLists, deleteList
+})(SubscribedList);

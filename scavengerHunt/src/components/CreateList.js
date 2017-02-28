@@ -38,8 +38,8 @@ class CreateList extends Component {
   }
 }
 
-const mapStateToProps = ({ list }) => {
-  const { listName } = list;
+const mapStateToProps = ({ core }) => {
+  const { listName } = core;
 
   return { listName };
 };
