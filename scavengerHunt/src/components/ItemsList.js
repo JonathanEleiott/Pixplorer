@@ -1,13 +1,14 @@
 // Shows a list of items items based on which list was clicked
 
 import React, { Component } from 'react';
-import { Image, Text, ScrollView } from 'react-native';
+import { View, Text, ScrollView } from 'react-native';
 import { connect } from 'react-redux';
 import Swipeout from '@maintained-repos/react-native-swipeout';
+import FontAwesome from 'react-native-fontawesome';
 import { Card, CardSection, Button } from './mostCommon';
 import { addItem, clickedUncheckedBox, deleteItem } from '../actions';
-import emptyCheckbox from '../images/emptyCheckbox.png';
-import checkedCheckbox from '../images/checkedCheckbox.png';
+// import emptyCheckbox from '../images/emptyCheckbox.png';
+// import checkedCheckbox from '../images/checkedCheckbox.png';
 
 /////////////////////////////////////////////////////////
 // ITEM LIST IS A HARDCODED JSON FILE!!! ////////////////
@@ -24,19 +25,16 @@ class ItemsList extends Component {
   listTitle(item, bool) {
     if (this.props.list && bool) {
       return (
-        <Image
-          source={checkedCheckbox}
-          style={{ width: 30, height: 30 }}
-          alt="checked checkbox"
-        />
+        <View>
+          <FontAwesome style={styles.checkFull}>checkSquareO</FontAwesome>
+        </View>
       );
     } else if (this.props.list) {
+      // empty
       return (
-        <Image
-          source={emptyCheckbox}
-          style={{ width: 30, height: 30 }}
-          alt="empty checkbox"
-        />
+        <View>
+          <FontAwesome style={styles.checkEmpty}>squareO</FontAwesome>
+        </View>
       );
     }
   }
@@ -107,7 +105,7 @@ class ItemsList extends Component {
 
   render() {
     return (
-      <ScrollView>
+      <ScrollView style={styles.listStyle}>
         <Card>
           { this.renderList() }
       <Button onPress={this.addItemToList.bind(this)}>Add Item</Button>
@@ -118,6 +116,9 @@ class ItemsList extends Component {
 }
 
 const styles = {
+  listStyle: {
+    marginBottom: 40
+  },
   nameStyle: {
     paddingLeft: 10,
     fontSize: 20,
@@ -126,6 +127,14 @@ const styles = {
   descriptionStyle: {
     fontSize: 16,
     color: '#666'
+  },
+  checkEmpty: {
+    fontSize: 30,
+    color: '#333'
+  },
+  checkFull: {
+    fontSize: 30,
+    color: 'green'
   }
 };
 

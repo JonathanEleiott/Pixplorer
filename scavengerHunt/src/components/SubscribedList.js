@@ -1,11 +1,11 @@
 // Creates a list of all scavenger hunts
 
 import React, { Component } from 'react';
-import { Text, Image, ScrollView, TouchableHighlight } from 'react-native';
+import { Text, View, ScrollView, TouchableHighlight } from 'react-native';
 import { connect } from 'react-redux';
 import Swipeout from '@maintained-repos/react-native-swipeout';
+import FontAwesome from 'react-native-fontawesome';
 import { Card, CardSection, Button } from './mostCommon';
-import rightArrow from '../images/rightArrow.png';
 import { listTitleClicked, createListClicked, importLists, deleteList } from '../actions';
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -40,7 +40,7 @@ class SubscribedList extends Component {
       <ScrollView>
         <Card>
           { this.props.allLists.map((list, index) => {
-            const { listStyle, rightArrowStyle } = styles;
+            const { listStyle, arrowStyle } = styles;
             const swipeButts = [{
               key: Math.random(),
               text: 'Delete',
@@ -64,11 +64,10 @@ class SubscribedList extends Component {
                     value={list}
                     onPress={() => this.clickOnATitle(list)}
                   >
-                    <Image
-                      source={rightArrow}
-                      style={rightArrowStyle}
-                      alt="right arrow"
-                    />
+                    <View>
+                      <FontAwesome style={arrowStyle}>arrowCircleRight</FontAwesome>
+                    </View>
+
                   </TouchableHighlight>
                 </CardSection>
               </Swipeout>
@@ -88,13 +87,9 @@ const styles = {
     fontSize: 20,
     width: 300
   },
-  rightArrowStyle: {
-    width: 30,
-    height: 30
-  },
-  onClickStyle: {
-
-
+  arrowStyle: {
+    fontSize: 30,
+    color: '#333'
   }
 };
 

@@ -3,10 +3,10 @@ import { View, Text, StyleSheet } from 'react-native';
 import { connect } from 'react-redux';
 
 import { Actions } from 'react-native-router-flux';
+import FontAwesome from 'react-native-fontawesome';
 import * as Keychain from 'react-native-keychain';
 //use splash to check if user's credentials exist in KeyChain for iOS
 import { emailChanged, passwordChanged, loginUser, signupUser } from '../actions';
-
 
 class Splash extends Component {
   
@@ -38,7 +38,7 @@ class Splash extends Component {
     return (
       <View style={styles.container}>
         <Text style={styles.textBig}>
-          LOGO
+          <FontAwesome>arrowsAlt</FontAwesome>
         </Text>
       </View>
     );
@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
   },
   textBig: {
     color: '#fff',
-    fontSize: 120,
+    fontSize: 160,
     textAlign: 'center',
   },
 });
