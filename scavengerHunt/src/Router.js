@@ -8,13 +8,24 @@ import CreateList from './components/CreateList';
 import CreateItem from './components/CreateItem';
 import CompareItem from './components/CompareItem';
 import GlobalList from './components/GlobalList';
+import ProfilePage from './components/ProfilePage';
 
 const RouterComponent = () => {
   return (
     <Router sceneStyle={{ paddingTop: 65 }}>
-      <Scene key="splash" component={Splash} title="Skavenger" timeout={1000} nextScene={'main'} initial />
-      <Scene key="auth" >
-        <Scene key="login" component={LoginForm} title="Please Login" />
+      <Scene
+        key="splash"
+        component={Splash}
+        title="Skavenger"
+        timeout={3000}
+        nextScene={'auth'}
+      />
+      <Scene key="auth">
+        <Scene
+          key="login"
+          component={LoginForm}
+          title="Please Login"
+        />
       </Scene>
       <Scene key="main" >
         <Scene
@@ -48,7 +59,14 @@ const RouterComponent = () => {
           title="Found Item"
         />
       </Scene>
-    </Router>
+      <Scene key="user">
+        <Scene
+          key="profilePage"
+          component={ProfilePage}
+          title="Profile Page"
+        />
+      </Scene>
+    </Router >
   );
 };
 

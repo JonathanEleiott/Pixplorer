@@ -85,7 +85,7 @@ class ItemsList extends Component {
             </Swipeout>
           );
         }
-        
+
         return (
           this.renderBody(item, index)
         );
