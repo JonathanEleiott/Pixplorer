@@ -21,14 +21,12 @@ class LoginForm extends Component {
   // Sends AJAX request to log in the user
   loginButtonPress() {
     const { email, password } = this.props;
-
     this.props.loginUser({ email, password });
   }
 
   // Sends AJAX request to sign up the user
   signupButtonPress() {
     const { email, password } = this.props;
-
     this.props.signupUser({ email, password });
   }
 
