@@ -1,7 +1,6 @@
-// Allows movement from one screen to another
-
 import React from 'react';
 import { Scene, Router, Actions } from 'react-native-router-flux';
+import Splash from './components/Splash';
 import LoginForm from './components/LoginForm';
 import ItemsList from './components/ItemsList';
 import SubscribedList from './components/SubscribedList';
@@ -9,11 +8,14 @@ import CreateList from './components/CreateList';
 import CreateItem from './components/CreateItem';
 import CompareItem from './components/CompareItem';
 
-//TODO: MAke sure to put the components back! Right now it goes straight to camera!!!
 const RouterComponent = () => {
   return (
     <Router sceneStyle={{ paddingTop: 65 }}>
-      <Scene key="main">
+      <Scene key="splash" component={Splash} title="Skavenger" timeout={3000} nextScene={'main'} />
+      <Scene key="auth">
+        <Scene key="login" component={LoginForm} title="Please Login" />
+      </Scene>
+      <Scene key="main" initial>
         <Scene
           key="subscribedList"
           component={SubscribedList}
@@ -40,10 +42,7 @@ const RouterComponent = () => {
           title="Found Item"
         />
       </Scene>
-      <Scene key="auth">
-        <Scene key="login" component={LoginForm} title="Please Login" />
-      </Scene>
-    </Router >
+    </Router>
   );
 };
 
