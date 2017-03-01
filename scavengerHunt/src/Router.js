@@ -10,6 +10,10 @@ import CompareItem from './components/CompareItem';
 import GlobalList from './components/GlobalList';
 import ProfilePage from './components/ProfilePage';
 
+//TODO: MAke sure to put the components back! Right now it goes straight to camera!!!
+/////////////////////////////////////////////////
+// Profile Page needs a username and user info //
+/////////////////////////////////////////////////
 const RouterComponent = () => {
   return (
     <Router sceneStyle={{ paddingTop: 65 }}>
@@ -59,11 +63,17 @@ const RouterComponent = () => {
           title="Found Item"
         />
       </Scene>
+      <Scene key="auth">
+        <Scene key="login" component={LoginForm} title="Please Login" />
+      </Scene>
       <Scene key="user">
         <Scene
           key="profilePage"
           component={ProfilePage}
           title="Profile Page"
+          onLeft={() => Actions.main()}
+          leftTitle={'Subscribe'}
+          initial
         />
       </Scene>
     </Router >

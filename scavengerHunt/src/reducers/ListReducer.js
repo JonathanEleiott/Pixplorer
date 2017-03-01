@@ -9,6 +9,7 @@ import {
   IMPORT_USER_LISTS,
   ADD_LIST_TO_DB,
   ADD_LIST_TO_SUSCRIBED_PAGE,
+  SEARCH_GLOBAL_LIST_CHANGED,
   DELETE_ITEM,
   LIST_NAME_CHANGED,
   DELETE_LIST,
@@ -51,6 +52,9 @@ export default (state = INITIAL_STATE, action) => {
     // Adds list to the users subscribed page
     case ADD_LIST_TO_SUSCRIBED_PAGE:
       return { ...state, userLists: action.payload };
+    // Updates search results based on what the user has typed in
+    case SEARCH_GLOBAL_LIST_CHANGED:
+      return { ...state, searchText: action.payload };
     // Updates props to not include this item
     case DELETE_ITEM:
       return { ...state, list: action.payload };

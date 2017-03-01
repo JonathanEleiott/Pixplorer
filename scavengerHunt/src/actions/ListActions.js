@@ -16,6 +16,8 @@ import {
   IMPORT_ALL_LISTS,
   IMPORT_USER_LISTS,
   ADD_LIST_TO_DB,
+  ADD_LIST_TO_SUSCRIBED_PAGE,
+  SEARCH_GLOBAL_LIST_CHANGED,
   DELETE_ITEM,
   LIST_NAME_CHANGED,
   DELETE_LIST,
@@ -139,6 +141,39 @@ export const addListToDB = (listName) => {
   };
 };
 
+////////////////////////////////////////////////////////////////////////////////
+// This does not currently do anything so make sure we hook up the axios call //
+////////////////////////////////////////////////////////////////////////////////
+export const addListToSubscribedPage = (list) => {
+  loading();
+  return (dispatch) => {
+    axios({
+      method: 'post',
+      url: `${listUrl}`,
+      data: list
+    })
+    .then(response => {
+      goToSubscribedList();
+      dispatch({
+        type: ADD_LIST_TO_SUSCRIBED_PAGE,
+        payload: response.data
+      });
+      success();
+    })
+    .catch(error => {
+      console.log('error in addListToSubscribedPage call', error);
+    });
+  };
+};
+
+// Updates global list with search results
+export const searchGlobalListChanged = (text) => {
+  return {
+    type: SEARCH_GLOBAL_LIST_CHANGED,
+    payload: text
+  };
+};
+
 // Deletes an item in the DB
 export const deleteItem = (item, list) => {
   loading();
@@ -239,11 +274,19 @@ const goToSubscribedList = () => {
 
 // Goes to the items list screen
 const goToItemsList = (list, name, destination) => {
-  Actions.itemsList({
-    list,
-    getTitle: () => name,
-    onBack: () => Actions[destination]()
-  });
+  if (destination === 'globalList') {
+    Actions.itemsList({
+      list,
+      getTitle: () => name,
+      fromGlobal: true
+    });
+  } else {
+    Actions.itemsList({
+      list,
+      getTitle: () => name,
+      onBack: () => Actions[destination]()
+    });
+  }
 };
 
 // Goes to the add an item

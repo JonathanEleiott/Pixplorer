@@ -5,7 +5,7 @@ import { Text, Image, ScrollView, TouchableHighlight } from 'react-native';
 import { connect } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
 import Swipeout from '@maintained-repos/react-native-swipeout';
-import { Card, CardSection, Button } from './mostCommon';
+import { Card, CardSection, Button, Input } from './mostCommon';
 import plusSign from '../images/plusSign.png';
 import rightArrow from '../images/rightArrow.png';
 import {
@@ -14,7 +14,8 @@ import {
   importAllLists,
   deleteList,
   goToSubscribedList,
-  addListToSubscribedPage
+  addListToSubscribedPage,
+  searchGlobalListChanged
 } from '../actions';
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -27,6 +28,12 @@ class SubscribedList extends Component {
   // Sets lists to all the lists in the DB
   componentWillMount() {
     this.props.importAllLists();
+  }
+
+  // Updates list as user types in the search box
+  onSearchGlobalListChange(text) {
+    console.log('global search props', this.props);
+    this.props.searchGlobalListChanged(text);
   }
 
   // Goes to items list for that list
@@ -47,6 +54,27 @@ class SubscribedList extends Component {
   // Adds a list to the users subscribed page
   clickAddListToSubscribedPage(list) {
     this.props.addListToSubscribedPage(list);
+  }
+
+  swipeoutBody(list, index) {
+    if (list.admin) {
+      const swipeButtonss = [{
+        key: Math.random(),
+        text: 'Delete',
+        backgroundColor: 'red',
+        onPress: () => this.deleteListFromDB(list)
+      }];
+      return (
+        <Swipeout key={index} right={swipeButtonss}>
+          { this.renderBody(list, index) }
+          <Button onPress={this.createAList.bind(this)}>
+            Create A New List
+          </Button>
+        </Swipeout>
+      );
+    }
+
+    return this.renderBody(list, index);
   }
 
   // Checks to see if the user has admin abilities
@@ -95,28 +123,23 @@ class SubscribedList extends Component {
     return (
       <ScrollView>
         <Card>
+          <CardSection>
+            <Input
+              label="Search List"
+              placeholder="My Hunt"
+              onChangeText={this.onSearchGlobalListChange.bind(this)}
+              value={this.props.searchText}
+            />
+          </CardSection>
           { this.props.allLists.map((list, index) => {
             /////////////////////////////////////////////
             // SHOW ALL THE GLOABL LISTS TO THE USER  //
             ////////////////////////////////////////////
-            if (list.admin) {
-              const swipeButtonss = [{
-                key: Math.random(),
-                text: 'Delete',
-                backgroundColor: 'red',
-                onPress: () => this.deleteListFromDB(list)
-              }];
-              return (
-                <Swipeout key={index} right={swipeButtonss}>
-                  { this.renderBody(list, index) }
-                  <Button onPress={this.createAList.bind(this)}>
-                    Create A New List
-                  </Button>
-                </Swipeout>
-              );
+            if (!this.props.searchText) {
+              return (this.swipeoutBody(list, index));
+            } else if (list.name.includes(this.props.searchText)) {
+              return (this.swipeoutBody(list, index));
             }
-
-            return this.renderBody(list, index);
           })}
           <Button onPress={() => Actions.subscribedList()}>
             Go To Subscribed List
@@ -140,9 +163,9 @@ const styles = {
 };
 
 const mapStateToProps = ({ core }) => {
-  const { list, allLists } = core;
+  const { list, allLists, searchText } = core;
 
-  return { list, allLists };
+  return { list, allLists, searchText };
 };
 
 export default connect(mapStateToProps, {
@@ -151,5 +174,6 @@ export default connect(mapStateToProps, {
   importAllLists,
   deleteList,
   goToSubscribedList,
-  addListToSubscribedPage
+  addListToSubscribedPage,
+  searchGlobalListChanged
 })(SubscribedList);

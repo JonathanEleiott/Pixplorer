@@ -23,7 +23,7 @@ class ItemsList extends Component {
 
   // Displays item with checked/unchecked box based on if it has been found yet
   listTitle(item, bool) {
-    if (this.props.list && bool) {
+    if (this.props.list && bool && !this.props.fromGlobal) {
       return (
         <View>
           <FontAwesome style={styles.checkFull}>checkSquareO</FontAwesome>
@@ -67,6 +67,31 @@ class ItemsList extends Component {
     this.props.deleteItem(item, this.props.list);
   }
 
+  // Checks whether we came from global scope
+    // to see if we can mark things off the list
+  clickableBoxes(item) {
+    const { nameStyle, descriptionStyle } = styles;
+    if (this.props.fromGlobal) {
+      return (
+        <Text style={nameStyle} >{ `${item.name} ${'\n'}` }
+          <Text style={descriptionStyle} >{`${item.description}`}</Text>
+        </Text>
+      );
+    }
+    return (
+      <Text
+        style={nameStyle}
+        onPress={() => {
+          if (item.complete === 0) {
+            this.uncheckedBoxClicked(item);
+          }
+        }}
+      >{ `${item.name} ${'\n'}` }
+        <Text style={descriptionStyle}>{`${item.description}`}</Text>
+      </Text>
+    );
+  }
+
   // Shows the list of items on the page
   renderList() {
     if (this.props.list.items) {
@@ -96,23 +121,10 @@ class ItemsList extends Component {
 
   // Allows editing based on whether the current user made the list
   renderBody(item, index) {
-    const { nameStyle, descriptionStyle } = styles;
     return (
       <CardSection key={index} style={{ borderBottomWidth: 0, padding: 20, height: 100 }}>
         { this.isComplete(item.complete, item) }
-        <Text
-          style={nameStyle}
-          onPress={() => {
-            if (item.complete === 0) {
-              this.uncheckedBoxClicked(item);
-            }
-          }}
-        >{ `${item.name} ${'\n'}` }
-        <Text
-          style={descriptionStyle}
-        >{`${item.description}`}
-        </Text>
-        </Text>
+        { this.clickableBoxes(item) }
       </CardSection>
     );
   }
