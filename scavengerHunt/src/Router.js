@@ -11,8 +11,11 @@ import CompareItem from './components/CompareItem';
 const RouterComponent = () => {
   return (
     <Router sceneStyle={{ paddingTop: 65 }}>
-      <Scene key="splash" component={Splash} title="Skavenger" timeout={2000} nextScene={'main'} />
-      <Scene key="main">
+      <Scene key="splash" component={Splash} title="Skavenger" timeout={3000} nextScene={'main'} />
+      <Scene key="auth">
+        <Scene key="login" component={LoginForm} title="Please Login" />
+      </Scene>
+      <Scene key="main" initial>
         <Scene
           key="subscribedList"
           component={SubscribedList}
@@ -38,9 +41,6 @@ const RouterComponent = () => {
           component={CompareItem}
           title="Found Item"
         />
-      </Scene>
-      <Scene key="auth">
-        <Scene key="login" component={LoginForm} title="Please Login" />
       </Scene>
     </Router>
   );
