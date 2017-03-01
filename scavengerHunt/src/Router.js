@@ -11,11 +11,11 @@ import CompareItem from './components/CompareItem';
 const RouterComponent = () => {
   return (
     <Router sceneStyle={{ paddingTop: 65 }}>
-      <Scene key="splash" component={Splash} title="Skavenger" timeout={3000} nextScene={'main'} />
-      <Scene key="auth">
+      <Scene key="splash" component={Splash} title="Skavenger" timeout={1000} nextScene={'main'} initial />
+      <Scene key="auth" >
         <Scene key="login" component={LoginForm} title="Please Login" />
       </Scene>
-      <Scene key="main" initial>
+      <Scene key="main" >
         <Scene
           key="subscribedList"
           component={SubscribedList}

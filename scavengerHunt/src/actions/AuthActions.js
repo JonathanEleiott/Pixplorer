@@ -10,6 +10,8 @@ import {
   LOGIN_USER_SUCCESS,
   LOGIN_USER_FAIL
 } from './types';
+import * as Keychain from 'react-native-keychain';
+
 
 const authUrl = 'http://198.199.94.223:8080/';
 
@@ -34,7 +36,11 @@ export const passwordChanged = (text) => {
 // RESPONSE NEEDS TO SEND CORRECT USER, //
 // NOT 'globalUser' OR 'user' ////////////
 //////////////////////////////////////////
-export const loginUser = ({ email, password }) => {
+export const loginUser = (credentials, callback) => {
+  const email = credentials.username;
+  const password = credentials.password;
+
+  console.log('loginUser Arguments: ', email, password);
   return (dispatch) => {
     dispatch({ type: LOGIN_USER });
 
@@ -49,6 +55,16 @@ export const loginUser = ({ email, password }) => {
     .then(response => {
       console.log('loginUser response', response);
       loginUserSuccess(dispatch, 'globalUser');
+      callback();
+      
+      Keychain
+        .setGenericPassword(email, password)
+        .then(() => {
+          console.log({ status: 'Credentials saved!' });
+        })
+        .catch((err) => {
+          console.log({ status: 'Could not save credentials, ' + err });
+        });
     })
     .catch(response => {
       console.log('response from login request error', response);
