@@ -9,6 +9,7 @@ import CreateItem from './components/CreateItem';
 import CompareItem from './components/CompareItem';
 import GlobalList from './components/GlobalList';
 import ProfilePage from './components/ProfilePage';
+import profilePageIcon from './images/rightArrow.png';
 
 //TODO: MAke sure to put the components back! Right now it goes straight to camera!!!
 /////////////////////////////////////////////////
@@ -17,21 +18,32 @@ import ProfilePage from './components/ProfilePage';
 const RouterComponent = () => {
   return (
     <Router sceneStyle={{ paddingTop: 65 }}>
-    <Scene key="auth" initial >
-        <Scene
-          key="login"
-          component={LoginForm}
-          title="Please Login"
+      <Scene 
+        key="splash" 
+        component={Splash} 
+        title="Skavenger" 
+        timeout={500} 
+        nextScene={'main'} 
+        initial 
+      />
+
+      <Scene key="auth" >
+        <Scene 
+          key="login" 
+          component={LoginForm} 
+          title="Please Login" 
+          onRight={() => { console.log('clicked the Right Button!'); }}
+          //rightButtonImage={profilePageIcon}
+          //rightButtonTextStyle={{font: 10}} 
+          rightTitle="Profile" 
         />
       </Scene>
-      <Scene
-        key="splash"
-        component={Splash}
-        title="Skavenger"
-        timeout={3000}
-        nextScene={'auth'}
-      />
-    <Scene key="main" >
+
+      <Scene key="profile" initial>
+        <Scene key="profilePage" component={ProfilePage} title="My Profile" />
+      </Scene>
+
+      <Scene key="main" >
         <Scene
           key="subscribedList"
           component={SubscribedList}
@@ -44,39 +56,34 @@ const RouterComponent = () => {
         <Scene
           key="globalList"
           component={GlobalList}
-          onBack={() => Actions.subscribedList()}
           title="Global Lists"
+          rightButtonImage={profilePageIcon}
+          onBack={() => Actions.subscribedList()}
+          onRight={() => { console.log('clicked the Right Button!'); }}
         />
         <Scene
           key="createList"
           component={CreateList}
           title="Create A List"
+          onRight={() => { console.log('clicked the Right Button!'); }}
+          rightButtonImage={profilePageIcon}
         />
         <Scene
           key="createItem"
           component={CreateItem}
           title="Create Item"
+          onRight={() => { console.log('clicked the Right Button!'); }}
+          rightButtonImage={profilePageIcon}
         />
         <Scene
           key="compareItem"
           component={CompareItem}
           title="Found Item"
+          onRight={() => { console.log('clicked the Right Button!'); }}
+          rightButtonImage={profilePageIcon}
         />
       </Scene>
-      <Scene key="auth">
-        <Scene key="login" component={LoginForm} title="Please Login" />
-      </Scene>
-      <Scene key="user">
-        <Scene
-          key="profilePage"
-          component={ProfilePage}
-          title="Profile Page"
-          onLeft={() => Actions.main()}
-          leftTitle={'Subscribe'}
-          initial
-        />
-      </Scene>
-    </Router >
+    </Router>
   );
 };
 
