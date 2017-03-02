@@ -107,6 +107,7 @@ export const importUserLists = (userFirebaseId) => {
       url: `${listUrl}/api/lists/${userFirebaseId}`
     })
     .then(response => {
+      console.log('response importUserLists', response);
       dispatch({
         type: IMPORT_USER_LISTS,
         payload: response.data

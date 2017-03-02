@@ -55,6 +55,7 @@ export const loginUser = (credentials) => {
       }
     })
     .then(response => {
+      console.log('loginUser success', response);
       loginUserSuccess(dispatch, response.data.uid);
       // callbackFromSplashComponent();
       //pass dispatch down to getUniqueUserId
@@ -71,7 +72,7 @@ export const loginUser = (credentials) => {
     })
     .catch(response => {
       console.log('response from login request error', response);
-      loginUserFail(dispatch, response.data.uid);
+      loginUserFail(dispatch, 'user');
     });
   };
 };
@@ -94,11 +95,12 @@ export const signupUser = ({ email, password }) => {
       }
     })
     .then((response) => {
+      console.log('response signupUser', response);
       loginUserSuccess(dispatch, response.data.uid);
     })
     .catch(response => {
       console.log('response from signup request error', response);
-      loginUserFail(dispatch, response.data.uid);
+      loginUserFail(dispatch, 'user');
     });
   };
 };

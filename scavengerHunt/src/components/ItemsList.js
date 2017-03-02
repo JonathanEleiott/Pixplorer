@@ -50,8 +50,8 @@ class ItemsList extends Component {
   }
 
   // Returns listTitle based on whether the item has been found or not
-  isComplete(complete, item) {
-    if (complete === 1) {
+  isComplete(done, item) {
+    if (done && done.id) {
       return (
         this.listTitle(item, true)
       );
@@ -82,7 +82,7 @@ class ItemsList extends Component {
       <Text
         style={nameStyle}
         onPress={() => {
-          if (item.complete === 0) {
+          if (item.done.id === undefined) {
             this.uncheckedBoxClicked(item);
           }
         }}
@@ -123,7 +123,7 @@ class ItemsList extends Component {
   renderBody(item, index) {
     return (
       <CardSection key={index} style={{ borderBottomWidth: 0, padding: 20, height: 100 }}>
-        { this.isComplete(item.complete, item) }
+        { this.isComplete(item.done, item) }
         { this.clickableBoxes(item) }
       </CardSection>
     );

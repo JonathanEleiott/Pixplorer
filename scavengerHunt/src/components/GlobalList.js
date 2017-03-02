@@ -1,13 +1,12 @@
 // Creates a list of all scavenger hunts
 
 import React, { Component } from 'react';
-import { Text, Image, ScrollView, TouchableHighlight } from 'react-native';
+import { Text, ScrollView, TouchableHighlight, View } from 'react-native';
 import { connect } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
+import FontAwesome from 'react-native-fontawesome';
 import Swipeout from '@maintained-repos/react-native-swipeout';
 import { Card, CardSection, Button, Input } from './mostCommon';
-import plusSign from '../images/plusSign.png';
-import rightArrow from '../images/rightArrow.png';
 import {
   listTitleClicked,
   createListClicked,
@@ -79,7 +78,7 @@ class SubscribedList extends Component {
 
   // Checks to see if the user has admin abilities
   renderBody(list, index) {
-    const { listStyle, imageStyle } = styles;
+    const { listStyle, imageStyle, arrowStyle } = styles;
 
     return (
       <CardSection key={index} style={{ padding: 20 }}>
@@ -89,11 +88,9 @@ class SubscribedList extends Component {
           value={list}
           onPress={() => this.clickAddListToSubscribedPage(list)}
         >
-          <Image
-            source={plusSign}
-            style={imageStyle}
-            alt="plus sign"
-          />
+        <View >
+          <FontAwesome style={imageStyle} >plusCircle</FontAwesome>
+        </View>
         </TouchableHighlight>
         <TouchableHighlight
         activeOpacity={0.5}
@@ -109,11 +106,9 @@ class SubscribedList extends Component {
           value={list}
           onPress={() => this.clickOnATitle(list)}
         >
-          <Image
-            source={rightArrow}
-            style={imageStyle}
-            alt="right arrow"
-          />
+        <View>
+          <FontAwesome style={arrowStyle}>arrowCircleRight</FontAwesome>
+        </View>
         </TouchableHighlight>
       </CardSection>
     );
@@ -157,8 +152,12 @@ const styles = {
     paddingLeft: 10,
   },
   imageStyle: {
-    width: 30,
-    height: 30
+    fontSize: 30,
+    color: '#333'
+  },
+  arrowStyle: {
+    fontSize: 30,
+    color: '#333'
   }
 };
 
