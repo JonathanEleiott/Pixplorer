@@ -103,11 +103,11 @@ export const importUserLists = () => {
   return (dispatch) => {
     axios({
       method: 'get',
-      url: `${listUrl}/api/all`
+      url: `${listUrl}/api/lists/qweryter`
     })
     .then(response => {
       dispatch({
-        type: IMPORT_ALL_LISTS,
+        type: IMPORT_USER_LISTS,
         payload: response.data
       });
       success();
@@ -117,7 +117,9 @@ export const importUserLists = () => {
     });
   };
 };
-
+///////////////////////////////////
+// Change userId to current user //
+///////////////////////////////////
 // Attempts to add a new list to the DB and sends user to the new lists item list
 export const addListToDB = (listName) => {
   loading();
@@ -125,6 +127,7 @@ export const addListToDB = (listName) => {
     axios({
       method: 'post',
       url: `${listUrl}/api/lists`,
+      userId: 'hjioh3498y14',
       data: listName
     })
     .then(response => {

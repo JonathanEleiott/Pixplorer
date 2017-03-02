@@ -154,7 +154,7 @@ const styles = {
   listStyle: {
     fontSize: 20,
     width: 275,
-    paddingLeft: 10
+    paddingLeft: 10,
   },
   imageStyle: {
     width: 30,

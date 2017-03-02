@@ -13,9 +13,9 @@ import {
   CURRENT_USER_FIREBASE_ID
 } from './types';
 
-
-const authUrl = 'http://54.218.118.52:8080/';
 //Amazon EC2 production server
+// const authUrl = 'http://198.199.94.223:8080/';
+const authUrl = 'https://05eaaf1d.ngrok.io/';
 
 // Changes email prop to what the user typed in
 export const emailChanged = (text) => {
@@ -67,7 +67,7 @@ export const loginUser = (credentials, callbackFromSplashComponent) => {
           console.log({ status: 'Credentials saved!' });
         })
         .catch((err) => {
-          console.log({ status: 'Could not save credentials, ' + err });
+          console.log('error', err);
         });
     })
     .catch(response => {

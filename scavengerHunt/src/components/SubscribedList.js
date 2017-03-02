@@ -42,7 +42,7 @@ class SubscribedList extends Component {
     return (
       <ScrollView>
         <Card>
-          { this.props.allLists.map((list, index) => {
+          { this.props.userLists.map((list, index) => {
             const { listStyle, arrowStyle } = styles;
             const swipeButts = [{
               key: Math.random(),
