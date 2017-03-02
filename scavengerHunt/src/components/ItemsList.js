@@ -23,7 +23,7 @@ class ItemsList extends Component {
 
   // Displays item with checked/unchecked box based on if it has been found yet
   listTitle(item, bool) {
-    if (this.props.list && bool) {
+    if (this.props.list && bool && !this.props.fromGlobal) {
       return (
         <View>
           <FontAwesome style={styles.checkFull}>checkSquareO</FontAwesome>
@@ -67,40 +67,66 @@ class ItemsList extends Component {
     this.props.deleteItem(item, this.props.list);
   }
 
-  renderList() {
+  // Checks whether we came from global scope
+    // to see if we can mark things off the list
+  clickableBoxes(item) {
     const { nameStyle, descriptionStyle } = styles;
+    if (this.props.fromGlobal) {
+      return (
+        <Text style={nameStyle} >{ `${item.name} ${'\n'}` }
+          <Text style={descriptionStyle} >{`${item.description}`}</Text>
+        </Text>
+      );
+    }
+    return (
+      <Text
+        style={nameStyle}
+        onPress={() => {
+          if (item.complete === 0) {
+            this.uncheckedBoxClicked(item);
+          }
+        }}
+      >{ `${item.name} ${'\n'}` }
+        <Text style={descriptionStyle}>{`${item.description}`}</Text>
+      </Text>
+    );
+  }
 
+  // Shows the list of items on the page
+  renderList() {
     if (this.props.list.items) {
       return this.props.list.items.map((item, index) => {
-        const swipeButtons = [{
-          key: Math.random(),
-          text: 'Delete',
-          backgroundColor: 'red',
-          onPress: () => this.deleteItem(item)
-        }];
+        if (this.props.list.admin) {
+          const swipeButtons = [{
+            key: Math.random(),
+            text: 'Delete',
+            backgroundColor: 'red',
+            onPress: () => this.deleteItem(item)
+          }];
+          return (
+            <Swipeout key={index} right={swipeButtons}>
+              {this.renderBody(item, index)}
+              <Button onPress={this.addItemToList.bind(this)}>Add Item</Button>
+            </Swipeout>
+          );
+        }
+
         return (
-          <Swipeout key={index} right={swipeButtons}>
-          <CardSection style={{ borderBottomWidth: 0, padding: 20, height: 100 }}>
-            { this.isComplete(item.complete, item) }
-            <Text
-              style={nameStyle}
-              onPress={() => {
-                if (item.complete === 0) {
-                  this.uncheckedBoxClicked(item);
-                }
-              }}
-            >{ `${item.name} ${'\n'}` }
-            <Text
-              style={descriptionStyle}
-            >{`${item.description}`}
-            </Text>
-            </Text>
-          </CardSection>
-          </Swipeout>
+          this.renderBody(item, index)
         );
       });
     }
     return;
+  }
+
+  // Allows editing based on whether the current user made the list
+  renderBody(item, index) {
+    return (
+      <CardSection key={index} style={{ borderBottomWidth: 0, padding: 20, height: 100 }}>
+        { this.isComplete(item.complete, item) }
+        { this.clickableBoxes(item) }
+      </CardSection>
+    );
   }
 
   render() {
@@ -108,9 +134,8 @@ class ItemsList extends Component {
       <ScrollView style={styles.listStyle}>
         <Card>
           { this.renderList() }
-      <Button onPress={this.addItemToList.bind(this)}>Add Item</Button>
-      </Card>
-    </ScrollView>
+        </Card>
+      </ScrollView>
     );
   }
 }

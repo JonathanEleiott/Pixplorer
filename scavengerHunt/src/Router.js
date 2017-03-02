@@ -7,24 +7,45 @@ import SubscribedList from './components/SubscribedList';
 import CreateList from './components/CreateList';
 import CreateItem from './components/CreateItem';
 import CompareItem from './components/CompareItem';
+import GlobalList from './components/GlobalList';
+import ProfilePage from './components/ProfilePage';
 
+//TODO: MAke sure to put the components back! Right now it goes straight to camera!!!
+/////////////////////////////////////////////////
+// Profile Page needs a username and user info //
+/////////////////////////////////////////////////
 const RouterComponent = () => {
   return (
     <Router sceneStyle={{ paddingTop: 65 }}>
-      <Scene key="splash" component={Splash} title="Skavenger" timeout={1000} nextScene={'main'} initial />
-      <Scene key="auth" >
-        <Scene key="login" component={LoginForm} title="Please Login" />
+    <Scene key="auth" initial >
+        <Scene
+          key="login"
+          component={LoginForm}
+          title="Please Login"
+        />
       </Scene>
-      <Scene key="main" >
+      <Scene
+        key="splash"
+        component={Splash}
+        title="Skavenger"
+        timeout={3000}
+        nextScene={'auth'}
+      />
+    <Scene key="main" >
         <Scene
           key="subscribedList"
           component={SubscribedList}
-          title="Choose A List"
+          title="Subscribed Lists"
         />
         <Scene
           key="itemsList"
           component={ItemsList}
+        />
+        <Scene
+          key="globalList"
+          component={GlobalList}
           onBack={() => Actions.subscribedList()}
+          title="Global Lists"
         />
         <Scene
           key="createList"
@@ -42,7 +63,20 @@ const RouterComponent = () => {
           title="Found Item"
         />
       </Scene>
-    </Router>
+      <Scene key="auth">
+        <Scene key="login" component={LoginForm} title="Please Login" />
+      </Scene>
+      <Scene key="user">
+        <Scene
+          key="profilePage"
+          component={ProfilePage}
+          title="Profile Page"
+          onLeft={() => Actions.main()}
+          leftTitle={'Subscribe'}
+          initial
+        />
+      </Scene>
+    </Router >
   );
 };
 

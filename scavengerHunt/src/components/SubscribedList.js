@@ -3,10 +3,13 @@
 import React, { Component } from 'react';
 import { Text, View, ScrollView, TouchableHighlight } from 'react-native';
 import { connect } from 'react-redux';
+import { Actions } from 'react-native-router-flux';
 import Swipeout from '@maintained-repos/react-native-swipeout';
 import FontAwesome from 'react-native-fontawesome';
 import { Card, CardSection, Button } from './mostCommon';
-import { listTitleClicked, createListClicked, importLists, deleteList } from '../actions';
+import {
+  listTitleClicked, createListClicked, importUserLists, deleteList, goToGlobalList
+} from '../actions';
 
 ///////////////////////////////////////////////////////////////////////////////
 // LIST OF HUNTS IS A HARDCODED JSON FILE!!! REPLACE WITH AJAX CALL TO DB... //
@@ -17,12 +20,13 @@ class SubscribedList extends Component {
 
   // Sets lists to all the lists in the DB
   componentWillMount() {
-    this.props.importLists();
+    const currUser = this.props.currentUserId || this.props.user;
+    this.props.importUserLists(currUser);
   }
 
   // Goes to items list for that list
   clickOnATitle(list) {
-    this.props.listTitleClicked(list);
+    this.props.listTitleClicked(list, 'subscribedList');
   }
 
   // Goes to create a list screen
@@ -39,7 +43,7 @@ class SubscribedList extends Component {
     return (
       <ScrollView>
         <Card>
-          { this.props.allLists.map((list, index) => {
+          { this.props.userLists.map((list, index) => {
             const { listStyle, arrowStyle } = styles;
             const swipeButts = [{
               key: Math.random(),
@@ -74,7 +78,10 @@ class SubscribedList extends Component {
             );
           })}
           <Button onPress={this.createAList.bind(this)}>
-            Create A List
+            Create A New List
+          </Button>
+          <Button onPress={() => Actions.globalList()}>
+            Go To Global List
           </Button>
         </Card>
       </ScrollView>
@@ -93,12 +100,16 @@ const styles = {
   }
 };
 
-const mapStateToProps = ({ core }) => {
-  const { list, allLists } = core;
+///////////////////////////////////////////////////////////
+// CHANGE ALLLISTS TO USERLISTS WHEN DB IS UP AND READY //
+///////////////////////////////////////////////////////////
+const mapStateToProps = ({ core, auth }) => {
+  const { list, allLists, userLists } = core;
+  const { currentUserId, user } = auth;
 
-  return { list, allLists };
+  return { list, allLists, userLists, currentUserId, user };
 };
 
 export default connect(mapStateToProps, {
-  listTitleClicked, createListClicked, importLists, deleteList
+  listTitleClicked, createListClicked, importUserLists, deleteList, goToGlobalList
 })(SubscribedList);

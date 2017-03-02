@@ -3,6 +3,7 @@ const AWS = require('aws-sdk');
 const axios = require('axios');
 const firebase = require('./firebaseConfig');
 const headers = require('./headers');
+const requestHandlerAPI = require('./handlers/api');
 
 AWS.config.loadFromPath('../../aws-config.json');
 //import { headers, firebase } from './config';
@@ -10,8 +11,8 @@ AWS.config.loadFromPath('../../aws-config.json');
 const vision = gcloud.vision({
   projectId: 'thesis-de1f8',
   keyFilename: '../../keys/Thesis-b9fb73d56c41.json'
-}); 
-const s3 = new AWS.S3();
+});
+// const s3 = new AWS.S3();
 
 const sendResponse = function (res, statusCode, headersSent, responseMessage) {
   console.log(responseMessage);
@@ -20,7 +21,7 @@ const sendResponse = function (res, statusCode, headersSent, responseMessage) {
 };
 
 module.exports = {
-  landing: (req, res) => { 
+  landing: (req, res) => {
     console.log(`Serving ${req.method} request for ${req.url} (inside requestHandler.landing)`);
     sendResponse(res, 200, headers, 'Welcome the server for Crustaceans thesis project!');
   },
@@ -41,7 +42,7 @@ module.exports = {
 
   logout: (req, res) => {
     console.log(`Serving ${req.method} request for ${req.url} (inside requestHandler.logout)`);
-    firebase.auth().signOut().then(() => {  
+    firebase.auth().signOut().then(() => {
       console.log('success logout!');
       sendResponse(res, 201, headers, 'Sign-out successful!');
     }, (error) => {
@@ -67,6 +68,7 @@ module.exports = {
     firebase.auth().createUserWithEmailAndPassword(req.body.email, req.body.password)
       .then((user) => {
         console.log('success createUser: ', user.email);
+        requestHandlerAPI.usersCreate(user);
         sendResponse(res, 201, headers, JSON.stringify(user));
       })
       .catch((error) => {
@@ -92,11 +94,11 @@ module.exports = {
         sendResponse(res, 401, '', 'User not logged in, or doesn\'t exist!');
       }
   },
-  
+
   postImage: (req, res) => {
     //http://localhost:8084/imageMockRoute
     console.log(`Serving ${req.method} request for ${req.url} (inside requestHandler.postImage)`);
-    const randomImageName = `${Math.random()}.jpg`;
+    // const randomImageName = `${Math.random()}.jpg`;
     const imageData = new Buffer(req.body.imageBuffer, 'base64');
 
     axios({
@@ -111,13 +113,13 @@ module.exports = {
       .catch((error) => {
         console.log('AXIOS ERROR', error);
         sendResponse(res, 404, '', 'Error');
-      });  
+      });
   },
 
   compareImage: (req, res) => {
     //http://localhost:8084/imageMockRoute
     console.log(`Serving ${req.method} request for ${req.url} (inside requestHandler.compareImage)`);
-    const randomImageName = `${Math.random()}.jpg`;
+    // const randomImageName = `${Math.random()}.jpg`;
     const imageData = new Buffer(req.body.imageBuffer, 'base64');
 
     axios({
@@ -130,9 +132,9 @@ module.exports = {
         sendResponse(res, 201, headers, response.data);
       })
       .catch((error) => {
-        console.log('AXIOS ERROR');
+        console.log('AXIOS ERROR', error);
         sendResponse(res, 404, '', 'Error');
-      });  
+      });
   },
   gVision: (req, res) => {
     console.log(`Serving ${req.method} request for ${req.url} (inside requestHandler.gVision)`);

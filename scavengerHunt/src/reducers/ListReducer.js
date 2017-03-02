@@ -5,8 +5,11 @@ import {
   CREATE_LIST_CLICKED,
   ADD_ITEM,
   CLICKED_UNCHECKED_BOX,
-  IMPORT_LISTS,
+  IMPORT_ALL_LISTS,
+  IMPORT_USER_LISTS,
   ADD_LIST_TO_DB,
+  ADD_LIST_TO_SUSCRIBED_PAGE,
+  SEARCH_GLOBAL_LIST_CHANGED,
   DELETE_ITEM,
   LIST_NAME_CHANGED,
   DELETE_LIST,
@@ -18,6 +21,7 @@ import {
 const INITIAL_STATE = {
   list: '',
   allLists: [],
+  userLists: [],
   listName: '',
   loading: false
 };
@@ -36,12 +40,21 @@ export default (state = INITIAL_STATE, action) => {
     // Sets list prop for camera
     case CLICKED_UNCHECKED_BOX:
       return { ...state, item: action.payload };
-    // Updates allLists prop for choose list component
-    case IMPORT_LISTS:
+    // Updates allLists prop for item list component
+    case IMPORT_ALL_LISTS:
       return { ...state, allLists: action.payload };
+    // Updates userLists prop for subscribed list
+    case IMPORT_USER_LISTS:
+      return { ...state, userLists: action.payload };
     // Doesn't do any prop updates yet :)
     case ADD_LIST_TO_DB:
       return { ...state, list: action.payload };
+    // Adds list to the users subscribed page
+    case ADD_LIST_TO_SUSCRIBED_PAGE:
+      return { ...state, userLists: action.payload };
+    // Updates search results based on what the user has typed in
+    case SEARCH_GLOBAL_LIST_CHANGED:
+      return { ...state, searchText: action.payload };
     // Updates props to not include this item
     case DELETE_ITEM:
       return { ...state, list: action.payload };

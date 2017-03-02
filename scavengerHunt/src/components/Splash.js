@@ -9,10 +9,6 @@ import * as Keychain from 'react-native-keychain';
 import { emailChanged, passwordChanged, loginUser, signupUser } from '../actions';
 
 class Splash extends Component {
-  
-  constructor(props) {
-    super();
-  }
 
   componentDidMount() {
     Keychain
@@ -28,8 +24,7 @@ class Splash extends Component {
           setTimeout(() => { Actions.auth(); }, this.props.timeout);
         }
       })
-      .catch((err) => {
-        console.log({ status: 'Could not load credentials. ' + err });
+      .catch(() => {
         setTimeout(() => { Actions.auth(); }, this.props.timeout);
       });
   }
@@ -67,4 +62,3 @@ const mapStateToProps = ({ auth }) => {
 export default connect(mapStateToProps, {
   emailChanged, passwordChanged, loginUser, signupUser
 })(Splash);
-
