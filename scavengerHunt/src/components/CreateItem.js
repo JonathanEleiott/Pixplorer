@@ -34,7 +34,6 @@ class CreateItem extends Component {
   }
 
   handleSubmit() {
-
       const item = {
         listId: this.props.listId,
         name: this.state.newItemName,
@@ -137,7 +136,7 @@ class CreateItem extends Component {
   render() {
     if (this.state.status === 1) {
       return (
-        <Instructions 
+        <Instructions
           openCamera={this.openCamera}
           header={'Add an Item'}
           subheader={'Step 1: Take a Photo'}
