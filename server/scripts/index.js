@@ -70,6 +70,12 @@ app.get('/api/lists', (req, res) => {
   requestHandlerAPI.lists(req, res);
 });
 
+// GET USER LISTS
+app.get('/api/lists/:firebase_id', (req, res) => {
+  requestHandlerAPI.listsUser(req, res);
+});
+
+// CREATE LIST REFACTOR
 app.post('/api/lists', (req, res) => {
   requestHandlerAPI.listsCreate(req, res);
 });
