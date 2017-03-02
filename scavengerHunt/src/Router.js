@@ -17,21 +17,24 @@ import ProfilePage from './components/ProfilePage';
 const RouterComponent = () => {
   return (
     <Router sceneStyle={{ paddingTop: 65 }}>
-    <Scene key="auth" initial >
-        <Scene
-          key="login"
-          component={LoginForm}
-          title="Please Login"
-        />
-      </Scene>
-      <Scene
-        key="splash"
-        component={Splash}
-        title="Skavenger"
-        timeout={3000}
-        nextScene={'auth'}
+      <Scene 
+        key="splash" 
+        component={Splash} 
+        title="Skavenger" 
+        timeout={500} 
+        nextScene={'main'} 
+        initial 
       />
-    <Scene key="main" >
+
+      <Scene key="auth" >
+        <Scene key="login" component={LoginForm} title="Please Login" />
+      </Scene>
+
+      <Scene key="profile" initial>
+        <Scene key="profilePage" component={ProfilePage} title="My Profile" />
+      </Scene>
+
+      <Scene key="main" >
         <Scene
           key="subscribedList"
           component={SubscribedList}
@@ -63,20 +66,7 @@ const RouterComponent = () => {
           title="Found Item"
         />
       </Scene>
-      <Scene key="auth">
-        <Scene key="login" component={LoginForm} title="Please Login" />
-      </Scene>
-      <Scene key="user">
-        <Scene
-          key="profilePage"
-          component={ProfilePage}
-          title="Profile Page"
-          onLeft={() => Actions.main()}
-          leftTitle={'Subscribe'}
-          initial
-        />
-      </Scene>
-    </Router >
+    </Router>
   );
 };
 
