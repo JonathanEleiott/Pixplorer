@@ -65,6 +65,7 @@ module.exports = {
     console.log(`Serving ${req.method} request for ${req.url} (handlers/api.listsUser)`);
 
     const firebaseId = req.params.firebase_id;
+    console.log('firebaseId', firebaseId);
 
     new User()
       .where('firebase_id', firebaseId)

@@ -4,7 +4,7 @@ const knex = require('knex')({
     host: 'localhost',
     user: 'root',
     //password: 'MyNewPass',  // set a password if needed
-    password: 'MyNewPass',  // set a password if needed // MyNewPass
+    password: '',  // set a password if needed // MyNewPass
     database: 'thesis',  // Be sure to create DB on server
     charset: 'utf8',
     //debug: true
