@@ -9,6 +9,8 @@ const knex = require('knex')({
   }
 });
 const bookshelf = require('bookshelf')(knex);
+
+
 // Our Models
 const User = bookshelf.Model.extend({
   tableName: 'users',
@@ -16,9 +18,9 @@ const User = bookshelf.Model.extend({
   lists: function () {
     return this.hasMany(List);
   },
-  items: function () {
-    return this.hasMany(Item);
-  },
+  // items: function () {
+  //   return this.hasMany(Item);
+  // },
 });
 
 const List = bookshelf.Model.extend({
@@ -38,11 +40,27 @@ const Item = bookshelf.Model.extend({
   list: function () {
     return this.belongsTo(List);
   },
-  users: function() {
-    return this.belongsToMany(User);
+  done: function () {
+    return this.hasOne(Done);
   }
+  // users: function() {
+  //   return this.belongsToMany(User);
+  // }
 });
 
+const Done = bookshelf.Model.extend({
+  tableName: 'users_items',
+  hasTimestamps: true,
+  item: function () {
+    return this.belongsTo(Item);
+  },
+  user: function () {
+    return this.belongsTo(User);
+  },
+  // users: function() {
+  //   return this.belongsToMany(User);
+  // }
+});
 
 module.exports = {
   create: (req, res) => {
@@ -72,7 +90,6 @@ module.exports = {
       table.string('name');
       table.string('description');
       table.string('image');
-      table.boolean('complete').defaultTo(false);
       table.decimal('lat');
       table.decimal('long');
       table.integer('radius');
@@ -81,8 +98,8 @@ module.exports = {
     })
     .createTable('users_items', (table) => {
       table.increments().primary();
-      table.integer('users_id').unsigned().references('users.id');
-      table.integer('items_id').unsigned().references('items.id');
+      table.integer('user_id').unsigned().references('users.id');
+      table.integer('item_id').unsigned().references('items.id');
       table.timestamps();
     })
 
@@ -91,8 +108,8 @@ module.exports = {
     ////////////////////////////////////////////////////////
     .then(() => {
       return new User({
-        name: 'Bill',
-        firebase_id: 'asdf'
+        name: 'JR',
+        firebase_id: 'V0ZWGwYw6qbn1gprp2DpksThLU32'
       })
       .save().then((model) => {
         return model.get('id');
@@ -149,8 +166,8 @@ module.exports = {
     // //////////////////////////////////////////////////////////
     .then(() => {
       return new User({
-        name: 'Jon E.',
-        firebase_id: 'qweryter'
+        name: 'JR',
+        firebase_id: 'V0ZWGwYw6qbn1gprp2DpksThLU32'
       })
       .save().then((model) => {
         return model.get('id');

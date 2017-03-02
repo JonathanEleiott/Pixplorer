@@ -28,10 +28,10 @@ module.exports = {
 
   login: (req, res) => {
     console.log(`Serving ${req.method} request for ${req.url} (inside requestHandler.login)`);
-    console.log('email:', req.body.email, 'pass: ', req.body.password, typeof req.body.email);
+    //console.log('email:', req.body.email, 'pass: ', req.body.password, typeof req.body.email);
     firebase.auth().signInWithEmailAndPassword(req.body.email, req.body.password)
       .then((user) => {
-        console.log('success login: ', user.email);
+        //console.log('success login: ', user.email);
         sendResponse(res, 201, headers, JSON.stringify(user));
       })
       .catch((error) => {

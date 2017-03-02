@@ -9,9 +9,9 @@ const User = bookshelf.Model.extend({
   lists: function () {
     return this.hasMany(List);
   },
-  items: function () {
-    return this.hasMany(Item);
-  },
+  // items: function () {
+  //   return this.hasMany(Item);
+  // },
 });
 
 const List = bookshelf.Model.extend({
@@ -31,9 +31,20 @@ const Item = bookshelf.Model.extend({
   list: function () {
     return this.belongsTo(List);
   },
-  users: function() {
-    return this.belongsToMany(User);
+  done: function () {
+    return this.hasOne(Done);
   }
+  // users: function() {
+  //   return this.belongsToMany(User);
+  // }
+});
+
+const Done = bookshelf.Model.extend({
+  tableName: 'users_items',
+  hasTimestamps: true,
+  item: function () {
+    return this.belongsTo(Item);
+  },
 });
 
 
@@ -69,7 +80,12 @@ module.exports = {
 
     new User()
       .where('firebase_id', firebaseId)
-      .fetch({ withRelated: ['lists.items'] })
+      .fetch({ withRelated: ['lists.items', {
+        'lists.items.done': function (qb) { 
+          qb.innerJoin('users', 'users_items.user_id', 'users.id');
+          qb.where('users.firebase_id', firebaseId); 
+        }
+        }] })
       .then((user) => {
             const output = user.toJSON();
             res.send(output.lists);
