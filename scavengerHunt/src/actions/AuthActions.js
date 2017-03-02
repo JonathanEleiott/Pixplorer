@@ -14,7 +14,8 @@ import {
 } from './types';
 
 //Amazon EC2 production server
-const authUrl = 'http://198.199.94.223:8080/';
+const authUrl = 'http://54.218.118.52:8080' // AWS EC2 production server
+// const authUrl = 'http://198.199.94.223:8080/';
 // const authUrl = 'https://0c781438.ngrok.io/';
 
 // Changes email prop to what the user typed in
