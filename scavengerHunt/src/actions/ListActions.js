@@ -98,12 +98,12 @@ export const importAllLists = () => {
 //////////////////////////////////////////////////////////////////
 // CURRENTLY LOADS ALL LISTS, BUT NEEDS TO CHANGE TO USER LISTS //
 //////////////////////////////////////////////////////////////////
-export const importUserLists = () => {
+export const importUserLists = (userFirebaseId) => {
   loading();
   return (dispatch) => {
     axios({
       method: 'get',
-      url: `${listUrl}/api/lists/qweryter`
+      url: `${listUrl}/api/lists/${userFirebaseId}`
     })
     .then(response => {
       dispatch({

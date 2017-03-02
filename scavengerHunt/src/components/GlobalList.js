@@ -27,7 +27,7 @@ class SubscribedList extends Component {
 
   // Sets lists to all the lists in the DB
   componentWillMount() {
-    this.props.importAllLists();
+    this.props.importAllLists(this.props.currentUserId);
   }
 
   // Updates list as user types in the search box
@@ -162,10 +162,11 @@ const styles = {
   }
 };
 
-const mapStateToProps = ({ core }) => {
+const mapStateToProps = ({ core, auth }) => {
   const { list, allLists, searchText } = core;
+  const { currentUserId } = auth;
 
-  return { list, allLists, searchText };
+  return { list, allLists, searchText, currentUserId };
 };
 
 export default connect(mapStateToProps, {
