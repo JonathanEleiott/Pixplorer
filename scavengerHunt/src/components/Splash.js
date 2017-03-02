@@ -12,18 +12,6 @@ class Splash extends Component {
   
   constructor(props) {
     super();
-    // setTimeout(() => {
-    //   switch (props.nextScene) {
-    //     case 'auth':
-    //       Actions.auth();
-    //       break;
-    //     case 'main':
-    //       //Actions.main();
-    //       break;
-    //     default:
-    //       Actions.main();
-    //   }
-    // }, props.timeout);
   }
 
   componentDidMount() {

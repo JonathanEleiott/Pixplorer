@@ -11,6 +11,15 @@ class App extends Component {
 
   render() {
     const store = createStore(reducers, {}, applyMiddleware(ReduxThunk));
+    
+    /////////////////////////////////////////////////////
+    // WAY TO ACCESS STATE FROM ANYWHERE IN THE APP ////
+    ///UNCOMMENT WHEN TESTING STATE/////////////////////
+    /////////////////////////////////////////////////////
+    // store.subscribe(() => {
+    //   console.log(store.getState().auth.currentUserId);
+    // });
+
     return (
       <Provider store={store}>
         <Router />

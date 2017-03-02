@@ -2,18 +2,20 @@
 
 import axios from 'axios';
 import { Actions } from 'react-native-router-flux';
+import * as Keychain from 'react-native-keychain';
 import {
   EMAIL_CHANGED,
   PASSWORD_CHANGED,
   LOGIN_USER,
   SIGNUP_USER,
   LOGIN_USER_SUCCESS,
-  LOGIN_USER_FAIL
+  LOGIN_USER_FAIL,
+  CURRENT_USER_FIREBASE_ID
 } from './types';
-import * as Keychain from 'react-native-keychain';
 
 
-const authUrl = 'http://198.199.94.223:8080/';
+const authUrl = 'http://54.218.118.52:8080/';
+//Amazon EC2 production server
 
 // Changes email prop to what the user typed in
 export const emailChanged = (text) => {
@@ -36,7 +38,7 @@ export const passwordChanged = (text) => {
 // RESPONSE NEEDS TO SEND CORRECT USER, //
 // NOT 'globalUser' OR 'user' ////////////
 //////////////////////////////////////////
-export const loginUser = (credentials, callback) => {
+export const loginUser = (credentials, callbackFromSplashComponent) => {
   const email = credentials.username;
   const password = credentials.password;
 
@@ -55,8 +57,10 @@ export const loginUser = (credentials, callback) => {
     .then(response => {
       console.log('loginUser response', response);
       loginUserSuccess(dispatch, 'globalUser');
-      callback();
-      
+      callbackFromSplashComponent();
+      //pass dispatch down to getUniqueUserId
+      getUniqueUserId(dispatch);
+
       Keychain
         .setGenericPassword(email, password)
         .then(() => {
@@ -99,6 +103,27 @@ export const signupUser = ({ email, password }) => {
       loginUserFail(dispatch, 'user');
     });
   };
+};
+
+// Sends AJAX request to get the unique user ID
+//////////////////////////////////////////
+// IF USER LOGGED IN WILL RETURN FIREBASE ID//
+//////////////////////////////////////////
+//////////////////////////////////////////
+export const getUniqueUserId = (dispatch) => {
+  const requrl = `${authUrl}checkUserCredentials`;
+  console.log('triggered getUniqueUserId', requrl);
+
+  axios({
+    method: 'get',
+    url: requrl,
+  })
+  .then((response) => {
+    dispatch({ type: CURRENT_USER_FIREBASE_ID, payload: response.data.uid });
+  })
+  .catch((response) => {
+    console.log('response from check user credentials request error', response);
+  });
 };
 
 // Sets the user if the log in was successful and directs them to next page
