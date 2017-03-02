@@ -14,7 +14,7 @@ import {
 } from './types';
 
 //Amazon EC2 production server
-const authUrl = 'http://54.218.118.52:8080' // AWS EC2 production server
+const authUrl = 'http://54.218.118.52:8080'; // AWS EC2 production server
 // const authUrl = 'http://198.199.94.223:8080/';
 // const authUrl = 'https://0c781438.ngrok.io/';
 
@@ -39,7 +39,8 @@ export const passwordChanged = (text) => {
 // RESPONSE NEEDS TO SEND CORRECT USER, //
 // NOT 'globalUser' OR 'user' ////////////
 //////////////////////////////////////////
-export const loginUser = (credentials) => {
+
+export const loginUser = (credentials, callbackFromSplashComponent) => {
   const email = credentials.email;
   const password = credentials.password;
 

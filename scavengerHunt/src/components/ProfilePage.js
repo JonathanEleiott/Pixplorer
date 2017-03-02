@@ -2,12 +2,28 @@ import React, { Component } from 'react';
 
 import { Text, Image } from 'react-native';
 import { connect } from 'react-redux';
+import { Actions } from 'react-native-router-flux';
+
 import { Spinner, Card, CardSection, Input, Button } from './mostCommon';
 import { emailChanged, passwordChanged, loginUser, signupUser } from '../actions';
 
 
 class ProfilePage extends Component {
- render() {
+  constructor(props, context) {
+    super(props, context);  
+  }
+
+  componentWillMount() {
+    //ensure user is logged in
+    const { store } = this.context;
+    const userLoggedIn = !!store.getState().auth.currentUserId;
+    if (!userLoggedIn) {
+      Actions.auth();
+    }
+  }
+  
+
+  render() {
    return (
      <Card>
        <CardSection>
@@ -46,8 +62,12 @@ class ProfilePage extends Component {
 
      </Card>
    );
- }
+  }
 }
+
+ProfilePage.contextTypes = {
+  store: React.PropTypes.object.isRequired
+};
 
 const styles = {
   textStyle: {
