@@ -19,5 +19,8 @@ export const DELETE_LIST = 'delete_list';
 export const LOADING = 'loading';
 export const SUCCESS = 'success';
 
+//Get current user
+export const CURRENT_USER_FIREBASE_ID = 'current_user_firebase_id';
+
 // Bill Added - step 7
 export const MANAGE_ITEM = 'manage_item';

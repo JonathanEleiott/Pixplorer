@@ -6,7 +6,8 @@ import {
   LOGIN_USER,
   SIGNUP_USER,
   LOGIN_USER_SUCCESS,
-  LOGIN_USER_FAIL
+  LOGIN_USER_FAIL,
+  CURRENT_USER_FIREBASE_ID
 } from '../actions/types';
 
 const INITIAL_STATE = {
@@ -14,7 +15,8 @@ const INITIAL_STATE = {
   password: '',
   user: '',
   error: '',
-  loading: false
+  loading: false,
+  currentUserId: ''
 };
 
 // Takes trigger from Actions and sets states/props
@@ -38,6 +40,9 @@ export default (state = INITIAL_STATE, action) => {
     // displays fail message
     case LOGIN_USER_FAIL:
       return { ...state, error: 'Authentication Failed.', password: '', loading: false };
+    //get current user unique id from Firebase
+    case CURRENT_USER_FIREBASE_ID:
+      return { ...state, currentUserId: action.payload };
     default:
       return state;
   }
