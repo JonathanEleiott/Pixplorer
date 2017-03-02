@@ -99,6 +99,7 @@ export const importAllLists = () => {
 // CURRENTLY LOADS ALL LISTS, BUT NEEDS TO CHANGE TO USER LISTS //
 //////////////////////////////////////////////////////////////////
 export const importUserLists = (userFirebaseId) => {
+  console.log('userFirebaseId', userFirebaseId);
   loading();
   return (dispatch) => {
     axios({
@@ -303,7 +304,6 @@ const goToCreateItem = (list) => {
 
 // Goes to the camera screen
 const goToCompareItem = (item) => {
-  console.log('goToCompareItem', item);
   ////////////////////////////////////
   // CHANGE TO Actions.camera() //////
   // IF YOU DON'T WANT A BACK BUTON //

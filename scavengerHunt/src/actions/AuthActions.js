@@ -15,7 +15,7 @@ import {
 
 //Amazon EC2 production server
 // const authUrl = 'http://198.199.94.223:8080/';
-const authUrl = 'https://05eaaf1d.ngrok.io/';
+const authUrl = 'https://0c781438.ngrok.io/';
 
 // Changes email prop to what the user typed in
 export const emailChanged = (text) => {
@@ -38,11 +38,10 @@ export const passwordChanged = (text) => {
 // RESPONSE NEEDS TO SEND CORRECT USER, //
 // NOT 'globalUser' OR 'user' ////////////
 //////////////////////////////////////////
-export const loginUser = (credentials, callbackFromSplashComponent) => {
-  const email = credentials.username;
+export const loginUser = (credentials) => {
+  const email = credentials.email;
   const password = credentials.password;
 
-  console.log('loginUser Arguments: ', email, password);
   return (dispatch) => {
     dispatch({ type: LOGIN_USER });
 
@@ -55,9 +54,8 @@ export const loginUser = (credentials, callbackFromSplashComponent) => {
       }
     })
     .then(response => {
-      console.log('loginUser response', response);
-      loginUserSuccess(dispatch, 'globalUser');
-      callbackFromSplashComponent();
+      loginUserSuccess(dispatch, response.data.uid);
+      // callbackFromSplashComponent();
       //pass dispatch down to getUniqueUserId
       getUniqueUserId(dispatch);
 
@@ -72,7 +70,7 @@ export const loginUser = (credentials, callbackFromSplashComponent) => {
     })
     .catch(response => {
       console.log('response from login request error', response);
-      loginUserFail(dispatch, 'user');
+      loginUserFail(dispatch, response.data.uid);
     });
   };
 };
@@ -95,12 +93,11 @@ export const signupUser = ({ email, password }) => {
       }
     })
     .then((response) => {
-      console.log(response);
-      loginUserSuccess(dispatch, 'user');
+      loginUserSuccess(dispatch, response.data.uid);
     })
     .catch(response => {
       console.log('response from signup request error', response);
-      loginUserFail(dispatch, 'user');
+      loginUserFail(dispatch, response.data.uid);
     });
   };
 };
@@ -112,7 +109,6 @@ export const signupUser = ({ email, password }) => {
 //////////////////////////////////////////
 export const getUniqueUserId = (dispatch) => {
   const requrl = `${authUrl}checkUserCredentials`;
-  console.log('triggered getUniqueUserId', requrl);
 
   axios({
     method: 'get',
@@ -134,6 +130,5 @@ const loginUserSuccess = (dispatch, user) => {
 
 // Resets password and shows fail message
 const loginUserFail = (dispatch, user) => {
-  console.log('loginUSerFail called', user);
   dispatch({ type: LOGIN_USER_FAIL, payload: user });
 };

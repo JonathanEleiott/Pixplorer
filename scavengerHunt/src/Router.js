@@ -17,7 +17,7 @@ import ProfilePage from './components/ProfilePage';
 const RouterComponent = () => {
   return (
     <Router sceneStyle={{ paddingTop: 65 }}>
-    <Scene key="auth" >
+    <Scene key="auth" initial >
         <Scene
           key="login"
           component={LoginForm}
@@ -31,7 +31,7 @@ const RouterComponent = () => {
         timeout={3000}
         nextScene={'auth'}
       />
-      <Scene key="main" >
+    <Scene key="main" >
         <Scene
           key="subscribedList"
           component={SubscribedList}

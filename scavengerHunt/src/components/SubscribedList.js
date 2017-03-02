@@ -20,7 +20,8 @@ class SubscribedList extends Component {
 
   // Sets lists to all the lists in the DB
   componentWillMount() {
-    this.props.importUserLists(this.props.currentUserId);
+    const currUser = this.props.currentUserId || this.props.user;
+    this.props.importUserLists(currUser);
   }
 
   // Goes to items list for that list
@@ -104,9 +105,9 @@ const styles = {
 ///////////////////////////////////////////////////////////
 const mapStateToProps = ({ core, auth }) => {
   const { list, allLists, userLists } = core;
-  const { currentUserId } = auth;
+  const { currentUserId, user } = auth;
 
-  return { list, allLists, userLists, currentUserId };
+  return { list, allLists, userLists, currentUserId, user };
 };
 
 export default connect(mapStateToProps, {
