@@ -1,50 +1,52 @@
 const headers = require('../headers');
-const bookshelf = require('../bookshelf');
+//const bookshelf = require('../bookshelf');
+const { User, List, Item } = require('../models');
+//const Done = require('../models').Done;
 
-// Our Models
-const User = bookshelf.Model.extend({
-  tableName: 'users',
-  hasTimestamps: true,
-  lists: function () {
-    return this.hasMany(List);
-  },
-  // items: function () {
-  //   return this.hasMany(Item);
-  // },
-});
+// // Our Models
+// const User = bookshelf.Model.extend({
+//   tableName: 'users',
+//   hasTimestamps: true,
+//   lists: function () {
+//     return this.hasMany(List);
+//   },
+//   // items: function () {
+//   //   return this.hasMany(Item);
+//   // },
+// });
 
-const List = bookshelf.Model.extend({
-  tableName: 'lists',
-  hasTimestamps: true,
-  items: function () {
-    return this.hasMany(Item);
-  },
-  user: function () {
-    return this.belongsTo(User);
-  }
-});
+// const List = bookshelf.Model.extend({
+//   tableName: 'lists',
+//   hasTimestamps: true,
+//   items: function () {
+//     return this.hasMany(Item);
+//   },
+//   user: function () {
+//     return this.belongsTo(User);
+//   }
+// });
 
-const Item = bookshelf.Model.extend({
-  tableName: 'items',
-  hasTimestamps: true,
-  list: function () {
-    return this.belongsTo(List);
-  },
-  done: function () {
-    return this.hasOne(Done);
-  }
-  // users: function() {
-  //   return this.belongsToMany(User);
-  // }
-});
+// const Item = bookshelf.Model.extend({
+//   tableName: 'items',
+//   hasTimestamps: true,
+//   list: function () {
+//     return this.belongsTo(List);
+//   },
+//   done: function () {
+//     return this.hasOne(Done);
+//   }
+//   // users: function() {
+//   //   return this.belongsToMany(User);
+//   // }
+// });
 
-const Done = bookshelf.Model.extend({
-  tableName: 'users_items',
-  hasTimestamps: true,
-  item: function () {
-    return this.belongsTo(Item);
-  },
-});
+// const Done = bookshelf.Model.extend({
+//   tableName: 'users_items',
+//   hasTimestamps: true,
+//   item: function () {
+//     return this.belongsTo(Item);
+//   },
+// });
 
 
 const sendResponse = (res, statusCode, responseHeaders, responseMessage) => {
