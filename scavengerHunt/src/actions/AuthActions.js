@@ -10,6 +10,7 @@ import {
   SIGNUP_USER,
   LOGIN_USER_SUCCESS,
   LOGIN_USER_FAIL,
+  LOGOUT_USER,
   CURRENT_USER_FIREBASE_ID
 } from './types';
 
@@ -102,6 +103,26 @@ export const signupUser = ({ email, password }) => {
     .catch(response => {
       console.log('response from signup request error', response);
       loginUserFail(dispatch, 'user');
+    });
+  };
+};
+
+export const logoutUser = () => {
+  return (dispatch) => {
+    dispatch({ type: LOGOUT_USER });
+
+    axios({
+      method: 'post',
+      url: `${authUrl}logout`
+    })
+    .then((response) => {
+      console.log('response LOGOUT USER', response);
+      //loginUserSuccess(dispatch, response.data.user_id);
+      Actions.auth();
+    })
+    .catch(response => {
+      console.log('response from signup request error', response);
+      //loginUserFail(dispatch, 'user');
     });
   };
 };

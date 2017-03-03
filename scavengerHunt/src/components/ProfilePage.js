@@ -4,7 +4,10 @@ import React, { Component } from 'react';
 import { Text, Image, View } from 'react-native';
 import { connect } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
-import { Card, CardSection, Button } from './mostCommon';
+
+
+import { Spinner, Card, CardSection, Input, Button } from './mostCommon';
+import { logoutUser } from '../actions';
 
 
 class ProfilePage extends Component {
@@ -54,7 +57,11 @@ class ProfilePage extends Component {
        </CardSection>
 
        <CardSection>
-         <Button onPress={() => { console.log('pressed logout!'); }}>
+        <Button onPress={() => { 
+            console.log('pressed logout!'); 
+            this.props.logoutUser();
+          }}
+        >
            Log out
          </Button>
        </CardSection>
@@ -81,4 +88,14 @@ const styles = {
   }
 };
 
-export default ProfilePage;
+const mapStateToProps = ({ core, auth }) => {
+  const { list, allLists, userLists } = core;
+  const { currentUserId, user } = auth;
+
+  return { list, allLists, userLists, currentUserId, user };
+};
+
+export default connect(mapStateToProps, {
+  logoutUser
+})(ProfilePage);
+
