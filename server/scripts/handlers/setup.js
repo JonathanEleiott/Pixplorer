@@ -3,18 +3,34 @@ const knex = require('knex')({
   connection: {
     host: 'localhost',
     user: 'root',
-    password: 'MyNewPass',  // set a password if needed
+    password: '',  // set a password if needed // MyNewPass
     database: 'thesis',  // Be sure to create DB on server
     charset: 'utf8'
   }
 });
 const bookshelf = require('bookshelf')(knex);
+
+
 // Our Models
+const User = bookshelf.Model.extend({
+  tableName: 'users',
+  hasTimestamps: true,
+  lists: function () {
+    return this.hasMany(List);
+  },
+  // items: function () {
+  //   return this.hasMany(Item);
+  // },
+});
+
 const List = bookshelf.Model.extend({
   tableName: 'lists',
   hasTimestamps: true,
   items: function () {
     return this.hasMany(Item);
+  },
+  user: function () {
+    return this.belongsTo(User);
   }
 });
 
@@ -22,36 +38,88 @@ const Item = bookshelf.Model.extend({
   tableName: 'items',
   hasTimestamps: true,
   list: function () {
-      return this.belongsTo(List);
-    }
+    return this.belongsTo(List);
+  },
+  done: function () {
+    return this.hasOne(Done);
+  }
+  // users: function() {
+  //   return this.belongsToMany(User);
+  // }
+});
+
+const Done = bookshelf.Model.extend({
+  tableName: 'users_items',
+  hasTimestamps: true,
+  item: function () {
+    return this.belongsTo(Item);
+  },
+  user: function () {
+    return this.belongsTo(User);
+  },
+  // users: function() {
+  //   return this.belongsToMany(User);
+  // }
 });
 
 module.exports = {
   create: (req, res) => {
     console.log(`Serving ${req.method} request for ${req.url} (requestHandlerAPI.create)`);
-    knex.schema.createTable('lists', (table) => {
-        table.increments().primary();
-        table.string('name');
-        table.string('description');
-        table.timestamps();
+    knex.schema
+    .dropTable('users_items')
+    .dropTable('items')
+    .dropTable('lists')
+    .dropTable('users')
+    .createTable('users', (table) => {
+      table.increments().primary();
+      table.string('firebase_id').unique();
+      table.string('email');
+      table.string('name');
+      table.timestamps();
+    })
+    .createTable('lists', (table) => {
+      table.increments().primary();
+      table.string('name');
+      table.string('description');
+      table.boolean('public').defaultTo(true);
+      table.integer('user_id').unsigned().references('users.id');
+      table.timestamps();
     })
     .createTable('items', (table) => {
-            table.increments().primary();
-            table.string('name');
-            table.string('description');
-            table.string('image');
-            table.boolean('complete').defaultTo(false);
-            table.timestamps();
-            table.integer('list_id').unsigned().references('lists.id');
-        })
+      table.increments().primary();
+      table.string('name');
+      table.string('description');
+      table.string('image');
+      table.decimal('lat');
+      table.decimal('long');
+      table.integer('radius');
+      table.integer('list_id').unsigned().references('lists.id');
+      table.timestamps();
+    })
+    .createTable('users_items', (table) => {
+      table.increments().primary();
+      table.integer('user_id').unsigned().references('users.id');
+      table.integer('item_id').unsigned().references('items.id');
+      table.timestamps();
+    })
 
-    //////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////
     // POPULATE LIST
-    //////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////
     .then(() => {
+      return new User({
+        name: 'John@aol.com',
+        firebase_id: 'te3FEQNQwighVFmSDzonY01a1ug2'
+      })
+      .save().then((model) => {
+        return model.get('id');
+      });
+    })
+    .then((userId) => {
       return new List({
-        name: 'Bills SF Spots',
-        description: 'Find these hidden spots in the city!!'
+        name: 'SF HotSpots',
+        description: 'Find these hidden spots in the city!!',
+        user_id: userId
       })
       .save().then((model) => {
         return model.get('id');
@@ -89,17 +157,27 @@ module.exports = {
         return model.get('list_id');
       });
     })
-    //////////////////////////////////////////////////////////
-    // END POPULATE LIST
-    //////////////////////////////////////////////////////////
+    // //////////////////////////////////////////////////////////
+    // // END POPULATE LIST
+    // //////////////////////////////////////////////////////////
 
-    //////////////////////////////////////////////////////////
-    // POPULATE LIST
-    //////////////////////////////////////////////////////////
+    // //////////////////////////////////////////////////////////
+    // // POPULATE LIST
+    // //////////////////////////////////////////////////////////
     .then(() => {
+      return new User({
+        name: 'JR',
+        firebase_id: 'V0ZWGwYw6qbn1gprp2DpksThLU32'
+      })
+      .save().then((model) => {
+        return model.get('id');
+      });
+    })
+    .then((userId) => {
       return new List({
-        name: 'Jons Treats',
-        description: 'Can you find each treat?'
+        name: 'Jon\'s Red Bull Hit List',
+        description: 'It gives you wings',
+        user_id: userId
       })
       .save().then((model) => {
         return model.get('id');
@@ -108,8 +186,8 @@ module.exports = {
     .then((listId) => {
       console.log('model: ', listId);
       return new Item({
-        name: 'Red Bull',
-        description: 'Gives you wings.',
+        name: 'Walgreens',
+        description: 'Most convenient to HR.',
         list_id: listId
       }).save().then((model) => {
         return model.get('list_id');
@@ -118,73 +196,62 @@ module.exports = {
     .then((listId) => {
       console.log('model: ', listId);
       return new Item({
-        name: 'Gummi Bears',
-        description: 'If any are left.',
+        name: 'Costco',
+        description: 'Load up on bulk Red Bull.',
         list_id: listId
       })
       .save().then((model) => {
         return model.get('list_id');
       });
     })
-    .then((listId) => {
-      console.log('model: ', listId);
-      return new Item({
-        name: 'Monster Energy Drink',
-        description: 'When Red Bull is not enough.',
-        list_id: listId
-      })
-      .save().then((model) => {
-        return model.get('list_id');
-      });
-    })
-    //////////////////////////////////////////////////////////
-    // END POPULATE LIST
-    //////////////////////////////////////////////////////////
+    // //////////////////////////////////////////////////////////
+    // // END POPULATE LIST
+    // //////////////////////////////////////////////////////////
 
-    //////////////////////////////////////////////////////////
-    // POPULATE LIST
-    //////////////////////////////////////////////////////////
-    .then(() => {
-      return new List({
-        name: 'Dan\'s Favorites',
-        description: 'Locate them all!'
-      })
-      .save().then((model) => {
-        return model.get('id');
-      });
-    })
-    .then((listId) => {
-      console.log('model: ', listId);
-      return new Item({
-        name: 'Daughter\'s Day Care',
-        description: 'Be aware ... they may have moved.',
-        list_id: listId
-      }).save().then((model) => {
-        return model.get('list_id');
-      });
-    })
-    .then((listId) => {
-      console.log('model: ', listId);
-      return new Item({
-        name: 'Hack Reactor',
-        description: 'Find the logo at the top of the stairs on 8th floor.',
-        list_id: listId
-      })
-      .save().then((model) => {
-        return model.get('list_id');
-      });
-    })
-    .then((listId) => {
-      console.log('model: ', listId);
-      return new Item({
-        name: 'Park Bench',
-        description: 'Dan loves this spot.',
-        list_id: listId
-      })
-      .save().then((model) => {
-        return model.get('list_id');
-      });
-    })
+    // //////////////////////////////////////////////////////////
+    // // POPULATE LIST
+    // //////////////////////////////////////////////////////////
+    // .then(() => {
+    //   return new List({
+    //     name: 'Dan\'s Favorites',
+    //     description: 'Locate them all!'
+    //   })
+    //   .save().then((model) => {
+    //     return model.get('id');
+    //   });
+    // })
+    // .then((listId) => {
+    //   console.log('model: ', listId);
+    //   return new Item({
+    //     name: 'Daughter\'s Day Care',
+    //     description: 'Be aware ... they may have moved.',
+    //     list_id: listId
+    //   }).save().then((model) => {
+    //     return model.get('list_id');
+    //   });
+    // })
+    // .then((listId) => {
+    //   console.log('model: ', listId);
+    //   return new Item({
+    //     name: 'Hack Reactor',
+    //     description: 'Find the logo at the top of the stairs on 8th floor.',
+    //     list_id: listId
+    //   })
+    //   .save().then((model) => {
+    //     return model.get('list_id');
+    //   });
+    // })
+    // .then((listId) => {
+    //   console.log('model: ', listId);
+    //   return new Item({
+    //     name: 'Park Bench',
+    //     description: 'Dan loves this spot.',
+    //     list_id: listId
+    //   })
+    //   .save().then((model) => {
+    //     return model.get('list_id');
+    //   });
+    // })
     //////////////////////////////////////////////////////////
     // END POPULATE LIST
     //////////////////////////////////////////////////////////

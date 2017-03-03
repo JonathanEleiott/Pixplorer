@@ -8,6 +8,7 @@ import * as Keychain from 'react-native-keychain';
 //use splash to check if user's credentials exist in KeyChain for iOS
 import { emailChanged, passwordChanged, loginUser, signupUser } from '../actions';
 
+
 class Splash extends Component {
 
   componentDidMount() {
