@@ -16,7 +16,7 @@ module.exports = (req, res) => {
       analyzeImageViaGoogleVision(imageBuffer, (googleImageLabels) => {
         if (googleImageLabels[0] === 'error') {
 
-          console.log('Error storing to S3');
+          console.log('Error analyzing with Google', googleImageLabels[1]);
         } else {
          mongoHandler.setImage(
           s3ImageLocation, 
@@ -32,6 +32,7 @@ module.exports = (req, res) => {
     
     // const newUser = new updateMongo.userData(item);
     uploadImageToS3(imageBuffer, (s3ImageLocation) => {
+      console.log('LOCATION!', s3ImageLocation)
       if (s3ImageLocation[0] === 'error') {
         console.log('Error storing to S3');
       } else {

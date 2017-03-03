@@ -5,11 +5,11 @@ module.exports = {
   create: (req, res) => {
     console.log(`Serving ${req.method} request for ${req.url} (requestHandlerAPI.create)`);
     knex.schema
-    .dropTable('users_lists')
-    .dropTable('users_items')
-    .dropTable('items')
-    .dropTable('lists')
-    .dropTable('users')
+    // .dropTable('users_lists')
+    // .dropTable('users_items')
+    // .dropTable('items')
+    // .dropTable('lists')
+    // .dropTable('users')
     .createTable('users', (table) => {
       table.increments().primary();
       table.string('firebase_id').unique();

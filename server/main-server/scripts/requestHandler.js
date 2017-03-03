@@ -5,7 +5,7 @@ const firebase = require('./firebaseConfig');
 const headers = require('./headers');
 const requestHandlerAPI = require('./handlers/api');
 
-AWS.config.loadFromPath('../../aws-config.json');
+AWS.config.loadFromPath('../awsConfig.json');
 //import { headers, firebase } from './config';
 
 const vision = gcloud.vision({
@@ -36,7 +36,7 @@ module.exports = {
       })
       .catch((error) => {
         console.log('error login: ', error);
-        sendResponse(res, 401, '', JSON.stringify(error));
+        sendResponse(res, 401, headers, JSON.stringify(error));
       });
   },
 
@@ -73,7 +73,7 @@ module.exports = {
       })
       .catch((error) => {
         console.log('error createUser: ', error);
-        sendResponse(res, 400, '', JSON.stringify(error));
+        sendResponse(res, 203, headers, JSON.stringify(error));
       });
   },
 
@@ -81,6 +81,7 @@ module.exports = {
     console.log(`Serving ${req.method} request for ${req.url} (inside requestHandler.deleteUser)`);
     const user = firebase.auth().currentUser;
     if (user) {
+      requestHandlerAPI.usersDelete(user);
       user.delete()
         .then((success) => {
           console.log('success deleteUser: ', success);
@@ -134,18 +135,6 @@ module.exports = {
       .catch((error) => {
         console.log('AXIOS ERROR', error);
         sendResponse(res, 404, '', 'Error');
-      });
-  },
-  gVision: (req, res) => {
-    console.log(`Serving ${req.method} request for ${req.url} (inside requestHandler.gVision)`);
-    // The name of the image file to annotate
-    const fileName = 'http://cdn.history.com/sites/2/2015/05/hith-golden-gate-144833144-E.jpeg';
-    // Performs label detection on the image file
-    vision.detectLabels(fileName)
-      .then((results) => {
-        const labels = results[0];
-        labels.forEach((label) => console.log(label));
-        res.json(results);
       });
   },
 };

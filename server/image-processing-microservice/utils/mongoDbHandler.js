@@ -37,35 +37,48 @@ module.exports = {
     const update = { s3ImageLocation: JSON.stringify(s3ImageLocation), GoogleVisionResultLabels: JSON.stringify(GoogleVisionResultLabels) };
     const options = { upsert: true, new: true, setDefaultsOnInsert: true };
 
+    const newImage = new model(update);
+
+    newImage.save((err, savedEntry) => {
+      if (err && respond) {
+        respond(404, 'Error saving the image!');
+      } else if (respond) {
+        respond(201, savedEntry.id);
+      }
+    })
+    ///////////////////////////////////////////
     // Find the document
-    model.findOneAndUpdate(query, update, options, (error, result) => {
-        // console.log('RESULT', result);
-        result = result || new model(query);
+    // model.findOneAndUpdate(query, update, options, (error, result) => {
+    //     // console.log('RESULT', result);
+    //     result = result || new model(query);
         
-        result.save((error, savedEntry) => {
-          if (error && respond) {
-            respond(404, 'Error saving the image!');
-          } else if (respond) {
-            respond(201, savedEntry.id);
-          }
-        });
-    });
+    //     result.save((error, savedEntry) => {
+    //       if (error && respond) {
+    //         respond(404, 'Error saving the image!');
+    //       } else if (respond) {
+    //         respond(201, savedEntry.id);
+    //       }
+    //     });
+    // });
+    //////////////////////////////////////////
   },
 
   compareImage: (comparisonImageId, googleImageLabelsToCompare, respond) => {
     const query = { _id: comparisonImageId };
     model.findOne(query, {}, (err, imageFromDB) => {
-      if (err) {
+      if (err || !imageFromDB) {
         console.log('Error finding the image', err);
-        respond(404, 'Error finding the image!');
-      } else {
+        respond(201, 'Error finding the image!');
+      } else if (imageFromDB) {
         console.log(imageFromDB);
         const comparison = compareImageLabels(imageFromDB.GoogleVisionResultLabels, googleImageLabelsToCompare);
         if (comparison) {
           respond(201, 'Images are the same!');
         } else {
-          respond(404, 'Images are not the same!');
+          respond(201, 'Images are not the same!');
         }
+      } else {
+          respond(201, 'Images not found in the database!');
       }
     });
   }
