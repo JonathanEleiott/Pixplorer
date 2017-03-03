@@ -98,13 +98,13 @@ export const importAllLists = () => {
 //////////////////////////////////////////////////////////////////
 // CURRENTLY LOADS ALL LISTS, BUT NEEDS TO CHANGE TO USER LISTS //
 //////////////////////////////////////////////////////////////////
-export const importUserLists = (userFirebaseId) => {
-  console.log('userFirebaseId', userFirebaseId);
+export const importUserLists = (userId) => {
+  console.log('userId', userId);
   loading();
   return (dispatch) => {
     axios({
       method: 'get',
-      url: `${listUrl}/api/lists/${userFirebaseId}`
+      url: `${listUrl}/api/lists/${userId}`
     })
     .then(response => {
       console.log('response importUserLists', response);

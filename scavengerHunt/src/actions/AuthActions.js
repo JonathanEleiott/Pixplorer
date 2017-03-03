@@ -40,7 +40,7 @@ export const passwordChanged = (text) => {
 // NOT 'globalUser' OR 'user' ////////////
 //////////////////////////////////////////
 
-export const loginUser = (credentials, callbackFromSplashComponent) => {
+export const loginUser = (credentials) => {
   const email = credentials.email;
   const password = credentials.password;
 
@@ -57,7 +57,7 @@ export const loginUser = (credentials, callbackFromSplashComponent) => {
     })
     .then(response => {
       console.log('loginUser success', response);
-      loginUserSuccess(dispatch, response.data.uid);
+      loginUserSuccess(dispatch, response.data.user_id);
       // callbackFromSplashComponent();
       //pass dispatch down to getUniqueUserId
       getUniqueUserId(dispatch);
@@ -97,7 +97,7 @@ export const signupUser = ({ email, password }) => {
     })
     .then((response) => {
       console.log('response signupUser', response);
-      loginUserSuccess(dispatch, response.data.uid);
+      loginUserSuccess(dispatch, response.data.user_id);
     })
     .catch(response => {
       console.log('response from signup request error', response);
@@ -107,10 +107,9 @@ export const signupUser = ({ email, password }) => {
 };
 
 // Sends AJAX request to get the unique user ID
-//////////////////////////////////////////
+//////////////////////////////////////////////
 // IF USER LOGGED IN WILL RETURN FIREBASE ID//
-//////////////////////////////////////////
-//////////////////////////////////////////
+//////////////////////////////////////////////
 export const getUniqueUserId = (dispatch) => {
   const requrl = `${authUrl}checkUserCredentials`;
 
@@ -119,6 +118,7 @@ export const getUniqueUserId = (dispatch) => {
     url: requrl,
   })
   .then((response) => {
+    console.log('getUniqueUserId', response);
     dispatch({ type: CURRENT_USER_FIREBASE_ID, payload: response.data.uid });
   })
   .catch((response) => {

@@ -20,7 +20,7 @@ class SubscribedList extends Component {
 
   // Sets lists to all the lists in the DB
   componentWillMount() {
-    const currUser = this.props.currentUserId || this.props.user;
+    const currUser = this.props.user;
     this.props.importUserLists(currUser);
   }
 
