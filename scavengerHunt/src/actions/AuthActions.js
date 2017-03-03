@@ -41,7 +41,7 @@ export const passwordChanged = (text) => {
 //////////////////////////////////////////
 
 export const loginUser = (credentials) => {
-  const email = credentials.email;
+  const email = credentials.username;
   const password = credentials.password;
 
   return (dispatch) => {
@@ -112,7 +112,6 @@ export const signupUser = ({ email, password }) => {
 //////////////////////////////////////////////
 export const getUniqueUserId = (dispatch) => {
   const requrl = `${authUrl}checkUserCredentials`;
-
   axios({
     method: 'get',
     url: requrl,

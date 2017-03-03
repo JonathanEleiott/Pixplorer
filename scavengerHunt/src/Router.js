@@ -1,6 +1,9 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { Scene, Router, Actions } from 'react-native-router-flux';
 import Splash from './components/Splash';
+import { Text, Image, View } from 'react-native';
+import FontAwesome from 'react-native-fontawesome';
+
 import LoginForm from './components/LoginForm';
 import ItemsList from './components/ItemsList';
 import SubscribedList from './components/SubscribedList';
@@ -15,68 +18,124 @@ import profilePageIcon from './images/rightArrow.png';
 /////////////////////////////////////////////////
 // Profile Page needs a username and user info //
 /////////////////////////////////////////////////
-const RouterComponent = () => {
-  return (
-    <Router sceneStyle={{ paddingTop: 65 }}>
-      <Scene 
-        key="splash" 
-        component={Splash} 
-        title="Skavenger" 
-        timeout={500} 
-        nextScene={'main'} 
-        initial 
-      />
+class RouterComponent extends Component {
+  constructor(props, context) {
+    super(props, context);  
+  }
 
-      <Scene key="auth" >
+  componentWillMount() {
+    //ensure user is logged in
+    const { store } = this.context;
+    const userLoggedIn = !!store.getState().auth.currentUserId;
+    // if (!userLoggedIn) {
+      //Actions.auth();
+    // }
+    console.log('user logged in: ', userLoggedIn);
+  }
+  
+  renderFontAwesome(iconKind) {
+    return (
+      <View style={styles.fontAwesomeView}>
+        <FontAwesome style={styles.cogStyle}>{iconKind}</FontAwesome>
+      </View>
+    );
+  }
+  render() {
+     return (
+      <Router sceneStyle={{ paddingTop: 65 }}>
         <Scene 
-          key="login" 
-          component={LoginForm} 
-          title="Please Login" 
+          key="splash" 
+          component={Splash} 
+          title="Skavenger" 
+          timeout={0} 
+          nextScene={'main'}    
         />
-      </Scene>
 
-      <Scene key="profile" initial>
-        <Scene key="profilePage" component={ProfilePage} title="My Profile" />
-      </Scene>
+        <Scene 
+          key="auth" 
+          onRight={() => { console.log('pressed right button'); }}
+          //rightButtonTextStyle={[styles.navTitle, styles.navTitleDisabled]} 
+        >
+          <Scene 
+            initial
+            key="login" 
+            component={LoginForm} 
+            title="Please Login"
+          />
+        </Scene>
 
-      <Scene key="main" >
-        <Scene
-          key="subscribedList"
-          component={SubscribedList}
-          title="Subscribed Lists"
-        />
-        <Scene
-          key="itemsList"
-          component={ItemsList}
-        />
-        <Scene
-          key="globalList"
-          component={GlobalList}
-          title="Global Lists"
-          rightButtonImage={profilePageIcon}
-          onBack={() => Actions.subscribedList()}
-        />
-        <Scene
-          key="createList"
-          component={CreateList}
-          title="Create A List"
-          onRight={() => { console.log('clicked the Right Button!'); }}
-        />
-        <Scene
-          key="createItem"
-          component={CreateItem}
-          title="Create Item"
-          onRight={() => { console.log('clicked the Right Button!'); }}
-        />
-        <Scene
-          key="compareItem"
-          component={CompareItem}
-          title="Found Item"
-          onRight={() => { console.log('clicked the Right Button!'); }}
-        />
-      </Scene>
-    </Router>
-  );
+        <Scene 
+          key="profile"
+          rightTitle={this.renderFontAwesome('cog')}
+          leftTitle={this.renderFontAwesome('angleLeft')}
+          onRight={() => { Actions.profile(); }}
+          onLeft={() => { Actions.main(); }}
+        >
+          <Scene 
+            key="profilePage" 
+            component={ProfilePage} 
+            title="My Profile" 
+          />
+        </Scene>
+
+        <Scene 
+          key="main"
+          onRight={() => { Actions.profile(); }}
+          //rightButtonTextStyle={[styles.navTitle, styles.navTitleDisabled]} 
+          rightTitle={this.renderFontAwesome('cog')}
+          onEnter={() => {console.log('enetering main scene')}}
+        >
+          <Scene
+            key="subscribedList"
+            component={SubscribedList}
+            title="Subscribed List"  
+          />
+          <Scene
+            key="itemsList"
+            component={ItemsList}
+          />
+          <Scene
+            key="globalList"
+            component={GlobalList}
+            title="Global Lists"
+            onBack={() => Actions.subscribedList()}
+          />
+          <Scene
+            key="createList"
+            component={CreateList}
+            title="Create A List"
+            onRight={() => { console.log('clicked the Right Button!'); }}
+          />
+          <Scene
+            key="createItem"
+            component={CreateItem}
+            title="Create Item"
+            onRight={() => { console.log('clicked the Right Button!'); }}
+          />
+          <Scene
+            key="compareItem"
+            component={CompareItem}
+            title="Found Item"
+            onRight={() => { console.log('clicked the Right Button!'); }}
+          />
+        </Scene>
+      </Router>
+    );
+  }
+}
+
+const styles = {
+  fontAwesomeView: {
+    height: 30,
+    width: 30
+  },
+  cogStyle: {
+    fontSize: 30,
+    color: '#333'
+  }
+};
+RouterComponent.contextTypes = {
+  store: React.PropTypes.object.isRequired
 };
 
 export default RouterComponent;
