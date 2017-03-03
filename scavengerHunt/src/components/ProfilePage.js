@@ -1,16 +1,13 @@
 import React, { Component } from 'react';
 
 import { Text, Image } from 'react-native';
-import { connect } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
-
-import { Spinner, Card, CardSection, Input, Button } from './mostCommon';
-import { emailChanged, passwordChanged, loginUser, signupUser } from '../actions';
+import { Card, CardSection, Button } from './mostCommon';
 
 
 class ProfilePage extends Component {
   constructor(props, context) {
-    super(props, context);  
+    super(props, context);
   }
 
   componentWillMount() {
@@ -21,7 +18,7 @@ class ProfilePage extends Component {
       Actions.auth();
     }
   }
-  
+
 
   render() {
    return (
@@ -73,11 +70,11 @@ const styles = {
   textStyle: {
     paddingRight: 20,
     paddingLeft: 10
-  }, 
+  },
   profilePhotoStyle: {
-    width: 50, 
-    height: 260, 
-    flex: 1, 
+    width: 50,
+    height: 260,
+    flex: 1,
     borderRadius: 60
   }
 };

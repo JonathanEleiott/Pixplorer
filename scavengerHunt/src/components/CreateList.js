@@ -14,8 +14,9 @@ class CreateList extends Component {
 
   // Makes an AJAX call to add list to DB
   addNewList() {
-    const { listName } = this.props;
-    this.props.addListToDB({ listName });
+    const { listName, user } = this.props;
+    console.log('user', user);
+    this.props.addListToDB({ listName, user });
   }
 
   render() {
@@ -38,10 +39,10 @@ class CreateList extends Component {
   }
 }
 
-const mapStateToProps = ({ core }) => {
+const mapStateToProps = ({ core, auth }) => {
   const { listName } = core;
-
-  return { listName };
+  const { user } = auth;
+  return { listName, user };
 };
 
 // IF YOU WANT PROPS USE MAPSTATETOPROPS INSTEAD OF NULL
