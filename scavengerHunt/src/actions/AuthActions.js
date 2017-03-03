@@ -43,7 +43,13 @@ export const passwordChanged = (text) => {
 
 export const loginUser = (credentials) => {
   console.log(credentials);
-  const email = credentials.email;
+
+  //////////////////////////////////////////////////////////
+  // "WHERE THE HECK DOES THAT CHANGE?!" - Dan
+  // This requires email when signing in, but username when confirming user on return
+  //////////////////////////////////////////////////////////
+
+  const email = credentials.email || credentials.username;
   const password = credentials.password;
 
   return (dispatch) => {
