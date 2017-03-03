@@ -108,8 +108,8 @@ module.exports = {
     ////////////////////////////////////////////////////////
     .then(() => {
       return new User({
-        name: 'JR',
-        firebase_id: 'V0ZWGwYw6qbn1gprp2DpksThLU32'
+        name: 'John@aol.com',
+        firebase_id: 'te3FEQNQwighVFmSDzonY01a1ug2'
       })
       .save().then((model) => {
         return model.get('id');
@@ -117,7 +117,7 @@ module.exports = {
     })
     .then((userId) => {
       return new List({
-        name: 'Bills SF Spots',
+        name: 'SF HotSpots',
         description: 'Find these hidden spots in the city!!',
         user_id: userId
       })

@@ -1,5 +1,4 @@
 const headers = require('../headers');
-
 const bookshelf = require('../bookshelf');
 
 // Our Models
@@ -72,18 +71,43 @@ module.exports = {
           });
   },
   // Return ALL lists for user
+  getUserId: (user, callback) => { 
+    console.log('Serving internal request for (handlers/api.getUserId)');
+
+    //const firebaseId = req.params.firebase_id;
+    //console.log('firebaseId', firebaseId);
+    console.log('user.uid', user.uid);
+    console.log('user.email', user.email);
+
+    new User({ firebase_id: user.uid })
+      .fetch()
+      .then((model) => {
+        const userId = model.get('id');
+        console.log('userId', userId);
+        const obj = {
+          user_id: userId, 
+          fb: user
+        };
+        console.log('obj', obj);
+        callback(obj);
+      })
+      .catch((error) => {
+            console.log('ERROR:', error);
+          });
+  },
+  // Return ALL lists for user
   listsUser: (req, res) => { 
     console.log(`Serving ${req.method} request for ${req.url} (handlers/api.listsUser)`);
 
-    const firebaseId = req.params.firebase_id;
-    console.log('firebaseId', firebaseId);
+    const userId = req.params.userId;
+    console.log('userId', userId);
 
     new User()
-      .where('firebase_id', firebaseId)
+      .where('id', userId)
       .fetch({ withRelated: ['lists.items', {
         'lists.items.done': function (qb) { 
           qb.innerJoin('users', 'users_items.user_id', 'users.id');
-          qb.where('users.firebase_id', firebaseId); 
+          qb.where('users.id', userId); 
         }
         }] })
       .then((user) => {
@@ -181,7 +205,6 @@ module.exports = {
       {
         name: newName,
         description: null,
-
       })
       .save()
       .then((model) => {

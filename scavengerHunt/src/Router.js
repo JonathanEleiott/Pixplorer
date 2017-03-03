@@ -32,10 +32,6 @@ const RouterComponent = () => {
           key="login" 
           component={LoginForm} 
           title="Please Login" 
-          onRight={() => { console.log('clicked the Right Button!'); }}
-          //rightButtonImage={profilePageIcon}
-          //rightButtonTextStyle={{font: 10}} 
-          rightTitle="Profile" 
         />
       </Scene>
 
@@ -59,28 +55,24 @@ const RouterComponent = () => {
           title="Global Lists"
           rightButtonImage={profilePageIcon}
           onBack={() => Actions.subscribedList()}
-          onRight={() => { console.log('clicked the Right Button!'); }}
         />
         <Scene
           key="createList"
           component={CreateList}
           title="Create A List"
           onRight={() => { console.log('clicked the Right Button!'); }}
-          rightButtonImage={profilePageIcon}
         />
         <Scene
           key="createItem"
           component={CreateItem}
           title="Create Item"
           onRight={() => { console.log('clicked the Right Button!'); }}
-          rightButtonImage={profilePageIcon}
         />
         <Scene
           key="compareItem"
           component={CompareItem}
           title="Found Item"
           onRight={() => { console.log('clicked the Right Button!'); }}
-          rightButtonImage={profilePageIcon}
         />
       </Scene>
     </Router>
