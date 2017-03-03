@@ -42,7 +42,8 @@ export const passwordChanged = (text) => {
 //////////////////////////////////////////
 
 export const loginUser = (credentials) => {
-  const email = credentials.username;
+  console.log(credentials);
+  const email = credentials.email;
   const password = credentials.password;
 
   return (dispatch) => {
@@ -117,7 +118,13 @@ export const logoutUser = () => {
     })
     .then((response) => {
       console.log('response LOGOUT USER', response);
-      //loginUserSuccess(dispatch, response.data.user_id);
+      
+      Keychain
+        .resetGenericPassword()
+        .then(function() {
+          console.log('Credentials successfully deleted');
+        });
+
       Actions.auth();
     })
     .catch(response => {

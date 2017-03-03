@@ -23,14 +23,11 @@ class RouterComponent extends Component {
     super(props, context);  
   }
 
-  componentWillMount() {
-    //ensure user is logged in
+  checkIfUserIsLoggedIn() {
     const { store } = this.context;
     const userLoggedIn = !!store.getState().auth.currentUserId;
-    // if (!userLoggedIn) {
-      //Actions.auth();
-    // }
     console.log('user logged in: ', userLoggedIn);
+    return userLoggedIn;
   }
   
   renderFontAwesome(iconKind) {
@@ -47,14 +44,17 @@ class RouterComponent extends Component {
           key="splash" 
           component={Splash} 
           title="Skavenger" 
-          timeout={0} 
-          nextScene={'main'}    
+          timeout={0}     
+          nextScene={() => {
+            if (!this.checkIfUserIsLoggedIn) {
+              return 'auth';
+            } 
+            return 'main'; 
+          }}
         />
 
         <Scene 
           key="auth" 
-          onRight={() => { console.log('pressed right button'); }}
-          //rightButtonTextStyle={[styles.navTitle, styles.navTitleDisabled]} 
         >
           <Scene 
             initial
@@ -80,10 +80,15 @@ class RouterComponent extends Component {
 
         <Scene 
           key="main"
-          onRight={() => { Actions.profile(); }}
+          onRight={() => {
+            if (!this.checkIfUserIsLoggedIn) {
+              Actions.auth();
+            } else {
+              Actions.profile(); 
+            }
+          }}
           //rightButtonTextStyle={[styles.navTitle, styles.navTitleDisabled]} 
           rightTitle={this.renderFontAwesome('cog')}
-          onEnter={() => {console.log('enetering main scene')}}
         >
           <Scene
             key="subscribedList"
