@@ -41,8 +41,11 @@ class ItemsList extends Component {
 
   // Goes to the camera screen to take a picture of the item to add to DB
   addItemToList() {
-      this.props.addItem(this.props.list);
-    }
+    const { list, user } = this.props;
+    console.log('addItemToList', user);
+
+    this.props.addItem(list, user);
+  }
 
   // Goes to the camera screen to take a picture of the item that the user found
   uncheckedBoxClicked(item) {
@@ -163,10 +166,11 @@ const styles = {
   }
 };
 
-const mapStateToProps = ({ core }) => {
+const mapStateToProps = ({ core, auth }) => {
   const { list } = core;
+  const { user } = auth;
 
-  return { list };
+  return { list, user };
 };
 
 export default connect(mapStateToProps, {
