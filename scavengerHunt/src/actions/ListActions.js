@@ -123,13 +123,13 @@ export const importUserLists = (userId) => {
 // Change userId to current user //
 ///////////////////////////////////
 // Attempts to add a new list to the DB and sends user to the new lists item list
-export const addListToDB = (listName) => {
+export const addListToDB = (listName, user) => {
   loading();
   return (dispatch) => {
     axios({
       method: 'post',
       url: `${listUrl}/api/lists`,
-      userId: 'hjioh3498y14',
+      userId: user,
       data: listName
     })
     .then(response => {
