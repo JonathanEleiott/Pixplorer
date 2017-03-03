@@ -81,7 +81,7 @@ export const loginUser = (credentials) => {
     })
     .catch(response => {
       console.log('response from login request error', response);
-      loginUserFail(dispatch, 'user');
+      loginUserFail(dispatch, 'Email or password were not correct');
     });
   };
 };
@@ -105,11 +105,17 @@ export const signupUser = ({ email, password }) => {
     })
     .then((response) => {
       console.log('response signupUser', response);
-      loginUserSuccess(dispatch, response.data.user_id);
+      const statusCode = response.status;
+
+      if (statusCode === 203) {
+        loginUserFail(dispatch, response.data.message);
+      } else {
+        loginUserSuccess(dispatch, response.data.user_id);
+      }
     })
     .catch(response => {
       console.log('response from signup request error', response);
-      loginUserFail(dispatch, 'user');
+      loginUserFail(dispatch, 'User already exists');
     });
   };
 };
@@ -124,10 +130,10 @@ export const logoutUser = () => {
     })
     .then((response) => {
       console.log('response LOGOUT USER', response);
-      
+
       Keychain
         .resetGenericPassword()
-        .then(function() {
+        .then(() => {
           console.log('Credentials successfully deleted');
         });
 
@@ -160,8 +166,8 @@ export const getUniqueUserId = (dispatch) => {
 };
 
 // Sets the user if the log in was successful and directs them to next page
-const loginUserSuccess = (dispatch, user) => {
-  dispatch({ type: LOGIN_USER_SUCCESS, payload: user });
+const loginUserSuccess = (dispatch, errorMessage) => {
+  dispatch({ type: LOGIN_USER_SUCCESS, payload: errorMessage });
   Actions.main();
 };
 

@@ -39,7 +39,7 @@ export default (state = INITIAL_STATE, action) => {
       return { ...state, ...INITIAL_STATE, user: action.payload };
     // displays fail message
     case LOGIN_USER_FAIL:
-      return { ...state, error: 'Authentication Failed.', password: '', loading: false };
+      return { ...state, error: action.payload, password: '', loading: false };
     //get current user unique id from Firebase
     case CURRENT_USER_FIREBASE_ID:
       return { ...state, currentUserId: action.payload };

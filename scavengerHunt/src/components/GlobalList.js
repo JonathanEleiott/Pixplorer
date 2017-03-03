@@ -26,7 +26,7 @@ class SubscribedList extends Component {
 
   // Sets lists to all the lists in the DB
   componentWillMount() {
-    this.props.importAllLists(this.props.currentUserId);
+    this.props.importAllLists();
   }
 
   // Updates list as user types in the search box
@@ -51,8 +51,10 @@ class SubscribedList extends Component {
   }
 
   // Adds a list to the users subscribed page
-  clickAddListToSubscribedPage(list) {
-    this.props.addListToSubscribedPage(list);
+  clickAddListToSubscribedPage() {
+    const { list, user } = this.props;
+    console.log(this.props);
+    this.props.addListToSubscribedPage(list, user);
   }
 
   swipeoutBody(list, index) {
@@ -163,9 +165,9 @@ const styles = {
 
 const mapStateToProps = ({ core, auth }) => {
   const { list, allLists, searchText } = core;
-  const { currentUserId } = auth;
+  const { currentUserId, user } = auth;
 
-  return { list, allLists, searchText, currentUserId };
+  return { list, allLists, searchText, currentUserId, user };
 };
 
 export default connect(mapStateToProps, {

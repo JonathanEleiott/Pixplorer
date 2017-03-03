@@ -83,6 +83,7 @@ export const importAllLists = () => {
       url: `${listUrl}/api/all`
     })
     .then(response => {
+      console.log('importAllLists', response);
       dispatch({
         type: IMPORT_ALL_LISTS,
         payload: response.data
@@ -149,7 +150,8 @@ export const addListToDB = (listName, user) => {
 ////////////////////////////////////////////////////////////////////////////////
 // This does not currently do anything so make sure we hook up the axios call //
 ////////////////////////////////////////////////////////////////////////////////
-export const addListToSubscribedPage = (list) => {
+export const addListToSubscribedPage = (list, user) => {
+  console.log('addListToSubscribedPage', 'list', list, 'user', user);
   loading();
   return (dispatch) => {
     axios({
