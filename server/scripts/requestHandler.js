@@ -15,7 +15,7 @@ const vision = gcloud.vision({
 // const s3 = new AWS.S3();
 
 const sendResponse = function (res, statusCode, headersSent, responseMessage) {
-  console.log(responseMessage);
+  //console.log(responseMessage);
   res.writeHead(statusCode, headersSent);
   res.end(responseMessage);
 };

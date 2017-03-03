@@ -74,21 +74,14 @@ module.exports = {
   getUserId: (user, callback) => { 
     console.log('Serving internal request for (handlers/api.getUserId)');
 
-    //const firebaseId = req.params.firebase_id;
-    //console.log('firebaseId', firebaseId);
-    console.log('user.uid', user.uid);
-    console.log('user.email', user.email);
-
     new User({ firebase_id: user.uid })
       .fetch()
       .then((model) => {
         const userId = model.get('id');
-        console.log('userId', userId);
         const obj = {
           user_id: userId, 
           fb: user
         };
-        console.log('obj', obj);
         callback(obj);
       })
       .catch((error) => {
@@ -144,7 +137,6 @@ module.exports = {
             console.log(error);
             res.send('An error occured');
           });
-
   },
   // DELETE a List
   listsDelete2: (req, res) => { 
@@ -180,7 +172,7 @@ module.exports = {
   usersCreate: (user) => { 
     console.log('Serving direct request for (handlers/api.usersCreate)');
 
-    console.log('user:', user);
+    //console.log('user:', user);
     //const newName = req.body.listName ? req.body.listName : 'Hello Jon.';
 
     new User(
@@ -198,17 +190,18 @@ module.exports = {
   listsCreate: (req, res) => { 
     console.log(`Serving ${req.method} request for ${req.url} (handlers/api.listsCreate)`);
 
-    console.log('body.listName:', req.body);
     const newName = req.body.listName ? req.body.listName : 'Hello Jon.';
+    const userId = parseInt(req.body.user, 10);
 
     new List(
       {
         name: newName,
         description: null,
+        user_id: userId
       })
       .save()
       .then((model) => {
-        console.log('model:', model);
+        //console.log('model:', model);
         return model.get('id');
       })
       .then((listId) => {
@@ -238,9 +231,6 @@ module.exports = {
   itemsCreate: (req, res) => { 
     console.log(`Serving ${req.method} request for ${req.url} (handlers/api.itemsCreate)`);
 
-    console.log('body:', req.body);
-    //const newName = req.body.listName ? req.body.listName : 'Hello Jon.';
-
     new Item(
       {
         name: req.body.name,
@@ -250,7 +240,6 @@ module.exports = {
       })
       .save()
       .then((model) => {
-        console.log('model:', model);
         return model.get('id');
       })
       .then(() => {
@@ -294,13 +283,9 @@ module.exports = {
   },
   itemsFound: (req, res) => { 
     console.log(`Serving ${req.method} request for ${req.url} (handlers/api.itemsFound)`);
-
-    console.log('BODY', req.body.item);
-
-
     const itemId = req.body.item.id;
     const listId = req.body.item.list_id;
-    console.log('ID ON SERVER', itemId);
+
     new Item({ id: itemId })
       .save({ complete: 1 }, { patch: true })
       .then(() => {
