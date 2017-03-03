@@ -10,6 +10,7 @@ import {
   SIGNUP_USER,
   LOGIN_USER_SUCCESS,
   LOGIN_USER_FAIL,
+  LOGOUT_USER,
   CURRENT_USER_FIREBASE_ID
 } from './types';
 
@@ -41,6 +42,7 @@ export const passwordChanged = (text) => {
 //////////////////////////////////////////
 
 export const loginUser = (credentials) => {
+  console.log(credentials);
   const email = credentials.email;
   const password = credentials.password;
 
@@ -106,13 +108,38 @@ export const signupUser = ({ email, password }) => {
   };
 };
 
+export const logoutUser = () => {
+  return (dispatch) => {
+    dispatch({ type: LOGOUT_USER });
+
+    axios({
+      method: 'post',
+      url: `${authUrl}logout`
+    })
+    .then((response) => {
+      console.log('response LOGOUT USER', response);
+      
+      Keychain
+        .resetGenericPassword()
+        .then(function() {
+          console.log('Credentials successfully deleted');
+        });
+
+      Actions.auth();
+    })
+    .catch(response => {
+      console.log('response from signup request error', response);
+      //loginUserFail(dispatch, 'user');
+    });
+  };
+};
+
 // Sends AJAX request to get the unique user ID
 //////////////////////////////////////////////
 // IF USER LOGGED IN WILL RETURN FIREBASE ID//
 //////////////////////////////////////////////
 export const getUniqueUserId = (dispatch) => {
   const requrl = `${authUrl}checkUserCredentials`;
-
   axios({
     method: 'get',
     url: requrl,

@@ -1,8 +1,13 @@
 import React, { Component } from 'react';
 
-import { Text, Image } from 'react-native';
+
+import { Text, Image, View } from 'react-native';
+import { connect } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
-import { Card, CardSection, Button } from './mostCommon';
+
+
+import { Spinner, Card, CardSection, Input, Button } from './mostCommon';
+import { logoutUser } from '../actions';
 
 
 class ProfilePage extends Component {
@@ -15,7 +20,7 @@ class ProfilePage extends Component {
     const { store } = this.context;
     const userLoggedIn = !!store.getState().auth.currentUserId;
     if (!userLoggedIn) {
-      Actions.auth();
+      //Actions.auth();
     }
   }
 
@@ -41,19 +46,23 @@ class ProfilePage extends Component {
 
        <CardSection>
          <Button>
-          Update Profile Photo
+            Update Profile Photo
          </Button>
        </CardSection>
 
        <CardSection>
          <Button>
-          Change Password
+            Change Password
          </Button>
        </CardSection>
 
        <CardSection>
-         <Button>
-          Log out
+        <Button onPress={() => { 
+            console.log('pressed logout!'); 
+            this.props.logoutUser();
+          }}
+        >
+           Log out
          </Button>
        </CardSection>
 
@@ -79,4 +88,14 @@ const styles = {
   }
 };
 
-export default ProfilePage;
+const mapStateToProps = ({ core, auth }) => {
+  const { list, allLists, userLists } = core;
+  const { currentUserId, user } = auth;
+
+  return { list, allLists, userLists, currentUserId, user };
+};
+
+export default connect(mapStateToProps, {
+  logoutUser
+})(ProfilePage);
+
