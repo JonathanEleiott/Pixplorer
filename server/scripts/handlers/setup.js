@@ -1,71 +1,11 @@
-const knex = require('knex')({
-  client: 'mysql',
-  connection: {
-    host: 'localhost',
-    user: 'root',
-    password: '',  // set a password if needed // MyNewPass
-    database: 'thesis',  // Be sure to create DB on server
-    charset: 'utf8'
-  }
-});
-const bookshelf = require('bookshelf')(knex);
-
-
-// Our Models
-const User = bookshelf.Model.extend({
-  tableName: 'users',
-  hasTimestamps: true,
-  lists: function () {
-    return this.hasMany(List);
-  },
-  // items: function () {
-  //   return this.hasMany(Item);
-  // },
-});
-
-const List = bookshelf.Model.extend({
-  tableName: 'lists',
-  hasTimestamps: true,
-  items: function () {
-    return this.hasMany(Item);
-  },
-  user: function () {
-    return this.belongsTo(User);
-  }
-});
-
-const Item = bookshelf.Model.extend({
-  tableName: 'items',
-  hasTimestamps: true,
-  list: function () {
-    return this.belongsTo(List);
-  },
-  done: function () {
-    return this.hasOne(Done);
-  }
-  // users: function() {
-  //   return this.belongsToMany(User);
-  // }
-});
-
-const Done = bookshelf.Model.extend({
-  tableName: 'users_items',
-  hasTimestamps: true,
-  item: function () {
-    return this.belongsTo(Item);
-  },
-  user: function () {
-    return this.belongsTo(User);
-  },
-  // users: function() {
-  //   return this.belongsToMany(User);
-  // }
-});
+const knex = require('../db').knex;
+const { User, List, Item } = require('../models');
 
 module.exports = {
   create: (req, res) => {
     console.log(`Serving ${req.method} request for ${req.url} (requestHandlerAPI.create)`);
     knex.schema
+    .dropTable('users_lists')
     .dropTable('users_items')
     .dropTable('items')
     .dropTable('lists')
@@ -96,10 +36,18 @@ module.exports = {
       table.integer('list_id').unsigned().references('lists.id');
       table.timestamps();
     })
+    // Completed
     .createTable('users_items', (table) => {
       table.increments().primary();
       table.integer('user_id').unsigned().references('users.id');
       table.integer('item_id').unsigned().references('items.id');
+      table.timestamps();
+    })
+    // Subscriptions 
+    .createTable('users_lists', (table) => {
+      table.increments().primary();
+      table.integer('user_id').unsigned().references('users.id');
+      table.integer('list_id').unsigned().references('lists.id');
       table.timestamps();
     })
 
@@ -208,54 +156,6 @@ module.exports = {
     // // END POPULATE LIST
     // //////////////////////////////////////////////////////////
 
-    // //////////////////////////////////////////////////////////
-    // // POPULATE LIST
-    // //////////////////////////////////////////////////////////
-    // .then(() => {
-    //   return new List({
-    //     name: 'Dan\'s Favorites',
-    //     description: 'Locate them all!'
-    //   })
-    //   .save().then((model) => {
-    //     return model.get('id');
-    //   });
-    // })
-    // .then((listId) => {
-    //   console.log('model: ', listId);
-    //   return new Item({
-    //     name: 'Daughter\'s Day Care',
-    //     description: 'Be aware ... they may have moved.',
-    //     list_id: listId
-    //   }).save().then((model) => {
-    //     return model.get('list_id');
-    //   });
-    // })
-    // .then((listId) => {
-    //   console.log('model: ', listId);
-    //   return new Item({
-    //     name: 'Hack Reactor',
-    //     description: 'Find the logo at the top of the stairs on 8th floor.',
-    //     list_id: listId
-    //   })
-    //   .save().then((model) => {
-    //     return model.get('list_id');
-    //   });
-    // })
-    // .then((listId) => {
-    //   console.log('model: ', listId);
-    //   return new Item({
-    //     name: 'Park Bench',
-    //     description: 'Dan loves this spot.',
-    //     list_id: listId
-    //   })
-    //   .save().then((model) => {
-    //     return model.get('list_id');
-    //   });
-    // })
-    //////////////////////////////////////////////////////////
-    // END POPULATE LIST
-    //////////////////////////////////////////////////////////
-
     .then((resp) => {
       console.log('RESp', resp);
       res.send('DB Created');
@@ -264,7 +164,6 @@ module.exports = {
       console.log('ERROR:', err);
       res.send(err);
     });
-    //res.send('DB Created');
   },
   delete: (req, res) => {
     knex.schema.dropTable('items')
