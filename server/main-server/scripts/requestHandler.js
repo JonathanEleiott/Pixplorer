@@ -101,14 +101,19 @@ module.exports = {
     console.log(`Serving ${req.method} request for ${req.url} (inside requestHandler.postImage)`);
     // const randomImageName = `${Math.random()}.jpg`;
     const imageData = new Buffer(req.body.imageBuffer, 'base64');
+    const { targetImageLatitude, targetImageLongitude, targetImageAllowedDistance } = req.body;
 
     axios({
         method: 'post',
         url: 'http://54.202.3.62:8084/setImage',
-        data: { imageBuffer: imageData }
+        data: { 
+          imageBuffer: imageData,
+          targetImageLatitude,
+          targetImageLongitude, 
+          targetImageAllowedDistance
+        }
       })
       .then((response) => {
-        console.log('image successfuly posted', response.data);
         sendResponse(res, 201, headers, response.data);
       })
       .catch((error) => {
@@ -122,18 +127,22 @@ module.exports = {
     console.log(`Serving ${req.method} request for ${req.url} (inside requestHandler.compareImage)`);
     // const randomImageName = `${Math.random()}.jpg`;
     const imageData = new Buffer(req.body.imageBuffer, 'base64');
-
+    const { userImageLatitude, userImageLongitude } = req.body;
     axios({
         method: 'post',
         url: 'http://54.202.3.62:8084/compareImage',
-        data: { imageBuffer: imageData, referenceImageId: req.body.referenceImageId }
+        data: { 
+          imageBuffer: imageData, 
+          referenceImageId: req.body.referenceImageId,
+          userImageLatitude,
+          userImageLongitude
+        }
       })
       .then((response) => {
-        console.log('image successfuly posted', response);
         sendResponse(res, 201, headers, response.data);
       })
       .catch((error) => {
-        console.log('AXIOS ERROR', error);
+        console.log('IMAGE NOT COMPARED AXIOS ERROR', error);
         sendResponse(res, 404, '', 'Error');
       });
   },

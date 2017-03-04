@@ -8,8 +8,8 @@ var bodyParser = require('body-parser');
 
 var generateParams = function(method, endpoint, optionalParams, optionalUrl) {
   optionalParams = optionalParams || '';
-  // optionalUrl = optionalUrl || 'http://54.218.118.52:8080/';
-  optionalUrl = optionalUrl || 'http://localhost:8080/';
+  optionalUrl = optionalUrl || 'http://54.218.118.52:8080/';
+  // optionalUrl = optionalUrl || 'http://localhost:8080/';
   return {
     method: method,
       uri: optionalUrl + endpoint,
@@ -142,7 +142,7 @@ describe('AUTH', function() {
        .catch(function(error) {
          expect(error.status).to.equal(201);
          expect(error.data.fb.email).to.equal('john@aol.com');
-         done();
+         done(error);
        });
   });
 
@@ -282,7 +282,11 @@ describe('IMAGE UPLOAD', function() {
       axios({
         method: axiosParams.method,
         url: axiosParams.uri,
-        data: { imageBuffer: imageData }
+        data: { 
+          imageBuffer: imageData,
+          targetImageLatitude: 37.776972,
+          targetImageLongitude: -122.406214
+        }
       })
       .then(function(response) {
         console.log(response.data);
@@ -292,7 +296,7 @@ describe('IMAGE UPLOAD', function() {
       })
       .catch(function(error) {
         console.log('error');
-        done();
+        done(error);
       });
     };
     
@@ -312,15 +316,20 @@ describe('IMAGE UPLOAD', function() {
       axios({
         method: axiosSetImageParams.method,
         url: axiosSetImageParams.uri,
-        data: { imageBuffer: imageData }
+        data: { 
+          imageBuffer: imageData,
+          targetImageLatitude: 37.776972,
+          targetImageLongitude: -122.406214,
+          targetImageAllowedDistance: 30 //kilometers. Set for less than 20 to fail the test
+        }
       })
       .then(function(response) {
         var referenceImageId = response.data;
-        compareImage(referenceImageId, done);
+        compareImage(referenceImageId);
       })
       .catch(function(error) {
         console.log('error');
-        done();
+        done(error);
       });
     };
     
@@ -329,35 +338,41 @@ describe('IMAGE UPLOAD', function() {
       processData(data);
     });
     //compare image function - executed after the image is set
-    var compareImage = function(imageId, done) {
+    var compareImage = function(imageId) {
       console.log(imageId);
       var axiosComapreImageParams = generateParams('post', 'compareImage', '');
-      var processData = function(data) {
+      var processCompareData = function(data) {
         var imageData =  new Buffer(data).toString('base64');
         axios({
           method: axiosComapreImageParams.method,
           url: axiosComapreImageParams.uri,
-          data: { imageBuffer: imageData, referenceImageId: imageId }
+          data: { 
+            imageBuffer: imageData, 
+            referenceImageId: imageId,
+            //this is about 25km away from the original image set above
+            userImageLatitude: 37.77,
+            userImageLongitude: -122.7
+          }
         })
         .then(function(response) {
           console.log(response.data, response.status);
+          expect(response.data).to.contain('Images are the same!');
           expect(response.status).to.equal(201);
-          expect(response.data).to.equal('Images are the same!');
           done();
         })
         .catch(function(error) {
-          //server responds with 'Error finding the image!'
-          console.log('error');
-          done();
+          //server responds with 'Error finding the image!' OR
+          //'You need to get within [someNumber]km and then take the picture!'
+          console.log('error', error);
+          done(error);
         });
       };
       
       fs.readFile('computer2.jpg', function(err, data) {
         if (err) throw err;
-        processData(data);
+        processCompareData(data);
       });
     };
-
   }); 
 });
 
