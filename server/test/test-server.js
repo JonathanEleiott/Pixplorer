@@ -247,7 +247,7 @@ describe('AUTH', function() {
     });
   });
 
-  it('should NOT create a new user with invalid email format', function(done) {
+  it('should NOT create a new user with invalid email format', (done) => {
     const createUserParams = generateParams(
       'POST',
       'createUser',
