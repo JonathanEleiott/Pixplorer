@@ -63,7 +63,7 @@ export default (state = INITIAL_STATE, action) => {
       return { ...state, listName: action.payload };
     // Updates allLists without deleted list
     case DELETE_LIST:
-      return { ...state, allLists: action.payload };
+      return { ...state, userLists: action.payload };
     // Added By Bill  - step 9
     case MANAGE_ITEM:
       return { ...state, list: action.payload };
