@@ -248,7 +248,10 @@ describe('AUTH', function() {
   });
 
   it('should NOT create a new user with invalid email format', function(done) {
-    const createUserParams = generateParams('POST', 'createUser', { email: 'johnaol.com', password: 'John123' });
+    const createUserParams = generateParams(
+      'POST',
+      'createUser',
+      { email: 'johnaol.com', password: 'John123' });
 
     request(createUserParams, (error, response, body) => {
       const parsedBody = JSON.parse(body);
