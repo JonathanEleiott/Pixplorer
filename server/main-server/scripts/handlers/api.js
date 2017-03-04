@@ -69,29 +69,6 @@ module.exports = {
           });
   },
 
-  // listsUser2: (req, res) => { 
-  //   console.log(`Serving ${req.method} request for ${req.url} (handlers/api.listsUser)`);
-
-  //   const userId = req.params.userId;
-  //   console.log('userId', userId);
-
-  //   new User()
-  //     .where('id', userId)
-  //     .fetch({ withRelated: ['lists.items', {
-  //       'lists.items.done': function (qb) { 
-  //         qb.innerJoin('users', 'users_items.user_id', 'users.id');
-  //         qb.where('users.id', userId); 
-  //       }
-  //       }] })
-  //     .then((user) => {
-  //           const output = user.toJSON();
-  //           res.send(output.lists);
-  //         })
-  //     .catch((error) => {
-  //           console.log(error);
-  //           res.send('An error occured');
-  //         });
-  // },
   // DELETE a List
   listsDelete: (req, res) => { 
     console.log(`Serving ${req.method} request for ${req.url} (handlers/api.listsDelete)`);
@@ -122,9 +99,6 @@ module.exports = {
   // Create Users -- from requestHandler
   usersCreate: (user) => { 
     console.log('Serving direct request for (handlers/api.usersCreate)');
-
-    //console.log('user:', user);
-    //const newName = req.body.listName ? req.body.listName : 'Hello Jon.';
 
     new User(
       {
@@ -262,7 +236,22 @@ module.exports = {
           .where({ user_id: userId, list_id: listId })
           .destroy()
           .then(() => {
-            res.send('deleted');
+            new User()
+              .where('id', userId)
+              .fetch({ withRelated: ['subscriptions.list.items', {
+                'subscriptions.list.items.done': function (qb) { 
+                  qb.innerJoin('users', 'users_items.user_id', 'users.id');
+                  qb.where('users.id', userId); 
+                }
+                }] })
+              .then((user) => {
+                    const output = user.toJSON();
+                    res.send(output.subscriptions);
+                  })
+              .catch((error) => {
+                    console.log('ERROR:', error);
+                    res.send('An error occured');
+                  });
           });
       });
   },
