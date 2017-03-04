@@ -9,6 +9,7 @@ var bodyParser = require('body-parser');
 var generateParams = function(method, endpoint, optionalParams, optionalUrl) {
   optionalParams = optionalParams || '';
   optionalUrl = optionalUrl || 'http://54.218.118.52:8080/';
+  // optionalUrl = optionalUrl || 'http://localhost:8080/';
   return {
     method: method,
       uri: optionalUrl + endpoint,
@@ -90,7 +91,7 @@ describe('AUTH', function() {
   });
 
   it('should create a new user', function(done) {
-    var createUserParams = generateParams('POST', 'createUser', {email: 'john2@aol.com', password: 'John123'});
+    var createUserParams = generateParams('POST', 'createUser', { email: 'john2@aol.com', password: 'John123' });
 
     request(createUserParams, function(error, response, body) {
       var parsedBody = JSON.parse(body);
@@ -108,7 +109,7 @@ describe('AUTH', function() {
     request(loginParams, function(error, response, body) {
       var parsedBody = JSON.parse(body);
       expect(response.statusCode).to.equal(201);
-      expect(parsedBody.email).to.equal('john@aol.com');
+      expect(parsedBody.fb.email).to.equal('john@aol.com');
       done();
     });
   });
@@ -120,7 +121,7 @@ describe('AUTH', function() {
     request(loginParams, function(error, response, body) {
       var parsedBody = JSON.parse(body);
       expect(response.statusCode).to.equal(201);
-      expect(parsedBody.email).to.equal('john@aol.com');
+      expect(parsedBody.fb.email).to.equal('john@aol.com');
       done();
     });
   });
@@ -135,13 +136,13 @@ describe('AUTH', function() {
        })
        .then(function(response) {
          expect(response.status).to.equal(201);
-         expect(response.data.email).to.equal('john@aol.com');
+         expect(response.data.fb.email).to.equal('john@aol.com');
          done();
        })
        .catch(function(error) {
          expect(error.status).to.equal(201);
-         expect(error.data.email).to.equal('john@aol.com');
-         done();
+         expect(error.data.fb.email).to.equal('john@aol.com');
+         done(error);
        });
   });
 
@@ -204,7 +205,7 @@ describe('AUTH', function() {
     var loginParams = generateParams('POST', 'login', {email: 'john2@aol.com', password: 'John123'});
     var deleteUserParams = generateParams('POST', 'deleteUser');
 
-    request(loginParams, function(error, response, body) {
+    request(loginParams, function(error, response, body) {      
       request(deleteUserParams, function(error, response, body) {
         expect(response.statusCode).to.equal(201);
         expect(body).to.equal('User deleted!');
@@ -240,7 +241,7 @@ describe('AUTH', function() {
     var createUserParams = generateParams('POST', 'createUser', {email: 'john@aol.com', password: 'John123'});
     request(createUserParams, function(error, response, body) {
       var parsedBody = JSON.parse(body);
-      expect(response.statusCode).to.equal(400);
+      expect(response.statusCode).to.equal(203);
       expect(body).to.contain('The email address is already in use by another account');
       done();
     });
@@ -251,7 +252,7 @@ describe('AUTH', function() {
 
     request(createUserParams, function(error, response, body) {
       var parsedBody = JSON.parse(body);
-      expect(response.statusCode).to.equal(400);
+      expect(response.statusCode).to.equal(203);
       expect(body).to.contain('The email address is badly formatted');
       done();
     });
@@ -262,7 +263,7 @@ describe('AUTH', function() {
     
     request(createUserParams, function(error, response, body) {
       var parsedBody = JSON.parse(body);
-      expect(response.statusCode).to.equal(400);
+      expect(response.statusCode).to.equal(203);
       expect(body).to.contain('Password should be at least 6 characters');
       done();
     });
@@ -273,7 +274,7 @@ describe('IMAGE UPLOAD', function() {
   
   it('it should set a reference image', function(done) {
     this.timeout(3500);
-    var axiosParams = generateParams('post', 'postImage', '', 'http://54.218.118.52:8080/');
+    var axiosParams = generateParams('post', 'postImage', '');
 
     var processData = function(data) {
 
@@ -281,7 +282,11 @@ describe('IMAGE UPLOAD', function() {
       axios({
         method: axiosParams.method,
         url: axiosParams.uri,
-        data: { imageBuffer: imageData }
+        data: { 
+          imageBuffer: imageData,
+          targetImageLatitude: 37.776972,
+          targetImageLongitude: -122.406214
+        }
       })
       .then(function(response) {
         console.log(response.data);
@@ -291,7 +296,7 @@ describe('IMAGE UPLOAD', function() {
       })
       .catch(function(error) {
         console.log('error');
-        done();
+        done(error);
       });
     };
     
@@ -303,7 +308,7 @@ describe('IMAGE UPLOAD', function() {
 
   it('it should compare an image to the reference image', function(done) {
     this.timeout(4500);
-    var axiosSetImageParams = generateParams('post', 'postImage', '', 'http://54.218.118.52:8080/');
+    var axiosSetImageParams = generateParams('post', 'postImage', '');
 
     var processData = function(data) {
 
@@ -311,15 +316,20 @@ describe('IMAGE UPLOAD', function() {
       axios({
         method: axiosSetImageParams.method,
         url: axiosSetImageParams.uri,
-        data: { imageBuffer: imageData }
+        data: { 
+          imageBuffer: imageData,
+          targetImageLatitude: 37.776972,
+          targetImageLongitude: -122.406214,
+          targetImageAllowedDistance: 30 //kilometers. Set for less than 20 to fail the test
+        }
       })
       .then(function(response) {
         var referenceImageId = response.data;
-        compareImage(referenceImageId, done);
+        compareImage(referenceImageId);
       })
       .catch(function(error) {
         console.log('error');
-        done();
+        done(error);
       });
     };
     
@@ -328,36 +338,41 @@ describe('IMAGE UPLOAD', function() {
       processData(data);
     });
     //compare image function - executed after the image is set
-    var compareImage = function(imageId, done) {
+    var compareImage = function(imageId) {
       console.log(imageId);
-      var axiosComapreImageParams = generateParams('post', 'compareImage', '', 'http://54.218.118.52:8080/');
-      var processData = function(data) {
+      var axiosComapreImageParams = generateParams('post', 'compareImage', '');
+      var processCompareData = function(data) {
         var imageData =  new Buffer(data).toString('base64');
         axios({
           method: axiosComapreImageParams.method,
           url: axiosComapreImageParams.uri,
-          data: { imageBuffer: imageData, referenceImageId: imageId }
+          data: { 
+            imageBuffer: imageData, 
+            referenceImageId: imageId,
+            //this is about 25km away from the original image set above
+            userImageLatitude: 37.77,
+            userImageLongitude: -122.7
+          }
         })
         .then(function(response) {
           console.log(response.data, response.status);
+          expect(response.data).to.contain('Images are the same!');
           expect(response.status).to.equal(201);
-          expect(response.data).to.equal('Images are the same!');
           done();
         })
         .catch(function(error) {
-          //server responds with 'Error finding the image!'
-          console.log('error');
-          done();
+          //server responds with 'Error finding the image!' OR
+          //'You need to get within [someNumber]km and then take the picture!'
+          console.log('error', error);
+          done(error);
         });
       };
       
       fs.readFile('computer2.jpg', function(err, data) {
         if (err) throw err;
-        processData(data);
+        processCompareData(data);
       });
     };
-
-  });
- 
+  }); 
 });
 

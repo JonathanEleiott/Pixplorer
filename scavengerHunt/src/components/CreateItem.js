@@ -26,11 +26,28 @@ class CreateItem extends Component {
       newItemName: '',
       newItemDesc: '',
       newItemURL: '',
-      newItemListId: null
+      newItemListId: null,
+      targetImageLatitude: '',
+      targetImageLongitude: ''
     };
 
     this.handleSubmit = this.handleSubmit.bind(this);
     this.openCamera = this.openCamera.bind(this);
+  }
+
+  componentWillMount() {
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const targetImageLatitude = position.coords.latitude;
+        const targetImageLongitude = position.coords.longitude;
+        this.setState({ targetImageLatitude, targetImageLongitude });
+        console.log('success getting current position: ', this.state);
+      },
+      (error) => {
+        console.log('error getting current position', JSON.stringify(error));
+      },
+      { enableHighAccuracy: true, timeout: 20000, maximumAge: 600000 }
+    );
   }
 
   handleSubmit() {
@@ -70,7 +87,12 @@ class CreateItem extends Component {
           axios({
               method: 'post',
               url: `${config.mainServer}/postImage`,
-              data: { imageBuffer: imageData }
+              data: { 
+                imageBuffer: imageData,
+                targetImageLatitude: this.state.targetImageLatitude,
+                targetImageLongitude: this.state.targetImageLongitude,
+                targetImageAllowedDistance: 30 //currently hardcoded
+              }
             })
             .then((response) => {
               console.log('SUCCESS: Image sent to server:', response.data);

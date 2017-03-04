@@ -188,6 +188,20 @@ module.exports = {
         return;
       });
   },
+
+  // Create Users -- from requestHandler
+  usersDelete: (user) => { 
+    console.log('Serving direct request for (handlers/api.usersDelete)', user.uid);
+
+    new User()
+      .where('firebase_id', user.uid)
+      .destroy()
+      .then(() => {
+        console.log('User Deleted from Local DB');
+        return;
+      });
+  },
+
   // Create New list
   listsCreate: (req, res) => { 
     console.log(`Serving ${req.method} request for ${req.url} (handlers/api.listsCreate)`);

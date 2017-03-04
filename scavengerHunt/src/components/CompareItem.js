@@ -15,7 +15,7 @@ import { manageItem } from '../actions';
 import { Analyzing, Match, NoMatch, Instructions } from './subcomponents';
 
 class CompareItem extends Component {
-  constructor(props) {
+    constructor(props) {
     super(props);
     this.state = {
       status: 1,
@@ -23,12 +23,30 @@ class CompareItem extends Component {
       newItemDesc: '',
       newItemURL: '',
       newItemListId: null,
-      currentList: null
+      currentList: null,
+      userImageLatitude: '',
+      userImageLongitude: ''
     };
 
     this.handleSubmit = this.handleSubmit.bind(this);
     this.openCamera = this.openCamera.bind(this);
   }
+
+  componentWillMount() {
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const userImageLatitude = position.coords.latitude;
+        const userImageLongitude = position.coords.longitude;
+        this.setState({ userImageLatitude, userImageLongitude });
+        console.log('success getting current position: ', this.state);
+      },
+      (error) => {
+        console.log('error getting current position', JSON.stringify(error));
+      },
+      { enableHighAccuracy: true, timeout: 20000, maximumAge: 600000 }
+    );
+  }
+
 
   handleSubmit() {
       this.props.manageItem(2, this.state.currentList);
@@ -55,7 +73,12 @@ class CompareItem extends Component {
           axios({
               method: 'post',
               url: `${config.mainServer}/compareImage`,
-              data: { imageBuffer: imageData, referenceImageId: this.props.item.image }
+              data: { 
+                imageBuffer: imageData, 
+                referenceImageId: this.props.item.image,
+                userImageLatitude: this.state.userImageLatitude,
+                userImageLongitude: this.state.userImageLongitude
+              }
             })
             .then((response) => {
               if (response.data === 'Images are the same!') {
