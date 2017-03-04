@@ -3,7 +3,7 @@ const setImageHandler = require('./imageHandler/setImage');
 const compareImageHandler = require('./imageHandler/compareImage');
 
 module.exports = {
-  landing: (req, res) => { 
+  landing: (req, res) => {
     console.log(`Serving ${req.method} request for ${req.url} (inside requestHandler.landing)`);
     sendResponse(res, 200, '', 'Welcome the image service for Crustaceans thesis project!');
   },
@@ -16,4 +16,3 @@ module.exports = {
     compareImageHandler(req, res);
   }
 };
-

@@ -17,8 +17,9 @@ import {
 //Amazon EC2 production server
 //const authUrl = 'http://54.218.118.52:8080/'; // AWS EC2 production server
 // const authUrl = 'http://198.199.94.223:8080/';
-// const authUrl = 'https://0c781438.ngrok.io/';
-const authUrl = 'http://localhost:8080/';
+const authUrl = 'https://0c781438.ngrok.io/';
+// const authUrl = 'http://localhost:8080/';
+
 // Changes email prop to what the user typed in
 export const emailChanged = (text) => {
   return {
@@ -36,14 +37,7 @@ export const passwordChanged = (text) => {
 };
 
 // Sends AJAX request to log in the user
-//////////////////////////////////////////
-// RESPONSE NEEDS TO SEND CORRECT USER, //
-// NOT 'globalUser' OR 'user' ////////////
-//////////////////////////////////////////
-
 export const loginUser = (credentials) => {
-  console.log(credentials);
-
   //////////////////////////////////////////////////////////
   // "WHERE THE HECK DOES THAT CHANGE?!" - Dan
   // This requires email when signing in, but username when confirming user on return
@@ -64,7 +58,7 @@ export const loginUser = (credentials) => {
       }
     })
     .then(response => {
-      console.log('loginUser success', response);
+      console.log('loginUser success');
       loginUserSuccess(dispatch, response.data.user_id);
       // callbackFromSplashComponent();
       //pass dispatch down to getUniqueUserId
@@ -157,7 +151,7 @@ export const getUniqueUserId = (dispatch) => {
     url: requrl,
   })
   .then((response) => {
-    console.log('getUniqueUserId', response);
+    console.log('getUniqueUserId');
     dispatch({ type: CURRENT_USER_FIREBASE_ID, payload: response.data.uid });
   })
   .catch((response) => {

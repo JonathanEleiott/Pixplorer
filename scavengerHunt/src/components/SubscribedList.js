@@ -36,20 +36,20 @@ class SubscribedList extends Component {
 
   //Deletes a list from the DB
   deleteListFromDB(listName) {
-    this.props.deleteList(listName);
+    this.props.deleteList(listName, this.props.user);
   }
 
   render() {
     return (
       <ScrollView>
         <Card>
-          { this.props.userLists.map((list, index) => {
+          { this.props.userLists.map((subscription, index) => {
             const { listStyle, arrowStyle } = styles;
             const swipeButts = [{
               key: Math.random(),
               text: 'Delete',
               backgroundColor: 'red',
-              onPress: () => this.deleteListFromDB(list)
+              onPress: () => this.deleteListFromDB(subscription.list)
             }];
             return (
               <Swipeout key={index} right={swipeButts}>
@@ -57,16 +57,20 @@ class SubscribedList extends Component {
                   <TouchableHighlight
                     activeOpacity={0.5}
                     underlayColor={'white'}
-                    value={list}
-                    onPress={() => this.clickOnATitle(list)}
+                    value={subscription.list}
+                    onPress={() => this.clickOnATitle(subscription.list)}
                   >
-                    <Text style={listStyle} value={list.name}>{list.name}</Text>
+                    <Text
+                      style={listStyle}
+                      value={subscription.list.name}
+                    >{subscription.list.name}
+                    </Text>
                   </TouchableHighlight>
                   <TouchableHighlight
                     activeOpacity={0.5}
                     underlayColor={'white'}
-                    value={list}
-                    onPress={() => this.clickOnATitle(list)}
+                    value={subscription.list}
+                    onPress={() => this.clickOnATitle(subscription.list)}
                   >
                     <View>
                       <FontAwesome style={arrowStyle}>arrowCircleRight</FontAwesome>
