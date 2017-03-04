@@ -40,6 +40,7 @@ module.exports = {
     .createTable('users_items', (table) => {
       table.increments().primary();
       table.integer('user_id').unsigned().references('users.id');
+      table.integer('list_id').unsigned().references('lists.id');
       table.integer('item_id').unsigned().references('items.id');
       table.timestamps();
     })
