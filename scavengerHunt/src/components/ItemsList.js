@@ -95,11 +95,21 @@ class ItemsList extends Component {
     );
   }
 
+  // Decides whether the user should be able to add to the list of items
+  showAddButton() {
+    if (this.props.list.user_id === this.props.user) {
+      return (
+        <Button onPress={this.addItemToList.bind(this)}>Add Item</Button>
+      );
+    }
+  }
+
   // Shows the list of items on the page
   renderList() {
     if (this.props.list.items) {
       return this.props.list.items.map((item, index) => {
-        if (this.props.list.admin) {
+        console.log('what is list?', item, 'baby dont hurt me', this.props.user);
+        if (this.props.list.user_id === this.props.user) {
           const swipeButtons = [{
             key: Math.random(),
             text: 'Delete',
@@ -109,18 +119,20 @@ class ItemsList extends Component {
           return (
             <Swipeout key={index} right={swipeButtons}>
               {this.renderBody(item, index)}
-              <Button onPress={this.addItemToList.bind(this)}>Add Item</Button>
             </Swipeout>
           );
         }
 
         return (
-          this.renderBody(item, index)
+          <Card>
+            { this.renderBody(item, index) }
+          </Card>
         );
       });
     }
     return;
   }
+
 
   // Allows editing based on whether the current user made the list
   renderBody(item, index) {
@@ -137,6 +149,7 @@ class ItemsList extends Component {
       <ScrollView style={styles.listStyle}>
         <Card>
           { this.renderList() }
+          { this.showAddButton() }
         </Card>
       </ScrollView>
     );
