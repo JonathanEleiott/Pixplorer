@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+
 const Schema = mongoose.Schema;
 
 mongoose.connect('mongodb://localhost/test');
@@ -51,13 +52,19 @@ const compareImageCoordinates = function (targetImgLat, targetImgLon, userImgLat
 module.exports = {
   userData: model,
 
-  setImage: (s3ImageLocation, GoogleVisionResultLabels, targetImageLatitude, targetImageLongitude, targetImageAllowedDistance, respond) => {
-    const update = { 
-      s3ImageLocation: JSON.stringify(s3ImageLocation), 
+  setImage: (s3ImageLocation,
+    GoogleVisionResultLabels,
+    targetImageLatitude,
+    targetImageLongitude,
+    targetImageAllowedDistance,
+    respond
+  ) => {
+    const update = {
+      s3ImageLocation: JSON.stringify(s3ImageLocation),
       GoogleVisionResultLabels: JSON.stringify(GoogleVisionResultLabels),
       targetImageLatitude: JSON.stringify(targetImageLatitude),
-      targetImageLongitude: JSON.stringify(targetImageLongitude), 
-      targetImageAllowedDistance: JSON.stringify(targetImageAllowedDistance) 
+      targetImageLongitude: JSON.stringify(targetImageLongitude),
+      targetImageAllowedDistance: JSON.stringify(targetImageAllowedDistance)
     };
 
     const newImage = new model(update);
@@ -73,7 +80,7 @@ module.exports = {
     // model.findOneAndUpdate(query, update, options, (error, result) => {
     //     // console.log('RESULT', result);
     //     result = result || new model(query);
-        
+
     //     result.save((error, savedEntry) => {
     //       if (error && respond) {
     //         respond(404, 'Error saving the image!');
@@ -85,21 +92,27 @@ module.exports = {
     //////////////////////////////////////////
   },
 
-  compareImage: (comparisonImageId, googleImageLabelsToCompare, userImageLatitude, userImageLongitude, respond) => {
+  compareImage: (
+    comparisonImageId,
+    googleImageLabelsToCompare,
+    userImageLatitude,
+    userImageLongitude,
+    respond
+  ) => {
     const query = { _id: comparisonImageId };
     model.findOne(query, {}, (err, imageFromDB) => {
       if (err || !imageFromDB) {
         respond(201, 'Error finding the image!');
       } else if (imageFromDB) {
         const coordinatesComparison = compareImageCoordinates(
-          imageFromDB.targetImageLatitude, 
-          imageFromDB.targetImageLongitude, 
+          imageFromDB.targetImageLatitude,
+          imageFromDB.targetImageLongitude,
           userImageLatitude,
           userImageLongitude
         );
 
         const labelComparison = compareImageLabels(
-          imageFromDB.GoogleVisionResultLabels, 
+          imageFromDB.GoogleVisionResultLabels,
           googleImageLabelsToCompare
         );
 
@@ -124,4 +137,3 @@ module.exports = {
     });
   }
 };
-
