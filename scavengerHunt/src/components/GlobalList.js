@@ -31,7 +31,6 @@ class SubscribedList extends Component {
 
   // Updates list as user types in the search box
   onSearchGlobalListChange(text) {
-    console.log('global search props', this.props);
     this.props.searchGlobalListChanged(text);
   }
 
@@ -51,10 +50,10 @@ class SubscribedList extends Component {
   }
 
   // Adds a list to the users subscribed page
-  clickAddListToSubscribedPage() {
-    const { list, user } = this.props;
-    console.log(this.props);
-    this.props.addListToSubscribedPage(list, user);
+  clickAddListToSubscribedPage(list) {
+    const { user } = this.props;
+
+    this.props.addListToSubscribedPage(list.id, user);
   }
 
   swipeoutBody(list, index) {
@@ -91,7 +90,11 @@ class SubscribedList extends Component {
           onPress={() => this.clickAddListToSubscribedPage(list)}
         >
         <View >
-          <FontAwesome style={imageStyle} >plusCircle</FontAwesome>
+          <FontAwesome
+            style={imageStyle}
+            onPress={() => this.clickAddListToSubscribedPage(list)}
+          >plusCircle
+        </FontAwesome>
         </View>
         </TouchableHighlight>
         <TouchableHighlight
@@ -164,10 +167,10 @@ const styles = {
 };
 
 const mapStateToProps = ({ core, auth }) => {
-  const { list, allLists, searchText } = core;
+  const { userLists, allLists, searchText } = core;
   const { currentUserId, user } = auth;
 
-  return { list, allLists, searchText, currentUserId, user };
+  return { userLists, allLists, searchText, currentUserId, user };
 };
 
 export default connect(mapStateToProps, {

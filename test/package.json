@@ -1,0 +1,46 @@
+{
+  "name": "thesis-server",
+  "version": "1.0.0",
+  "description": "Crustaceans thesis server",
+  "main": "index.js",
+  "presets": [
+    "react-native"
+  ],
+  "scripts": {
+    "test": "mocha test/test-server.js",
+    "testFE": "mocha --opts ./mocha.opts ./frontEndTests.spec.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CruciferousCrustaceans/hrsf53-thesis.git"
+  },
+  "author": "Dan Svorcan, Jonathan Eleiott, Bill Lea",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/CruciferousCrustaceans/hrsf53-thesis/issues"
+  },
+  "homepage": "https://github.com/CruciferousCrustaceans/hrsf53-thesis#readme",
+  "dependencies": {
+    "axios": "^0.15.3",
+    "babel-core": "^6.23.1",
+    "babel-preset-airbnb": "^2.2.3",
+    "babel-preset-react-native": "^1.9.1",
+    "chai": "^3.5.0",
+    "chai-enzyme": "^0.6.1",
+    "chai-http": "^3.0.0",
+    "enzyme": "^2.7.1",
+    "eslint": "^3.15.0",
+    "eslint-config-rallycoding": "^3.2.0",
+    "firebase": "^3.6.9",
+    "mocha": "^3.2.0",
+    "react": "^15.4.2",
+    "react-addons-test-utils": "^15.4.2",
+    "react-dom": "^15.4.2",
+    "react-native": "^0.42.0",
+    "react-native-mock": "^0.3.1"
+  },
+  "devDependencies": {
+    "nodemon": "^1.11.0",
+    "sinon": "^1.17.7"
+  }
+}

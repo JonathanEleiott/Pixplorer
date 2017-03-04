@@ -83,7 +83,7 @@ export const importAllLists = () => {
       url: `${listUrl}/api/all`
     })
     .then(response => {
-      console.log('importAllLists', response);
+      console.log('importAllLists');
       dispatch({
         type: IMPORT_ALL_LISTS,
         payload: response.data
@@ -100,7 +100,7 @@ export const importAllLists = () => {
 // CURRENTLY LOADS ALL LISTS, BUT NEEDS TO CHANGE TO USER LISTS //
 //////////////////////////////////////////////////////////////////
 export const importUserLists = (userId) => {
-  console.log('userId', userId);
+  console.log('importUserLists');
   loading();
   return (dispatch) => {
     axios({
@@ -108,7 +108,7 @@ export const importUserLists = (userId) => {
       url: `${listUrl}/api/lists/${userId}`
     })
     .then(response => {
-      console.log('response importUserLists', response);
+      console.log('response importUserLists');
       dispatch({
         type: IMPORT_USER_LISTS,
         payload: response.data
@@ -151,20 +151,19 @@ export const addListToDB = (listName, user) => {
 // This does not currently do anything so make sure we hook up the axios call //
 ////////////////////////////////////////////////////////////////////////////////
 export const addListToSubscribedPage = (list, user) => {
-  console.log('addListToSubscribedPage', 'list', list, 'user', user);
+  console.log('addListToSubscribedPage');
   loading();
-  return (dispatch) => {
+  return () => {
     axios({
       method: 'post',
-      url: `${listUrl}`,
-      data: list
+      url: `${listUrl}/api/lists/subscribe`,
+      data: {
+        user,
+        list
+      }
     })
-    .then(response => {
+    .then(() => {
       goToSubscribedList();
-      dispatch({
-        type: ADD_LIST_TO_SUSCRIBED_PAGE,
-        payload: response.data
-      });
       success();
     })
     .catch(error => {
@@ -204,12 +203,12 @@ export const deleteItem = (item, list) => {
 };
 
 // Deletes a list from the DB
-export const deleteList = (listName) => {
+export const deleteList = (listName, user) => {
   loading();
   return (dispatch) => {
     axios({
       method: 'delete',
-      url: `${listUrl}/api/lists/${listName.id}`
+      url: `${listUrl}/api/lists/subscribe/${user}/${listName.id}`
     })
     .then(response => {
       goToSubscribedList();

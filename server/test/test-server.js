@@ -205,7 +205,7 @@ describe('AUTH', function() {
     var loginParams = generateParams('POST', 'login', {email: 'john2@aol.com', password: 'John123'});
     var deleteUserParams = generateParams('POST', 'deleteUser');
 
-    request(loginParams, function(error, response, body) {      
+    request(loginParams, function(error, response, body) {
       request(deleteUserParams, function(error, response, body) {
         expect(response.statusCode).to.equal(201);
         expect(body).to.equal('User deleted!');
@@ -250,19 +250,23 @@ describe('AUTH', function() {
   it('should NOT create a new user with invalid email format', function(done) {
     var createUserParams = generateParams('POST', 'createUser', {email: 'johnaol.com', password: 'John123'});
 
-    request(createUserParams, function(error, response, body) {
-      var parsedBody = JSON.parse(body);
+    request(createUserParams, (error, response, body) => {
+      const parsedBody = JSON.parse(body);
       expect(response.statusCode).to.equal(203);
       expect(body).to.contain('The email address is badly formatted');
       done();
     });
   });
 
-  it('should NOT create a new user with password that is less than 6 characters long', function(done) {
-    var createUserParams = generateParams('POST', 'createUser', {email: 'john2@aol.com', password: '1234'});
-    
-    request(createUserParams, function(error, response, body) {
-      var parsedBody = JSON.parse(body);
+  it('should NOT create a new user with password that is less than 6 characters long', (done) => {
+    const createUserParams = generateParams(
+      'POST',
+      'createUser',
+      { email: 'john2@aol.com', password: '1234' }
+    );
+
+    request(createUserParams, (error, response, body) => {
+      const parsedBody = JSON.parse(body);
       expect(response.statusCode).to.equal(203);
       expect(body).to.contain('Password should be at least 6 characters');
       done();
@@ -270,109 +274,105 @@ describe('AUTH', function() {
   });
 });
 
-describe('IMAGE UPLOAD', function() {
-  
-  it('it should set a reference image', function(done) {
+describe('IMAGE UPLOAD', () => {
+  it('it should set a reference image', (done) => {
     this.timeout(3500);
-    var axiosParams = generateParams('post', 'postImage', '');
+    const axiosParams = generateParams('post', 'postImage', '');
 
-    var processData = function(data) {
-
-      var imageData =  new Buffer(data).toString('base64');
+    const processData = (data) => {
+      const imageData = new Buffer(data).toString('base64');
       axios({
         method: axiosParams.method,
         url: axiosParams.uri,
-        data: { 
+        data: {
           imageBuffer: imageData,
           targetImageLatitude: 37.776972,
           targetImageLongitude: -122.406214
         }
       })
-      .then(function(response) {
+      .then((response) => {
         console.log(response.data);
         expect(response.status).to.equal(201);
         expect(response.data).to.exist;
         done();
       })
-      .catch(function(error) {
+      .catch((error) => {
         console.log('error');
         done(error);
       });
     };
-    
-    fs.readFile('computer1.jpg', function(err, data) {
+
+    fs.readFile('computer1.jpg', (err, data) => {
       if (err) throw err;
       processData(data);
     });
   });
 
-  it('it should compare an image to the reference image', function(done) {
+  it('it should compare an image to the reference image', (done) => {
     this.timeout(4500);
-    var axiosSetImageParams = generateParams('post', 'postImage', '');
+    const axiosSetImageParams = generateParams('post', 'postImage', '');
 
-    var processData = function(data) {
-
-      var imageData =  new Buffer(data).toString('base64');
+    const processData = (data) => {
+      const imageData = new Buffer(data).toString('base64');
       axios({
         method: axiosSetImageParams.method,
         url: axiosSetImageParams.uri,
-        data: { 
+        data: {
           imageBuffer: imageData,
           targetImageLatitude: 37.776972,
           targetImageLongitude: -122.406214,
           targetImageAllowedDistance: 30 //kilometers. Set for less than 20 to fail the test
         }
       })
-      .then(function(response) {
-        var referenceImageId = response.data;
+      .then((response) => {
+        const referenceImageId = response.data;
         compareImage(referenceImageId);
       })
-      .catch(function(error) {
+      .catch((error) => {
         console.log('error');
         done(error);
       });
     };
-    
-    fs.readFile('computer2.jpg', function(err, data) {
+
+    fs.readFile('computer2.jpg', (err, data) => {
       if (err) throw err;
       processData(data);
     });
     //compare image function - executed after the image is set
-    var compareImage = function(imageId) {
+    const compareImage = (imageId) => {
       console.log(imageId);
-      var axiosComapreImageParams = generateParams('post', 'compareImage', '');
-      var processCompareData = function(data) {
-        var imageData =  new Buffer(data).toString('base64');
+      const axiosComapreImageParams = generateParams('post', 'compareImage', '');
+      const processCompareData = (data) => {
+        const imageData = new Buffer(data).toString('base64');
         axios({
           method: axiosComapreImageParams.method,
           url: axiosComapreImageParams.uri,
-          data: { 
-            imageBuffer: imageData, 
+          data: {
+            imageBuffer: imageData,
             referenceImageId: imageId,
             //this is about 25km away from the original image set above
             userImageLatitude: 37.77,
             userImageLongitude: -122.7
           }
         })
-        .then(function(response) {
+        .then((response) => {
           console.log(response.data, response.status);
           expect(response.data).to.contain('Images are the same!');
           expect(response.status).to.equal(201);
           done();
         })
-        .catch(function(error) {
+        .catch((error) => {
           //server responds with 'Error finding the image!' OR
           //'You need to get within [someNumber]km and then take the picture!'
           console.log('error', error);
           done(error);
         });
       };
-      
-      fs.readFile('computer2.jpg', function(err, data) {
+
+      fs.readFile('computer2.jpg', (err, data) => {
         if (err) throw err;
         processCompareData(data);
       });
     };
-  }); 
+  });
 });
-
