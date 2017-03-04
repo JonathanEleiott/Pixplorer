@@ -95,9 +95,6 @@ export const importAllLists = () => {
   };
 };
 
-//////////////////////////////////////////////////////////////////
-// CURRENTLY LOADS ALL LISTS, BUT NEEDS TO CHANGE TO USER LISTS //
-//////////////////////////////////////////////////////////////////
 export const importUserLists = (userId) => {
   console.log('importUserLists');
   loading();
@@ -119,9 +116,7 @@ export const importUserLists = (userId) => {
     });
   };
 };
-///////////////////////////////////
-// Change userId to current user //
-///////////////////////////////////
+
 // Attempts to add a new list to the DB and sends user to the new lists item list
 export const addListToDB = (listName, user) => {
   loading();
@@ -146,9 +141,6 @@ export const addListToDB = (listName, user) => {
   };
 };
 
-////////////////////////////////////////////////////////////////////////////////
-// This does not currently do anything so make sure we hook up the axios call //
-////////////////////////////////////////////////////////////////////////////////
 export const addListToSubscribedPage = (list, user) => {
   console.log('addListToSubscribedPage');
   loading();
@@ -267,6 +259,24 @@ export const manageItem = (type = 1, itemOrList) => {
   };
 };
 
+////////////////////////////////////////////////////////////////////////////////
+// This does not currently do anything so make sure we hook up the axios call //
+////////////////////////////////////////////////////////////////////////////////
+// Sends user to listStats page and shows them the list stats
+export const goToListStats = (list) => {
+  axios({
+    method: 'get',
+    url: `${listUrl}/api`,
+    data: list
+  })
+  .then((response) => {
+    Actions.listStats(response.data);
+  })
+  .catch((error) => {
+    console.log('error in goToListStats', error);
+  });
+};
+
 // Goes to the create a list screen
 const goToCreateList = () => {
   Actions.createList();
@@ -297,7 +307,7 @@ const goToItemsList = (list, name, destination) => {
 // Goes to the add an item
 const goToCreateItem = (list) => {
   ////////////////////////////////////
-  // CHANGE TO Actions.createItem() //////
+  // CHANGE TO Actions.createItem() //
   // IF YOU DON'T WANT A BACK BUTON //
   ////////////////////////////////////
   Actions.createItem({ listId: list.id });

@@ -51,9 +51,9 @@ class SubscribedList extends Component {
 
   // Adds a list to the users subscribed page
   clickAddListToSubscribedPage(list) {
-    const { user } = this.props;
+    const { userID } = this.props;
 
-    this.props.addListToSubscribedPage(list.id, user);
+    this.props.addListToSubscribedPage(list.id, userID);
   }
 
   swipeoutBody(list, index) {
@@ -79,7 +79,7 @@ class SubscribedList extends Component {
 
   // Checks to see if the user has admin abilities
   renderBody(list, index) {
-    const { listStyle, imageStyle, arrowStyle } = styles;
+    const { listStyle, descriptionStyle, imageStyle, arrowStyle } = styles;
 
     return (
       <CardSection key={index} style={{ padding: 20 }}>
@@ -103,7 +103,11 @@ class SubscribedList extends Component {
         value={list}
         onPress={() => this.clickOnATitle(list)}
         >
-        <Text style={listStyle} value={list.name}>{list.name}</Text>
+          <Text style={listStyle} value={list.name}>{list.name} {'\n'}
+            <Text style={descriptionStyle}>
+              {list.items.length} items - 226 subscribers
+            </Text>
+          </Text>
         </TouchableHighlight>
         <TouchableHighlight
           activeOpacity={0.5}
@@ -156,6 +160,10 @@ const styles = {
     width: 275,
     paddingLeft: 10,
   },
+  descriptionStyle: {
+    fontSize: 16,
+    color: '#666'
+  },
   imageStyle: {
     fontSize: 30,
     color: '#333'
@@ -168,9 +176,9 @@ const styles = {
 
 const mapStateToProps = ({ core, auth }) => {
   const { userLists, allLists, searchText } = core;
-  const { currentUserId, user } = auth;
+  const { currentUserId, userID } = auth;
 
-  return { userLists, allLists, searchText, currentUserId, user };
+  return { userLists, allLists, searchText, currentUserId, userID };
 };
 
 export default connect(mapStateToProps, {

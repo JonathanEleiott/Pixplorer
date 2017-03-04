@@ -6,7 +6,6 @@ export const LOGIN_USER = 'login_user';
 export const SIGNUP_USER = 'signup_user';
 export const LOGIN_USER_SUCCESS = 'login_user_sucess';
 export const LOGIN_USER_FAIL = 'login_user_fail';
-
 export const LOGOUT_USER = 'logout_user';
 
 export const LIST_TITLE_CLICKED = 'list_title_clicked';
@@ -23,6 +22,8 @@ export const LIST_NAME_CHANGED = 'list_name_changed';
 export const DELETE_LIST = 'delete_list';
 export const LOADING = 'loading';
 export const SUCCESS = 'success';
+
+export const UPDATE_PROFILE = 'update_profile';
 
 //Get current user
 export const CURRENT_USER_FIREBASE_ID = 'current_user_firebase_id';
