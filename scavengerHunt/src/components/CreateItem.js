@@ -87,7 +87,7 @@ class CreateItem extends Component {
         console.log('DATA IMG:', data.path);
 
         this.setState({
-          status: 3,
+          status: 4,
         });
 
         RNFetchBlob.fs.readFile(data.path, 'base64')
@@ -136,7 +136,6 @@ class CreateItem extends Component {
       });
     } 
   }
-
 
   renderForm() {
     return (
