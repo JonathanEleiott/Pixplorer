@@ -278,7 +278,7 @@ describe('AUTH', function() {
 });
 
 describe('IMAGE UPLOAD', () => {
-  it('it should set a reference image', (done) => {
+  it('it should set a reference image', function(done) {
     this.timeout(3500);
     const axiosParams = generateParams('post', 'postImage', '');
 
@@ -311,7 +311,7 @@ describe('IMAGE UPLOAD', () => {
     });
   });
 
-  it('it should compare an image to the reference image', (done) => {
+  it('it should compare an image to the reference image', function(done) {
     this.timeout(4500);
     const axiosSetImageParams = generateParams('post', 'postImage', '');
 
@@ -378,4 +378,38 @@ describe('IMAGE UPLOAD', () => {
       });
     };
   });
+
+  it('it should set a user profile image', function(done) {
+    this.timeout(3500);
+    
+    const axiosParams = generateParams('post', 'postProfilePic', '');
+
+    const processData = (data) => {
+      const imageData = new Buffer(data).toString('base64');
+      axios({
+        method: axiosParams.method,
+        url: axiosParams.uri,
+        data: { 
+          imageBuffer: imageData,
+          email: 'test@email.com'
+        }
+      })
+      .then((response) => {
+        expect(response.status).to.equal(201);
+        expect(response.data).to.contain('test%40email.com');
+        expect(response.data).to.contain('user profile pic saved at');
+        done();
+      })
+      .catch((error) => {
+        console.log('error');
+        done(error);
+      });
+    };
+
+    fs.readFile('computer1.jpg', (err, data) => {
+      if (err) throw err;
+      processData(data);
+    });
+  });
+
 });

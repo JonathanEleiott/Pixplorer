@@ -1,5 +1,53 @@
 const headers = require('../headers');
-const { User, List, Item, Subscription, Done } = require('../models');
+//const bookshelf = require('../bookshelf');
+const { User, List, Item } = require('../models');
+//const Done = require('../models').Done;
+
+// // Our Models
+// const User = bookshelf.Model.extend({
+//   tableName: 'users',
+//   hasTimestamps: true,
+//   lists: function () {
+//     return this.hasMany(List);
+//   },
+//   // items: function () {
+//   //   return this.hasMany(Item);
+//   // },
+// });
+
+// const List = bookshelf.Model.extend({
+//   tableName: 'lists',
+//   hasTimestamps: true,
+//   items: function () {
+//     return this.hasMany(Item);
+//   },
+//   user: function () {
+//     return this.belongsTo(User);
+//   }
+// });
+
+// const Item = bookshelf.Model.extend({
+//   tableName: 'items',
+//   hasTimestamps: true,
+//   list: function () {
+//     return this.belongsTo(List);
+//   },
+//   done: function () {
+//     return this.hasOne(Done);
+//   }
+//   // users: function() {
+//   //   return this.belongsToMany(User);
+//   // }
+// });
+
+// const Done = bookshelf.Model.extend({
+//   tableName: 'users_items',
+//   hasTimestamps: true,
+//   item: function () {
+//     return this.belongsTo(Item);
+//   },
+// });
+
 
 const sendResponse = (res, statusCode, responseHeaders, responseMessage) => {
   res.writeHead(statusCode, responseHeaders);
@@ -42,33 +90,30 @@ module.exports = {
             console.log('ERROR:', error);
           });
   },
-
-  // NEW ONE
   // Return ALL lists for user
-  //
   listsUser: (req, res) => { 
     console.log(`Serving ${req.method} request for ${req.url} (handlers/api.listsUser)`);
 
     const userId = req.params.userId;
+    console.log('userId', userId);
 
     new User()
       .where('id', userId)
-      .fetch({ withRelated: ['subscriptions.list.items', {
-        'subscriptions.list.items.done': function (qb) { 
+      .fetch({ withRelated: ['lists.items', {
+        'lists.items.done': function (qb) { 
           qb.innerJoin('users', 'users_items.user_id', 'users.id');
           qb.where('users.id', userId); 
         }
         }] })
       .then((user) => {
             const output = user.toJSON();
-            res.send(output.subscriptions);
+            res.send(output.lists);
           })
       .catch((error) => {
-            console.log('ERROR:', error);
+            console.log(error);
             res.send('An error occured');
           });
   },
-
   // DELETE a List
   listsDelete: (req, res) => { 
     console.log(`Serving ${req.method} request for ${req.url} (handlers/api.listsDelete)`);
@@ -95,10 +140,42 @@ module.exports = {
             res.send('An error occured');
           });
   },
-  
+  // DELETE a List
+  listsDelete2: (req, res) => { 
+    console.log(`Serving ${req.method} request for ${req.url} (handlers/api.listsDelete)`);
+
+    const listId = req.params.list_id;
+
+    new Item()
+      .where('list_id', listId)
+      .destroy()
+      .then((model) => {
+            console.log('List Items Deleted:', model);
+            new List({ id: listId })
+              .destroy()
+              .then(() => {
+                console.log('FULL LIST DELETED');
+                new List()
+                  .fetchAll({ withRelated: ['items'] })
+                  .then((lists) => { 
+                        res.send(lists.toJSON());
+                      }).catch((error) => {
+                        console.log(error);
+                        res.send('An error occured');
+                      });
+              });
+          })
+      .catch((error) => {
+            console.log(error);
+            res.send('An error occured');
+          });
+  },
   // Create Users -- from requestHandler
   usersCreate: (user) => { 
     console.log('Serving direct request for (handlers/api.usersCreate)');
+
+    //console.log('user:', user);
+    //const newName = req.body.listName ? req.body.listName : 'Hello Jon.';
 
     new User(
       {
@@ -141,17 +218,7 @@ module.exports = {
       .save()
       .then((model) => {
         //console.log('model:', model);
-        const listId = model.get('id');
-        return new Subscription(
-          {
-            user_id: userId,
-            list_id: listId
-          })
-          .save()
-          .then((model2) => {
-            console.log('model:', model2);
-            return model2.get('list_id');
-          });
+        return model.get('id');
       })
       .then((listId) => {
         return new List({ id: listId })
@@ -164,98 +231,6 @@ module.exports = {
           });
       });
   },
-
-  // SUBSCRIBE USER TO LIST
-  subscribeUserToList: (req, res) => { 
-    console.log(`Serving ${req.method} request for ${req.url} (handlers/api.subscribeUserToList)`);
-
-    const userId = parseInt(req.body.user, 10);
-    const listId = parseInt(req.body.list, 10);
-
-    new Subscription()
-      .where({
-        user_id: userId,
-        list_id: listId
-      })
-      .count()
-      .then((count) => {
-        if (count > 0) {
-          console.log('DUPLICATE SUBSCRIPTION');
-          return new List({ id: listId })
-            .fetch({ withRelated: ['items'] })
-            .then((list) => { 
-              res.send(list.toJSON());
-            }).catch((error) => {
-              console.log(error);
-              res.send('An error occured');
-            });
-        } else {
-          new Subscription()
-            .save({
-              user_id: userId,
-              list_id: listId
-            })
-            .then((model) => {
-              console.log('model:', model);
-              return model.get('list_id');
-            })
-            .then((listId1) => {
-              return new List({ id: listId1 })
-                .fetch({ withRelated: ['items'] })
-                .then((list) => { 
-                  res.send(list.toJSON());
-                }).catch((error) => {
-                  console.log(error);
-                  res.send('An error occured');
-                });
-            })
-            .catch((error) => {
-              console.log(error);
-              res.send('An error occured');
-            });
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-        res.send('An error occured');
-      });
-  },
-
-  // SUBSCRIBE USER TO LIST
-  unSubscribeUserFromList: (req, res) => { 
-    console.log(`Serving ${req.method} request for ${req.url} (handlers/api.unSubscribeUserFromList)`);
-
-    const userId = parseInt(req.params.user_id, 10);
-    const listId = parseInt(req.params.list_id, 10);
-
-    new Done()
-      .where({ user_id: userId, list_id: listId })
-      .destroy()
-      .then(() => {
-        new Subscription()
-          .where({ user_id: userId, list_id: listId })
-          .destroy()
-          .then(() => {
-            new User()
-              .where('id', userId)
-              .fetch({ withRelated: ['subscriptions.list.items', {
-                'subscriptions.list.items.done': function (qb) { 
-                  qb.innerJoin('users', 'users_items.user_id', 'users.id');
-                  qb.where('users.id', userId); 
-                }
-                }] })
-              .then((user) => {
-                    const output = user.toJSON();
-                    res.send(output.subscriptions);
-                  })
-              .catch((error) => {
-                    console.log('ERROR:', error);
-                    res.send('An error occured');
-                  });
-          });
-      });
-  },
-
   // Return ALL items
   items: (req, res) => { 
     console.log(`Serving ${req.method} request for ${req.url} (handlers/api.items)`);

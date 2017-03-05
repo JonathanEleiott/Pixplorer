@@ -5,11 +5,15 @@ import {
   StyleSheet,
   Text,
   View,
-  Vibration
+  Vibration,
+  Picker
 } from 'react-native';
 import Camera from 'react-native-camera';
 import axios from 'axios';
 import RNFetchBlob from 'react-native-fetch-blob';
+import { RadioButtons, SegmentedControls } from 'react-native-radio-buttons';
+
+
 import { Card, CardSection, Button, Input } from './mostCommon';
 import { Analyzing, Instructions } from './subcomponents';
 // For main server url ///////////////
@@ -28,7 +32,13 @@ class CreateItem extends Component {
       newItemURL: '',
       newItemListId: null,
       targetImageLatitude: '',
-      targetImageLongitude: ''
+      targetImageLongitude: '',
+      newItemTargetDistance: 1,
+      distanceMeasurementUnits: 'kilometers',
+      displayDistanceUnits: 'kilometers',
+      displayDistance: '1',
+      imageDataPath: '',
+      item: {}
     };
 
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -51,27 +61,25 @@ class CreateItem extends Component {
   }
 
   handleSubmit() {
-      const item = {
+      this.setState({ item: {
         listId: this.props.listId,
         name: this.state.newItemName,
         desc: this.state.newItemDesc,
         image: this.state.newItemURL
-      };
+        } }
+      );
 
-      this.openCamera = this.openCamera.bind(this);
-
-      // Step 1
-      // Add item to Database and redirect user to updated list
-      this.props.manageItem(1, item);
+      this.setState({ status: 2 });
   }
 
   openCamera() {
     this.setState({
-      status: 2
+      status: 3
     });
   }
 
   takePicture() {
+    
     console.log('PRESSED');
     this.camera.capture()
       .then((data) => {
@@ -79,7 +87,7 @@ class CreateItem extends Component {
         console.log('DATA IMG:', data.path);
 
         this.setState({
-          status: 3,
+          status: 4,
         });
 
         RNFetchBlob.fs.readFile(data.path, 'base64')
@@ -91,21 +99,42 @@ class CreateItem extends Component {
                 imageBuffer: imageData,
                 targetImageLatitude: this.state.targetImageLatitude,
                 targetImageLongitude: this.state.targetImageLongitude,
-                targetImageAllowedDistance: 30 //currently hardcoded
+                targetImageAllowedDistance: this.state.newItemTargetDistance
               }
             })
             .then((response) => {
               console.log('SUCCESS: Image sent to server:', response.data);
+              console.log('PArams:', this.state);
               this.setState({
-                status: 4,
-                newItemURL: response.data
+                newItemURL: response.data,
               });
+              // Step 1
+                // Add item to Database and redirect user to updated list
+                this.props.manageItem(1, this.state.item);
             })
             .catch((error) => {
               console.log('Error sending image to server', error);
             });
           });
         });
+  }
+
+  convertToKilometers(measurementUnitsString) {
+    //convert all units to kilometers
+
+    if (measurementUnitsString === 'feet') {
+      this.setState({
+        newItemTargetDistance: this.state.newItemTargetDistance * 0.0003048
+      });
+    } else if (measurementUnitsString === 'miles') {
+      this.setState({
+        newItemTargetDistance: this.state.newItemTargetDistance * 1.60934
+      });
+    } else if (measurementUnitsString === 'meters') {
+      this.setState({
+        newItemTargetDistance: this.state.newItemTargetDistance * 0.001
+      });
+    } 
   }
 
   renderForm() {
@@ -130,6 +159,44 @@ class CreateItem extends Component {
             maxLength={60}
           />
         </CardSection>
+
+        <CardSection>
+          <Input
+            label="Target Distance"
+            keyboardType="numeric"
+            placeholder="Set the distance (e.g. 1 mile, or 0.7 kilometers)"
+            onChangeText={(distance) => {
+              this.setState({ newItemTargetDistance: distance, displayDistance: distance });
+            }}
+            value={this.state.displayDistance}
+            maxLength={60}
+          />
+        </CardSection>
+
+        <CardSection style={{ flexDirection: 'column' }}>
+          <Text style={{ textAlign: 'center' }}> Choose distance units </Text>
+          <Picker 
+            selectedValue={this.state.displayDistanceUnits}
+            onValueChange={(measurementUnits) => {
+              this.convertToKilometers(measurementUnits);
+              this.setState({ displayDistanceUnits: measurementUnits });
+            }}
+          >
+            <Picker.Item label="Kilometers" value="kilometers" />
+            <Picker.Item label="Meters" value="meters" />
+            <Picker.Item label="Miles" value="miles" />
+            <Picker.Item label="Feet" value="feet" />
+          </Picker>
+        </CardSection>
+
+        <CardSection>
+          <Text>
+            Note: The user will have to be within the target 
+            distance when taking the photo to successfuly complete 
+            (check off) the item from their list
+          </Text>
+        </CardSection>
+
         <CardSection>
           <Button onPress={this.handleSubmit}>
             Save Item
@@ -156,27 +223,27 @@ class CreateItem extends Component {
   }
 
   render() {
-    if (this.state.status === 1) {
+    if (this.state.status === 2) {
       return (
         <Instructions
           openCamera={this.openCamera}
           header={'Add an Item'}
           subheader={'Step 1: Take a Photo'}
-          text={'Your first step is to take a photo, then you will give it a name.'}
+          text={'Your second step is to take a photo, then you will give it a name.'}
           buttonText={'OK, I GOT IT!'}
         />
       );
-    } else if (this.state.status === 2) {
+    } else if (this.state.status === 3) {
       return (
         <View style={styles.container}>
         {this.renderCamera()}
         </View>
       );
-    } else if (this.state.status === 3) {
+    } else if (this.state.status === 4) {
       return (
         <Analyzing />
       );
-    } else if (this.state.status === 4) {
+    } else if (this.state.status === 1) {
       return (
         <View style={styles.containerForm}>
           {this.renderForm()}
@@ -185,6 +252,7 @@ class CreateItem extends Component {
     }
   }
 }
+
 
 const styles = StyleSheet.create({
   preview: {

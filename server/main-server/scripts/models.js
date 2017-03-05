@@ -8,10 +8,6 @@ models.User = bookshelf.Model.extend({
   lists: function () {
     return this.hasMany(models.List);
   },
-  subscriptions: function () {
-    return this.hasMany(models.Subscription);
-  }
-
   // items: function () {
   //   return this.hasMany(Item);
   // },
@@ -25,9 +21,6 @@ models.List = bookshelf.Model.extend({
   },
   user: function () {
     return this.belongsTo(models.User);
-  },
-  subscriptions: function () {
-    return this.hasMany(models.Subscriptions);
   }
 });
 
@@ -39,10 +32,7 @@ models.Item = bookshelf.Model.extend({
   },
   done: function () {
     return this.hasOne(models.Done);
-  },
-  subscriptions: function () {
-    return this.belongsTo(models.Subscriptions);
-  },
+  }
   // users: function() {
   //   return this.belongsToMany(User);
   // }
@@ -51,25 +41,8 @@ models.Item = bookshelf.Model.extend({
 models.Done = bookshelf.Model.extend({
   tableName: 'users_items',
   hasTimestamps: true,
-  user: function () {
-    return this.belongsTo(models.User);
-  },
-  list: function () {
-    return this.belongsTo(models.List);
-  },
   item: function () {
     return this.belongsTo(models.Item);
-  },
-});
-
-models.Subscription = bookshelf.Model.extend({
-  tableName: 'users_lists',
-  hasTimestamps: true,
-  list: function () {
-    return this.belongsTo(models.List);
-  },
-  user: function () {
-    return this.belongsTo(models.User);
   },
 });
 

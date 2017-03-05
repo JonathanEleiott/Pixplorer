@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { Scene, Router, Actions } from 'react-native-router-flux';
-import { View } from 'react-native';
+import Splash from './components/Splash';
+import { Text, Image, View } from 'react-native';
 import FontAwesome from 'react-native-fontawesome';
 
-import Splash from './components/Splash';
 import LoginForm from './components/LoginForm';
 import ItemsList from './components/ItemsList';
 import SubscribedList from './components/SubscribedList';
@@ -12,7 +12,7 @@ import CreateItem from './components/CreateItem';
 import CompareItem from './components/CompareItem';
 import GlobalList from './components/GlobalList';
 import ProfilePage from './components/ProfilePage';
-import ListStats from './components/ListStats';
+import profilePageIcon from './images/rightArrow.png';
 
 //TODO: MAke sure to put the components back! Right now it goes straight to camera!!!
 /////////////////////////////////////////////////
@@ -20,7 +20,7 @@ import ListStats from './components/ListStats';
 /////////////////////////////////////////////////
 class RouterComponent extends Component {
   constructor(props, context) {
-    super(props, context);
+    super(props, context);  
   }
 
   checkIfUserIsLoggedIn() {
@@ -29,7 +29,7 @@ class RouterComponent extends Component {
     console.log('user logged in: ', userLoggedIn);
     return userLoggedIn;
   }
-
+  
   renderFontAwesome(iconKind) {
     return (
       <View style={styles.fontAwesomeView}>
@@ -37,58 +37,63 @@ class RouterComponent extends Component {
       </View>
     );
   }
-
   render() {
      return (
       <Router sceneStyle={{ paddingTop: 65 }}>
-        <Scene
-          key="splash"
-          component={Splash}
-          title="Skavenger"
-          timeout={0}
+        <Scene 
+          key="splash" 
+          component={Splash} 
+          title="Skavenger" 
+          timeout={0}     
           nextScene={() => {
             if (!this.checkIfUserIsLoggedIn) {
               return 'auth';
-            }
-            return 'main';
+            } 
+            return 'main'; 
           }}
         />
 
-        <Scene
-          key="auth"
+        <Scene 
+          key="auth" 
         >
-          <Scene
+          <Scene 
             initial
-            key="login"
-            component={LoginForm}
+            key="login" 
+            component={LoginForm} 
             title="Please Login"
           />
         </Scene>
 
-        <Scene
-          key="profilePage"
-          component={ProfilePage}
-          title="My Profile"
-          onLeft={() => { Actions.main(); }}
+        <Scene 
+          key="profile"
+          rightTitle={this.renderFontAwesome('cog')}
           leftTitle={this.renderFontAwesome('angleLeft')}
-        />
+          onRight={() => { Actions.profile(); }}
+          onLeft={() => { Actions.main(); }}
+        >
+          <Scene 
+            key="profilePage" 
+            component={ProfilePage} 
+            title="My Profile" 
+          />
+        </Scene>
 
-        <Scene
+        <Scene 
           key="main"
           onRight={() => {
             if (!this.checkIfUserIsLoggedIn) {
               Actions.auth();
             } else {
-              Actions.profilePage();
+              Actions.profile(); 
             }
           }}
-          rightButtonTextStyle={[styles.navTitle, styles.navTitleDisabled]}
+          //rightButtonTextStyle={[styles.navTitle, styles.navTitleDisabled]} 
           rightTitle={this.renderFontAwesome('cog')}
         >
           <Scene
             key="subscribedList"
             component={SubscribedList}
-            title="Subscribed List"
+            title="Subscribed List"  
           />
           <Scene
             key="itemsList"
@@ -105,28 +110,20 @@ class RouterComponent extends Component {
             component={CreateList}
             title="Create A List"
             onRight={() => { console.log('clicked the Right Button!'); }}
-            rightTitle={''}
           />
           <Scene
             key="createItem"
             component={CreateItem}
             title="Create Item"
             onRight={() => { console.log('clicked the Right Button!'); }}
-            rightTitle={''}
           />
           <Scene
             key="compareItem"
             component={CompareItem}
             title="Found Item"
             onRight={() => { console.log('clicked the Right Button!'); }}
-            rightTitle={''}
           />
         </Scene>
-        <Scene
-          key="listStats"
-          component={ListStats}
-          title={'Stats'}
-        />
       </Router>
     );
   }
