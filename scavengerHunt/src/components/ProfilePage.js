@@ -1,24 +1,22 @@
 import React, { Component } from 'react';
 import {
   Dimensions,
-  StyleSheet,
   Text,
   View,
   Vibration,
   Image,
-  AsyncStorage
+  AsyncStorage,
+  ScrollView
 } from 'react-native';
 import * as Keychain from 'react-native-keychain';
 
 import Camera from 'react-native-camera';
 import axios from 'axios';
 import RNFetchBlob from 'react-native-fetch-blob';
-
 import { connect } from 'react-redux';
-import { Actions } from 'react-native-router-flux';
 import config from '../config.js'; //
 
-import { Spinner, Card, CardSection, Input, Button } from './mostCommon';
+import { Card, CardSection, Button } from './mostCommon';
 import { logoutUser } from '../actions';
 
 class ProfilePage extends Component {
@@ -36,7 +34,9 @@ class ProfilePage extends Component {
         profilePicLocation: result
       });
       console.log(err, result);
-    });      
+    });
+    console.log('this.props.userID', this.props.userID);
+    this.props.updateProfile(this.props.userID);
   }
 
   takePicture() {
@@ -50,7 +50,7 @@ class ProfilePage extends Component {
 
         this.setState({
           currentScreen: 'profilePage',
-          profilePicLocation: data.path 
+          profilePicLocation: data.path
         });
 
         const sendImageWithUserEmail = function (email) {
@@ -59,9 +59,9 @@ class ProfilePage extends Component {
             axios({
                 method: 'post',
                 url: `${config.mainServer}/postProfilePic`,
-                data: { 
+                data: {
                   imageBuffer: imageData,
-                  email 
+                  email
                 }
               })
               .then((response) => {
@@ -91,59 +91,97 @@ class ProfilePage extends Component {
 
   renderProfilePage() {
     return (
-      <Card>
-        <CardSection>
-          <Image
-           style={styles.profilePhotoStyle}
-           source={{ uri: this.state.profilePicLocation }}
-          />
-        </CardSection>
+      <ScrollView>
+        <Card>
+          <CardSection>
+            <Image
+             style={styles.profilePhotoStyle}
+             source={{ uri: this.state.profilePicLocation }}
+            />
+          </CardSection>
 
-        <CardSection>
-          <Text style={styles.textStyle}>
-           Email Address:
-          </Text>
-          <Text style={styles.textStyle}>
-           gandalfTheGrey@gmail.com
-          </Text>
-        </CardSection>
+          <CardSection>
+            <Text style={styles.textStyle}>
+             Email Address:
+            </Text>
+            <Text style={styles.textStyle}>
+             gandalfTheGrey@gmail.com
+            </Text>
+          </CardSection>
 
-        <CardSection>
-          <Button
-            onPress={() => { 
-              console.log('pressed update profile pic button!'); 
-              this.setState({
-                currentScreen: 'frontCamera'
-              });
-            }}
-          >
-             Update Profile Photo
-          </Button>
-        </CardSection>
+          <CardSection>
+            <Text style={styles.textStyle}>
+              Number of Created Lists
+            </Text>
+            <Text style={styles.textStyle}>
+              { this.props.userStats }
+            </Text>
+          </CardSection>
 
-        <CardSection>
-          <Button>
-             Change Password
-          </Button>
-        </CardSection>
+          <CardSection>
+            <Text style={styles.textStyle}>
+              Number of Subscribed Lists
+            </Text>
+            <Text style={styles.textStyle}>
+              { this.props.userStats }
+            </Text>
+          </CardSection>
 
-        <CardSection>
-         <Button 
-           onPress={() => { 
-             console.log('pressed logout!'); 
-             this.props.logoutUser();
-           }}
-         >
-            Log out
-          </Button>
-        </CardSection>
-      </Card>
+          <CardSection>
+            <Text style={styles.textStyle}>
+              Number of Items checked off
+            </Text>
+            <Text style={styles.textStyle}>
+              { this.props.userStats }
+            </Text>
+          </CardSection>
+
+          <CardSection>
+            <Text style={styles.textStyle}>
+              Number of Bunnies Found
+            </Text>
+            <Text style={styles.textStyle}>
+              322
+            </Text>
+          </CardSection>
+
+          <CardSection>
+            <Button
+              onPress={() => {
+                console.log('pressed update profile pic button!');
+                this.setState({
+                  currentScreen: 'frontCamera'
+                });
+              }}
+            >
+               Update Profile Photo
+            </Button>
+          </CardSection>
+
+          <CardSection>
+            <Button>
+               Change Password
+            </Button>
+          </CardSection>
+
+          <CardSection>
+           <Button
+             onPress={() => {
+               console.log('pressed logout!');
+               this.props.logoutUser();
+             }}
+           >
+              Log out
+            </Button>
+          </CardSection>
+        </Card>
+      </ScrollView>
     );
   }
 
   renderFrontCamera() {
     return (
-      <View style={styles.container}>       
+      <View style={styles.container}>
         <Camera
           ref={(cam) => {
             this.camera = cam;
@@ -218,11 +256,12 @@ const styles = {
   }
 };
 
-const mapStateToProps = ({ core, auth }) => {
+const mapStateToProps = ({ core, auth, user }) => {
   const { list, allLists, userLists } = core;
-  const { currentUserId, user } = auth;
+  const { currentUserId, userID } = auth;
+  const { userStats } = user;
 
-  return { list, allLists, userLists, currentUserId, user };
+  return { list, allLists, userLists, currentUserId, userID, userStats };
 };
 
 export default connect(mapStateToProps, {

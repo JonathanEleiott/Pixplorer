@@ -15,7 +15,8 @@ import {
   DELETE_LIST,
   MANAGE_ITEM, // Added by bill - step 8
   LOADING,
-  SUCCESS
+  SUCCESS,
+  ITEM_TIME_STAMPS
 } from '../actions/types';
 
 const INITIAL_STATE = {
@@ -23,7 +24,8 @@ const INITIAL_STATE = {
   allLists: [],
   userLists: [],
   listName: '',
-  loading: false
+  loading: false,
+  timeStamps: []
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -75,6 +77,8 @@ export default (state = INITIAL_STATE, action) => {
       // Takes away loading screen/spinner
     case SUCCESS:
       return { ...state, loading: false };
+    case ITEM_TIME_STAMPS:
+      return { ...state, timeStamps: action.payload };
     default:
       return state;
   }
