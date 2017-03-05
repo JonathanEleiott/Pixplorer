@@ -218,14 +218,13 @@ const styles = {
   }
 };
 
-const mapStateToProps = ({ core, auth, user }) => {
+const mapStateToProps = ({ core, auth }) => {
   const { list, allLists, userLists } = core;
-  const { currentUserId, userID } = auth;
-  const { userStats } = user;
+  const { currentUserId, user } = auth;
 
-  return { list, allLists, userLists, currentUserId, userID };
+  return { list, allLists, userLists, currentUserId, user };
 };
 
 export default connect(mapStateToProps, {
-  logoutUser, updateProfile
+  logoutUser
 })(ProfilePage);
