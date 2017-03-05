@@ -59,6 +59,8 @@ class CompareItem extends Component {
   }
 
   takePicture() {
+    const { userID } = this.props;
+
     this.camera.capture()
       .then((data) => {
         Vibration.vibrate();
@@ -73,8 +75,8 @@ class CompareItem extends Component {
           axios({
               method: 'post',
               url: `${config.mainServer}/compareImage`,
-              data: { 
-                imageBuffer: imageData, 
+              data: {
+                imageBuffer: imageData,
                 referenceImageId: this.props.item.image,
                 userImageLatitude: this.state.userImageLatitude,
                 userImageLongitude: this.state.userImageLongitude
@@ -87,7 +89,11 @@ class CompareItem extends Component {
                 axios({
                     method: 'post',
                     url: `${config.mainServer}/api/items/found`,
-                    data: { item: this.props.item, complete: 1 }
+                    data: {
+                      item: this.props.item,
+                      complete: 1,
+                      user_id: userID
+                    }
                   }).then((responseDB) => {
                     console.log('completed item saved to db');
                     this.setState({
@@ -98,12 +104,16 @@ class CompareItem extends Component {
                     console.log('Error saving to DB', error);
                   });
               } else {
-                // NO MATCH  
+                // NO MATCH
                 console.log('no match');
                 axios({
                     method: 'post',
                     url: `${config.mainServer}/api/items/found`,
-                    data: { item: this.props.item, complete: 0 }
+                    data: {
+                      item: this.props.item,
+                      complete: 0,
+                      user_id: userID
+                    }
                   }).then((responseDB) => {
                     this.setState({
                       currentList: responseDB.data,
@@ -141,7 +151,7 @@ class CompareItem extends Component {
     if (this.state.status === 1) {
       return (
         <View style={styles.container}>
-          <Instructions 
+          <Instructions
             openCamera={this.openCamera}
             header={'Found an Item!'}
             subheader={'Step 1: Take a Photo'}
@@ -203,13 +213,14 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#F5FCFF',
-  },  
+  },
 
 });
 
-const mapStateToProps = ({ core }) => {
+const mapStateToProps = ({ core, auth }) => {
+  const { userID } = auth;
   const { list } = core;
-  return { list };
+  return { list, userID };
 };
 
 export default connect(mapStateToProps, { manageItem })(CompareItem);

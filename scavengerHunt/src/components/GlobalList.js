@@ -80,7 +80,7 @@ class SubscribedList extends Component {
   // Checks to see if the user has admin abilities
   renderBody(list, index) {
     const { listStyle, descriptionStyle, imageStyle, arrowStyle } = styles;
-
+    console.log('list subscribers', list);
     return (
       <CardSection key={index} style={{ padding: 20 }}>
         <TouchableHighlight
@@ -105,7 +105,7 @@ class SubscribedList extends Component {
         >
           <Text style={listStyle} value={list.name}>{list.name} {'\n'}
             <Text style={descriptionStyle}>
-              {list.items.length} items - 226 subscribers
+              {list.items.length} items - {list.subscribers} subscribers
             </Text>
           </Text>
         </TouchableHighlight>

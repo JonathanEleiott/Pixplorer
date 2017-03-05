@@ -1,18 +1,35 @@
 import React, { Component } from 'react';
-import { Text, View } from 'react-native';
-// import { connect } from 'react-redux';
-// import { Actions } from 'react-native-router-flux';
-// import { Spinner, Card, CardSection, Input, Button } from './mostCommon';
+import { Text } from 'react-native';
+import { connect } from 'react-redux';
+import { Card, CardSection } from './mostCommon';
 
 class ListStats extends Component {
 
   render() {
+    const { list } = this.props;
+
    return (
-    <View>
-      <Text>Stats Page</Text>
-    </View>
+     <Card>
+       <CardSection>
+         <Text>
+          Number of Subscribers - { list.subscribers }
+         </Text>
+       </CardSection>
+
+       <CardSection>
+         <Text>
+          Total Items in List - { list.items.length }
+         </Text>
+       </CardSection>
+     </Card>
    );
   }
 }
 
-export default ListStats;
+const mapStateToProps = ({ core }) => {
+  const { list, timeStamps } = core;
+
+  return { list };
+};
+
+export default connect(mapStateToProps, {})(ListStats);

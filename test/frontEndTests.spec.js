@@ -1,5 +1,4 @@
-import React from 'react';
-import { shallow } from 'enzyme';
+const React = require('react');
 
 const expect = require('chai').expect;
 
