@@ -280,7 +280,7 @@ export const goToListStats = (listID, itemsArray) => {
 
       dispatch({
         type: ITEM_TIME_STAMPS,
-        payload: { times: response.data.completed,  }
+        payload: { times: response.data.completed }
       });
       Actions.listStats();
     })
