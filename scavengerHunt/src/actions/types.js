@@ -22,6 +22,7 @@ export const LIST_NAME_CHANGED = 'list_name_changed';
 export const DELETE_LIST = 'delete_list';
 export const LOADING = 'loading';
 export const SUCCESS = 'success';
+export const ITEM_TIME_STAMPS = 'item_time_stamps';
 
 export const UPDATE_PROFILE = 'update_profile';
 

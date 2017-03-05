@@ -22,7 +22,8 @@ import {
   DELETE_LIST,
   MANAGE_ITEM, // Added by Bill - Step 5
   SUCCESS,
-  LOADING
+  LOADING,
+  ITEM_TIME_STAMPS
 } from './types';
 
 import config from '../config.js';
@@ -263,18 +264,30 @@ export const manageItem = (type = 1, itemOrList) => {
 // This does not currently do anything so make sure we hook up the axios call //
 ////////////////////////////////////////////////////////////////////////////////
 // Sends user to listStats page and shows them the list stats
-export const goToListStats = (list) => {
-  axios({
-    method: 'get',
-    url: `${listUrl}/api`,
-    data: list
-  })
-  .then((response) => {
-    Actions.listStats(response.data);
-  })
-  .catch((error) => {
-    console.log('error in goToListStats', error);
-  });
+export const goToListStats = (listID, itemsArray) => {
+  return (dispatch) => {
+    axios({
+      method: 'get',
+      url: `${listUrl}/api/lists/stats/${listID}`,
+    })
+    .then((response) => {
+      // make new object with names and counts
+        // response =  array with id's
+          // make old object with id: count
+      // loop through itemsArray
+        // if itemsArray.id is in old object
+          // new object = name: itemsArray.name, count: old object.id (count)
+
+      dispatch({
+        type: ITEM_TIME_STAMPS,
+        payload: { times: response.data.completed,  }
+      });
+      Actions.listStats();
+    })
+    .catch((error) => {
+      console.log('error in goToListStats', error);
+    });
+  };
 };
 
 // Goes to the create a list screen

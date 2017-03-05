@@ -28,7 +28,6 @@ class ItemsList extends Component {
         </View>
       );
     } else if (this.props.list) {
-      // empty
       return (
         <View>
           <FontAwesome style={styles.checkEmpty}>squareO</FontAwesome>
@@ -40,7 +39,6 @@ class ItemsList extends Component {
   // Goes to the camera screen to take a picture of the item to add to DB
   addItemToList() {
     const { list, userID } = this.props;
-    console.log('addItemToList', userID);
 
     this.props.addItem(list, userID);
   }
@@ -51,8 +49,8 @@ class ItemsList extends Component {
   }
 
   // Returns listTitle based on whether the item has been found or not
-  isComplete(done, item) {
-    if (done && done.id) {
+  isComplete(complete, item) {
+    if (complete && complete.id) {
       return (
         this.listTitle(item, true)
       );
@@ -83,7 +81,7 @@ class ItemsList extends Component {
       <Text
         style={nameStyle}
         onPress={() => {
-          if (item.done.id === undefined) {
+          if (item.complete.id === undefined) {
             this.uncheckedBoxClicked(item);
           }
         }}
@@ -95,8 +93,9 @@ class ItemsList extends Component {
 
 // Sends user to the stats page for this list
   clickOnGoToStatsPage() {
-    //  Insert function to send user to stats page
-    this.props.goToListStats();
+    const { list } = this.props;
+    console.log('list', list)
+    this.props.goToListStats(list.id, list.items);
   }
 
   // Decides whether the user should be able to add to the list of items
@@ -141,7 +140,7 @@ class ItemsList extends Component {
   renderBody(item, index) {
     return (
       <CardSection key={index} style={{ borderBottomWidth: 0, padding: 20, height: 100 }}>
-        { this.isComplete(item.done, item) }
+        { this.isComplete(item.complete, item) }
         { this.clickableBoxes(item) }
       </CardSection>
     );

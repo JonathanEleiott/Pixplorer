@@ -54,24 +54,14 @@ class RouterComponent extends Component {
           }}
         />
 
-        <Scene
-          key="auth"
-        >
+        <Scene key="auth">
           <Scene
-            initial
             key="login"
             component={LoginForm}
             title="Please Login"
           />
         </Scene>
 
-        <Scene
-          key="profilePage"
-          component={ProfilePage}
-          title="My Profile"
-          onLeft={() => { Actions.main(); }}
-          leftTitle={this.renderFontAwesome('angleLeft')}
-        />
 
         <Scene
           key="main"
@@ -121,12 +111,20 @@ class RouterComponent extends Component {
             onRight={() => { console.log('clicked the Right Button!'); }}
             rightTitle={''}
           />
+          <Scene
+            key="profilePage"
+            component={ProfilePage}
+            title="My Profile"
+            onLeft={() => { Actions.main(); }}
+            leftTitle={this.renderFontAwesome('angleLeft')}
+            rightTitle={''}
+          />
+          <Scene
+            key="listStats"
+            component={ListStats}
+            title={'Stats'}
+          />
         </Scene>
-        <Scene
-          key="listStats"
-          component={ListStats}
-          title={'Stats'}
-        />
       </Router>
     );
   }
