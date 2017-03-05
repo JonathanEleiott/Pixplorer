@@ -13,7 +13,7 @@ import {
 const INITIAL_STATE = {
   email: '',
   password: '',
-  user: '',
+  userID: '',
   error: '',
   loading: false,
   currentUserId: ''
@@ -36,7 +36,7 @@ export default (state = INITIAL_STATE, action) => {
       return { ...state, loading: true, error: '' };
     // Takes away loading screen and sets current user to logged in user
     case LOGIN_USER_SUCCESS:
-      return { ...state, ...INITIAL_STATE, user: action.payload };
+      return { ...state, ...INITIAL_STATE, userID: action.payload };
     // displays fail message
     case LOGIN_USER_FAIL:
       return { ...state, error: action.payload, password: '', loading: false };

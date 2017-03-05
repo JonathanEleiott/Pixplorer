@@ -20,7 +20,7 @@ class SubscribedList extends Component {
 
   // Sets lists to all the lists in the DB
   componentWillMount() {
-    const currUser = this.props.user;
+    const currUser = this.props.userID;
     this.props.importUserLists(currUser);
   }
 
@@ -36,7 +36,7 @@ class SubscribedList extends Component {
 
   //Deletes a list from the DB
   deleteListFromDB(listName) {
-    this.props.deleteList(listName, this.props.user);
+    this.props.deleteList(listName, this.props.userID);
   }
 
   render() {
@@ -75,7 +75,6 @@ class SubscribedList extends Component {
                     <View>
                       <FontAwesome style={arrowStyle}>arrowCircleRight</FontAwesome>
                     </View>
-
                   </TouchableHighlight>
                 </CardSection>
               </Swipeout>
@@ -109,9 +108,9 @@ const styles = {
 ///////////////////////////////////////////////////////////
 const mapStateToProps = ({ core, auth }) => {
   const { list, allLists, userLists } = core;
-  const { currentUserId, user } = auth;
+  const { currentUserId, userID } = auth;
 
-  return { list, allLists, userLists, currentUserId, user };
+  return { list, allLists, userLists, currentUserId, userID };
 };
 
 export default connect(mapStateToProps, {

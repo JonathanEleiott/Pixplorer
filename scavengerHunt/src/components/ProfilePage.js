@@ -1,13 +1,9 @@
 import React, { Component } from 'react';
-
-
-import { Text, Image, View } from 'react-native';
+import { Text, Image } from 'react-native';
 import { connect } from 'react-redux';
-import { Actions } from 'react-native-router-flux';
-
-
-import { Spinner, Card, CardSection, Input, Button } from './mostCommon';
-import { logoutUser } from '../actions';
+// import { Actions } from 'react-native-router-flux';
+import { Card, CardSection, Button } from './mostCommon';
+import { logoutUser, updateProfile } from '../actions';
 
 
 class ProfilePage extends Component {
@@ -22,8 +18,9 @@ class ProfilePage extends Component {
     if (!userLoggedIn) {
       //Actions.auth();
     }
-  }
 
+    this.props.updateProfile(this.props.userID);
+  }
 
   render() {
    return (
@@ -45,6 +42,42 @@ class ProfilePage extends Component {
        </CardSection>
 
        <CardSection>
+         <Text style={styles.textStyle}>
+          Number of Created Lists
+         </Text>
+         <Text style={styles.textStyle}>
+          { this.props.userStats }
+         </Text>
+       </CardSection>
+
+       <CardSection>
+         <Text style={styles.textStyle}>
+          Number of Subscribed Lists
+         </Text>
+         <Text style={styles.textStyle}>
+          { this.props.userStats }
+         </Text>
+       </CardSection>
+
+       <CardSection>
+         <Text style={styles.textStyle}>
+          Number of Items checked off
+         </Text>
+         <Text style={styles.textStyle}>
+          { this.props.userStats }
+         </Text>
+       </CardSection>
+
+       <CardSection>
+         <Text style={styles.textStyle}>
+          Number of Bunnies Found
+         </Text>
+         <Text style={styles.textStyle}>
+          322
+         </Text>
+       </CardSection>
+
+       <CardSection>
          <Button>
             Update Profile Photo
          </Button>
@@ -57,8 +90,9 @@ class ProfilePage extends Component {
        </CardSection>
 
        <CardSection>
-        <Button onPress={() => { 
-            console.log('pressed logout!'); 
+        <Button
+          onPress={() => {
+            console.log('pressed logout!');
             this.props.logoutUser();
           }}
         >
@@ -88,14 +122,14 @@ const styles = {
   }
 };
 
-const mapStateToProps = ({ core, auth }) => {
+const mapStateToProps = ({ core, auth, user }) => {
   const { list, allLists, userLists } = core;
-  const { currentUserId, user } = auth;
+  const { currentUserId, userID } = auth;
+  const { userStats } = user;
 
-  return { list, allLists, userLists, currentUserId, user };
+  return { list, allLists, userLists, currentUserId, userID };
 };
 
 export default connect(mapStateToProps, {
-  logoutUser
+  logoutUser, updateProfile
 })(ProfilePage);
-

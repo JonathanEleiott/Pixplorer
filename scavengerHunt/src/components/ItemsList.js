@@ -6,13 +6,11 @@ import { connect } from 'react-redux';
 import Swipeout from '@maintained-repos/react-native-swipeout';
 import FontAwesome from 'react-native-fontawesome';
 import { Card, CardSection, Button } from './mostCommon';
-import { addItem, clickedUncheckedBox, deleteItem } from '../actions';
-// import emptyCheckbox from '../images/emptyCheckbox.png';
-// import checkedCheckbox from '../images/checkedCheckbox.png';
+import { addItem, clickedUncheckedBox, deleteItem, goToListStats } from '../actions';
 
 /////////////////////////////////////////////////////////
-// ITEM LIST IS A HARDCODED JSON FILE!!! ////////////////
-// import itemList from '../itemList.json'; /////////////
+// ITEM LIST IS A HARDCODED JSON FILE!!! ///////////////
+// import itemList from '../itemList.json'; ////////////
 ////////////////////////////////////////////////////////
 
 class ItemsList extends Component {
@@ -41,10 +39,10 @@ class ItemsList extends Component {
 
   // Goes to the camera screen to take a picture of the item to add to DB
   addItemToList() {
-    const { list, user } = this.props;
-    console.log('addItemToList', user);
+    const { list, userID } = this.props;
+    console.log('addItemToList', userID);
 
-    this.props.addItem(list, user);
+    this.props.addItem(list, userID);
   }
 
   // Goes to the camera screen to take a picture of the item that the user found
@@ -95,9 +93,15 @@ class ItemsList extends Component {
     );
   }
 
+// Sends user to the stats page for this list
+  clickOnGoToStatsPage() {
+    //  Insert function to send user to stats page
+    this.props.goToListStats();
+  }
+
   // Decides whether the user should be able to add to the list of items
   showAddButton() {
-    if (this.props.list.user_id === this.props.user) {
+    if (this.props.list.user_id === this.props.userID) {
       return (
         <Button onPress={this.addItemToList.bind(this)}>Add Item</Button>
       );
@@ -108,8 +112,7 @@ class ItemsList extends Component {
   renderList() {
     if (this.props.list.items) {
       return this.props.list.items.map((item, index) => {
-        console.log('what is list?', item, 'baby dont hurt me', this.props.user);
-        if (this.props.list.user_id === this.props.user) {
+        if (this.props.list.user_id === this.props.userID) {
           const swipeButtons = [{
             key: Math.random(),
             text: 'Delete',
@@ -124,7 +127,7 @@ class ItemsList extends Component {
         }
 
         return (
-          <Card>
+          <Card key={index}>
             { this.renderBody(item, index) }
           </Card>
         );
@@ -148,6 +151,7 @@ class ItemsList extends Component {
     return (
       <ScrollView style={styles.listStyle}>
         <Card>
+          <Button onPress={this.clickOnGoToStatsPage.bind(this)}>See List Stats</Button>
           { this.renderList() }
           { this.showAddButton() }
         </Card>
@@ -181,11 +185,11 @@ const styles = {
 
 const mapStateToProps = ({ core, auth }) => {
   const { list } = core;
-  const { user } = auth;
+  const { userID } = auth;
 
-  return { list, user };
+  return { list, userID };
 };
 
 export default connect(mapStateToProps, {
-  addItem, clickedUncheckedBox, deleteItem
+  addItem, clickedUncheckedBox, deleteItem, goToListStats
 })(ItemsList);
