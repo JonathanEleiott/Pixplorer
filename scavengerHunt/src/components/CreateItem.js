@@ -99,7 +99,7 @@ class CreateItem extends Component {
                 imageBuffer: imageData,
                 targetImageLatitude: this.state.targetImageLatitude,
                 targetImageLongitude: this.state.targetImageLongitude,
-                targetImageAllowedDistance: this.state.distanceMeasurementUnits
+                targetImageAllowedDistance: this.state.newItemTargetDistance
               }
             })
             .then((response) => {

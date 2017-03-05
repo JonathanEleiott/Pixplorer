@@ -1,14 +1,15 @@
 const AWS = require('aws-sdk');
 
-AWS.config.loadFromPath('aws-config.json');
+AWS.config.loadFromPath('awsConfig.json');
 const s3 = new AWS.S3();
 
 module.exports = {
-  uploadImageToS3: (imageBuffer, callback) => {
-    const randomImageName = `Dan-${Math.random().toString().slice(2)}.jpg`;
+  uploadImageToS3: function (imageBuffer, callback, bucket, imageName) {
+    imageName = imageName || 'randomUser'
+    const randomImageName = `${imageName}${Math.random().toString().slice(2)}.jpg`;
 
     const params = {
-      Bucket: 'set-image-folder',
+      Bucket: bucket || 'set-image-folder',
       Key: randomImageName,
       Body: imageBuffer
     };
@@ -20,7 +21,8 @@ module.exports = {
       } if (err) {
         console.log('Upload Error ', err);
         callback(['error', err]);
-      }
-    });
+      } 
+    }); 
   }
 };
+

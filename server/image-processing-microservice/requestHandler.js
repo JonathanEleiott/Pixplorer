@@ -1,9 +1,10 @@
 const sendResponse = require('./utils/sendResponse');
 const setImageHandler = require('./imageHandler/setImage');
 const compareImageHandler = require('./imageHandler/compareImage');
+const postProfilePicHandler = require('./imageHandler/postProfilePicHandler');
 
 module.exports = {
-  landing: (req, res) => {
+  landing: (req, res) => { 
     console.log(`Serving ${req.method} request for ${req.url} (inside requestHandler.landing)`);
     sendResponse(res, 200, '', 'Welcome the image service for Crustaceans thesis project!');
   },
@@ -14,5 +15,10 @@ module.exports = {
 
   compareImage: (req, res) => {
     compareImageHandler(req, res);
+  },
+
+  postProfilePic: (req, res) => {
+    postProfilePicHandler(req, res);
   }
 };
+

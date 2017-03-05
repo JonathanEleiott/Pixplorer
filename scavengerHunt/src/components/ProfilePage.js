@@ -5,14 +5,18 @@ import {
   Text,
   View,
   Vibration,
-  Image
+  Image,
+  AsyncStorage
 } from 'react-native';
+import * as Keychain from 'react-native-keychain';
+
 import Camera from 'react-native-camera';
 import axios from 'axios';
 import RNFetchBlob from 'react-native-fetch-blob';
 
 import { connect } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
+import config from '../config.js'; //
 
 import { Spinner, Card, CardSection, Input, Button } from './mostCommon';
 import { logoutUser } from '../actions';
@@ -21,18 +25,18 @@ class ProfilePage extends Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
-      currentScreen: 'profilePage'
+      currentScreen: 'profilePage',
+      profilePicLocation: ''
     };
   }
-  
 
   componentWillMount() {
-    //ensure user is logged in
-    const { store } = this.context;
-    const userLoggedIn = !!store.getState().auth.currentUserId;
-    if (!userLoggedIn) {
-      //Actions.auth();
-    }
+    AsyncStorage.getItem('profilePicLocalStoragePath', (err, result) => {
+      this.setState({
+        profilePicLocation: result
+      });
+      console.log(err, result);
+    });      
   }
 
   takePicture() {
@@ -42,32 +46,45 @@ class ProfilePage extends Component {
         Vibration.vibrate();
         console.log('DATA IMG:', data.path);
 
+        AsyncStorage.setItem('profilePicLocalStoragePath', data.path);
+
         this.setState({
-          currentScreen: 'profilePage'
+          currentScreen: 'profilePage',
+          profilePicLocation: data.path 
         });
 
-        RNFetchBlob.fs.readFile(data.path, 'base64')
-        .then((imageData) => {
-          // axios({
-          //     method: 'post',
-          //     url: `${config.mainServer}/postImage`,
-          //     data: { 
-          //       imageBuffer: imageData,
-          //       targetImageLatitude: this.state.targetImageLatitude,
-          //       targetImageLongitude: this.state.targetImageLongitude,
-          //       targetImageAllowedDistance: 30 //currently hardcoded
-          //     }
-          //   })
-          //   .then((response) => {
-          //     console.log('SUCCESS: Image sent to server:', response.data);
-          //     this.setState({
-          //       status: 4,
-          //       newItemURL: response.data
-          //     });
-          //   })
-          //   .catch((error) => {
-          //     console.log('Error sending image to server', error);
-          //   });
+        const sendImageWithUserEmail = function (email) {
+          RNFetchBlob.fs.readFile(data.path, 'base64')
+          .then((imageData) => {
+            axios({
+                method: 'post',
+                url: `${config.mainServer}/postProfilePic`,
+                data: { 
+                  imageBuffer: imageData,
+                  email 
+                }
+              })
+              .then((response) => {
+                console.log('SUCCESS: Profile Image sent to server:', response.data);
+              })
+              .catch((error) => {
+                console.log('Error sending profile image to server', error);
+              });
+            });
+        };
+
+        Keychain
+          .getGenericPassword()
+          .then((credentials) => {
+            if (credentials) {
+              console.log('Keychain credentials: ', credentials);
+              sendImageWithUserEmail(credentials.username);
+            } else {
+              sendImageWithUserEmail('noemail@aol.com');
+            }
+          })
+          .catch(() => {
+            console.log('Keychain error in profile page');
           });
         });
   }
@@ -78,7 +95,7 @@ class ProfilePage extends Component {
         <CardSection>
           <Image
            style={styles.profilePhotoStyle}
-           source={{ uri: 'https://cdn.pixabay.com/photo/2016/05/23/23/32/human-1411499_1280.jpg' }}
+           source={{ uri: this.state.profilePicLocation }}
           />
         </CardSection>
 
@@ -94,7 +111,7 @@ class ProfilePage extends Component {
         <CardSection>
           <Button
             onPress={() => { 
-              console.log('pressed logout!'); 
+              console.log('pressed update profile pic button!'); 
               this.setState({
                 currentScreen: 'frontCamera'
               });
@@ -134,7 +151,7 @@ class ProfilePage extends Component {
           type="front"
           style={styles.preview}
           aspect={Camera.constants.Aspect.fill}
-          captureTarget={Camera.constants.CaptureTarget.cameraRoll}
+          captureTarget={Camera.constants.CaptureTarget.disk}
           defaultTouchToFocus
         >
           <Text style={styles.header}>List Item Found...</Text>

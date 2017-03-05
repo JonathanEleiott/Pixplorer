@@ -5,9 +5,11 @@ const firebase = require('./firebaseConfig');
 const headers = require('./headers');
 const requestHandlerAPI = require('./handlers/api');
 
-//AWS.config.loadFromPath('../awsConfig.json'); 
-AWS.config = require('../awsConfig.json');
+AWS.config.loadFromPath('../awsConfig.json');
 //import { headers, firebase } from './config';
+
+const imageServerUrl = 'http://54.202.3.62:8084';
+// const imageServerUrl = 'http://localhost:8084';
 
 // const vision = gcloud.vision({
 //   projectId: 'thesis-de1f8',
@@ -106,7 +108,7 @@ module.exports = {
 
     axios({
         method: 'post',
-        url: 'http://54.202.3.62:8084/setImage',
+        url: `${imageServerUrl}/setImage`,
         data: { 
           imageBuffer: imageData,
           targetImageLatitude,
@@ -115,6 +117,31 @@ module.exports = {
         }
       })
       .then((response) => {
+        sendResponse(res, 201, headers, response.data);
+      })
+      .catch((error) => {
+        console.log('AXIOS ERROR');
+        sendResponse(res, 404, '', 'Error');
+      });
+  },
+
+  postProfilePic: (req, res) => {
+    //http://localhost:8084/imageMockRoute
+    console.log(`Serving ${req.method} request for ${req.url} (inside requestHandler.postProfilePic)`);
+    // const randomImageName = `${Math.random()}.jpg`;
+    const imageData = new Buffer(req.body.imageBuffer, 'base64');
+    const { email } = req.body;
+
+    axios({
+        method: 'post',
+        url: `${imageServerUrl}/postProfilePic`,
+        data: { 
+          imageBuffer: imageData,
+          email
+        }
+      })
+      .then((response) => {
+        console.log(response)
         sendResponse(res, 201, headers, response.data);
       })
       .catch((error) => {
@@ -131,7 +158,7 @@ module.exports = {
     const { userImageLatitude, userImageLongitude } = req.body;
     axios({
         method: 'post',
-        url: 'http://54.202.3.62:8084/compareImage',
+        url: `${imageServerUrl}/compareImage`,
         data: { 
           imageBuffer: imageData, 
           referenceImageId: req.body.referenceImageId,

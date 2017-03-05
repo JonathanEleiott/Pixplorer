@@ -13,13 +13,13 @@ module.exports = (req, res) => {
     const imageBuffer = getImageBuffer(req.body.imageBuffer);
     const { targetImageLatitude, targetImageLongitude, targetImageAllowedDistance } = req.body;
 
-    const sendToGoogleVision = (s3ImageLocation) => {
+    const sendToGoogleVision = function(s3ImageLocation) {
       analyzeImageViaGoogleVision(imageBuffer, (googleImageLabels) => {
         if (googleImageLabels[0] === 'error') {
           console.log('Error analyzing with Google', googleImageLabels[1]);
         } else {
          mongoHandler.setImage(
-          s3ImageLocation,
+          s3ImageLocation, 
           googleImageLabels[1],
           targetImageLatitude,
           targetImageLongitude,
@@ -30,7 +30,7 @@ module.exports = (req, res) => {
         }
       });
     };
-
+    
     // const newUser = new updateMongo.userData(item);
     uploadImageToS3(imageBuffer, (s3ImageLocation) => {
       console.log('LOCATION!', s3ImageLocation);

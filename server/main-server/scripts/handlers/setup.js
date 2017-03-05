@@ -40,7 +40,6 @@ module.exports = {
     .createTable('users_items', (table) => {
       table.increments().primary();
       table.integer('user_id').unsigned().references('users.id');
-      table.integer('list_id').unsigned().references('lists.id');
       table.integer('item_id').unsigned().references('items.id');
       table.timestamps();
     })
@@ -66,8 +65,8 @@ module.exports = {
     })
     .then((userId) => {
       return new List({
-        name: 'San Francisco',
-        description: 'Frisco',
+        name: 'SF HotSpots',
+        description: 'Find these hidden spots in the city!!',
         user_id: userId
       })
       .save().then((model) => {
@@ -124,8 +123,8 @@ module.exports = {
     })
     .then((userId) => {
       return new List({
-        name: 'New York City',
-        description: 'The Big Apple',
+        name: 'Jon\'s Red Bull Hit List',
+        description: 'It gives you wings',
         user_id: userId
       })
       .save().then((model) => {
@@ -135,8 +134,8 @@ module.exports = {
     .then((listId) => {
       console.log('model: ', listId);
       return new Item({
-        name: 'Statue of Liberty',
-        description: 'Gift from France',
+        name: 'Walgreens',
+        description: 'Most convenient to HR.',
         list_id: listId
       }).save().then((model) => {
         return model.get('list_id');
@@ -145,8 +144,8 @@ module.exports = {
     .then((listId) => {
       console.log('model: ', listId);
       return new Item({
-        name: 'Empire State Building',
-        description: 'Take the stairs',
+        name: 'Costco',
+        description: 'Load up on bulk Red Bull.',
         list_id: listId
       })
       .save().then((model) => {
