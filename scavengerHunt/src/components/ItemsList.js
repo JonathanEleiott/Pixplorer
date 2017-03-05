@@ -94,7 +94,7 @@ class ItemsList extends Component {
 // Sends user to the stats page for this list
   clickOnGoToStatsPage() {
     const { list } = this.props;
-    console.log('list', list)
+    console.log('list', list);
     this.props.goToListStats(list.id, list.items);
   }
 
