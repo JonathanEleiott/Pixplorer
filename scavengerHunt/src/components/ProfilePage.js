@@ -35,7 +35,7 @@ class ProfilePage extends Component {
       });
       console.log(err, result);
     });
-    console.log('this.props.userID', this.props.userID);
+    console.log('profile page this.props.userID', this.props.userID);
     this.props.updateProfile(this.props.userID);
   }
 
@@ -90,6 +90,7 @@ class ProfilePage extends Component {
   }
 
   renderProfilePage() {
+    console.log('this.props', this.props);
     return (
       <ScrollView>
         <Card>
@@ -114,7 +115,7 @@ class ProfilePage extends Component {
               Number of Created Lists
             </Text>
             <Text style={styles.textStyle}>
-              { this.props.userStats }
+              { this.props.userStats.listCount }
             </Text>
           </CardSection>
 
@@ -123,7 +124,7 @@ class ProfilePage extends Component {
               Number of Subscribed Lists
             </Text>
             <Text style={styles.textStyle}>
-              { this.props.userStats }
+              { this.props.userStats.subscriptionCount }
             </Text>
           </CardSection>
 
@@ -132,7 +133,7 @@ class ProfilePage extends Component {
               Number of Items checked off
             </Text>
             <Text style={styles.textStyle}>
-              { this.props.userStats }
+              { this.props.userStats.completeCount }
             </Text>
           </CardSection>
 
