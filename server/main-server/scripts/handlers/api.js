@@ -410,6 +410,46 @@ module.exports = {
       });
   },
 
+  // Return ALL lists, with ALL related items nested
+  userStats: (req, res) => { 
+    console.log(`Serving ${req.method} request for ${req.url} (handlers/api.listStats)`);
+
+    const userId = req.params.user_id;
+    const output = {};
+
+    new List()
+      .where({ user_id: userId })
+      .count()
+      .then((count) => { 
+        output.listCount = count;
+      })
+      .then(() => {
+        return new Subscription()
+          .where({ user_id: userId })
+          .count()
+          .then((subscriptions) => {
+            output.subscriptionCount = subscriptions;
+            return;
+          });
+      })
+      .then(() => {
+        return new Complete()
+          .where({ user_id: userId })
+          .count()
+          .then((completes) => {
+            output.completeCount = completes;
+            return;
+          });
+      })
+      .then(() => {
+        res.send(JSON.stringify(output));
+      })
+      .catch((error) => {
+        console.log(error);
+        res.send('An error occured');
+      });
+  },
+
   // Route used for testing purposes
   test: (req, res) => { 
     console.log(`Serving ${req.method} request for ${req.url} (handlers/api.test)`);
