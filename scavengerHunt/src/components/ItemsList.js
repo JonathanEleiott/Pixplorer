@@ -71,6 +71,7 @@ class ItemsList extends Component {
     // to see if we can mark things off the list
   clickableBoxes(item) {
     const { nameStyle, descriptionStyle } = styles;
+    console.log('clickableBoxes props', this.props);
     if (this.props.fromGlobal) {
       return (
         <Text style={nameStyle} >{ `${item.name} ${'\n'}` }
@@ -82,7 +83,7 @@ class ItemsList extends Component {
       <Text
         style={nameStyle}
         onPress={() => {
-          if (item.complete && item.complete.id === undefined) {
+          if (item.complete === undefined || item.complete.id === undefined) {
             this.uncheckedBoxClicked(item);
           }
         }}
