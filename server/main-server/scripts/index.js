@@ -80,17 +80,16 @@ app.get('/api/lists/:userId', (req, res) => {
   requestHandlerAPI.listsUser(req, res);
 });
 
-// GET USER LISTS (SUBSCRIPTION)
-app.get('/api/lists2/:userId', (req, res) => {
-  requestHandlerAPI.listsUser2(req, res);
-});
-
 app.get('/api/items', (req, res) => {
   requestHandlerAPI.items(req, res);
 });
 
 app.get('/api/lists/stats/:list_id', (req, res) => {
   requestHandlerAPI.listStats(req, res);
+});
+
+app.get('/api/users/stats/:user_id', (req, res) => {
+  requestHandlerAPI.userStats(req, res);
 });
 
 app.get('/api/test', (req, res) => {
