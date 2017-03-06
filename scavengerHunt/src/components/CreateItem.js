@@ -11,8 +11,6 @@ import {
 import Camera from 'react-native-camera';
 import axios from 'axios';
 import RNFetchBlob from 'react-native-fetch-blob';
-import { RadioButtons, SegmentedControls } from 'react-native-radio-buttons';
-
 
 import { Card, CardSection, Button, Input } from './mostCommon';
 import { Analyzing, Instructions } from './subcomponents';
@@ -79,7 +77,6 @@ class CreateItem extends Component {
   }
 
   takePicture() {
-    
     console.log('PRESSED');
     this.camera.capture()
       .then((data) => {
@@ -95,7 +92,7 @@ class CreateItem extends Component {
           axios({
               method: 'post',
               url: `${config.mainServer}/postImage`,
-              data: { 
+              data: {
                 imageBuffer: imageData,
                 targetImageLatitude: this.state.targetImageLatitude,
                 targetImageLongitude: this.state.targetImageLongitude,
@@ -134,7 +131,7 @@ class CreateItem extends Component {
       this.setState({
         newItemTargetDistance: this.state.newItemTargetDistance * 0.001
       });
-    } 
+    }
   }
 
   renderForm() {
@@ -175,7 +172,7 @@ class CreateItem extends Component {
 
         <CardSection style={{ flexDirection: 'column' }}>
           <Text style={{ textAlign: 'center' }}> Choose distance units </Text>
-          <Picker 
+          <Picker
             selectedValue={this.state.displayDistanceUnits}
             onValueChange={(measurementUnits) => {
               this.convertToKilometers(measurementUnits);
@@ -191,8 +188,8 @@ class CreateItem extends Component {
 
         <CardSection>
           <Text>
-            Note: The user will have to be within the target 
-            distance when taking the photo to successfuly complete 
+            Note: The user will have to be within the target
+            distance when taking the photo to successfuly complete
             (check off) the item from their list
           </Text>
         </CardSection>
