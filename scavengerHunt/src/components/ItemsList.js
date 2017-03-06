@@ -50,6 +50,7 @@ class ItemsList extends Component {
 
   // Returns listTitle based on whether the item has been found or not
   isComplete(complete, item) {
+    console.log('complete', complete);
     if (complete && complete.id) {
       return (
         this.listTitle(item, true)
@@ -81,7 +82,7 @@ class ItemsList extends Component {
       <Text
         style={nameStyle}
         onPress={() => {
-          if (item.complete.id === undefined) {
+          if (item.complete && item.complete.id === undefined) {
             this.uncheckedBoxClicked(item);
           }
         }}
@@ -138,6 +139,7 @@ class ItemsList extends Component {
 
   // Allows editing based on whether the current user made the list
   renderBody(item, index) {
+    console.log('item in itemslist', item);
     return (
       <CardSection key={index} style={{ borderBottomWidth: 0, padding: 20, height: 100 }}>
         { this.isComplete(item.complete, item) }

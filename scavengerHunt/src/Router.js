@@ -108,17 +108,17 @@ class RouterComponent extends Component {
             onRight={() => { console.log('clicked the Right Button!'); }}
           />
           <Scene
+            key="listStats"
+            component={ListStats}
+            title={'Stats'}
+          />
+          <Scene
             key="profilePage"
             component={ProfilePage}
             title="My Profile"
             onLeft={() => { Actions.main(); }}
             leftTitle={this.renderFontAwesome('angleLeft')}
             rightTitle={''}
-          />
-          <Scene
-            key="listStats"
-            component={ListStats}
-            title={'Stats'}
           />
         </Scene>
       </Router>

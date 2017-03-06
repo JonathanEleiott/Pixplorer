@@ -97,7 +97,7 @@ export const importAllLists = () => {
 };
 
 export const importUserLists = (userId) => {
-  console.log('importUserLists');
+  console.log('importUserLists', userId);
   loading();
   return (dispatch) => {
     axios({
