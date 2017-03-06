@@ -68,7 +68,7 @@ class RouterComponent extends Component {
             if (!this.checkIfUserIsLoggedIn) {
               Actions.auth();
             } else {
-              Actions.profile();
+              Actions.profilePage();
             }
           }}
           //rightButtonTextStyle={[styles.navTitle, styles.navTitleDisabled]}

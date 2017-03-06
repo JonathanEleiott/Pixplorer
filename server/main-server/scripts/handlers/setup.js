@@ -5,11 +5,11 @@ module.exports = {
   create: (req, res) => {
     console.log(`Serving ${req.method} request for ${req.url} (requestHandlerAPI.create)`);
     knex.schema
-    // .dropTable('users_lists')
-    // .dropTable('users_items')
-    // .dropTable('items')
-    // .dropTable('lists')
-    // .dropTable('users')
+    .dropTable('users_lists')
+    .dropTable('users_items')
+    .dropTable('items')
+    .dropTable('lists')
+    .dropTable('users')
     .createTable('users', (table) => {
       table.increments().primary();
       table.string('firebase_id').unique();
@@ -21,6 +21,7 @@ module.exports = {
       table.increments().primary();
       table.string('name');
       table.string('description');
+      table.integer('subscribers').defaultTo(0);
       table.boolean('public').defaultTo(true);
       table.integer('user_id').unsigned().references('users.id');
       table.timestamps();
@@ -40,6 +41,7 @@ module.exports = {
     .createTable('users_items', (table) => {
       table.increments().primary();
       table.integer('user_id').unsigned().references('users.id');
+      table.integer('list_id').unsigned().references('lists.id');
       table.integer('item_id').unsigned().references('items.id');
       table.timestamps();
     })
@@ -65,8 +67,8 @@ module.exports = {
     })
     .then((userId) => {
       return new List({
-        name: 'SF HotSpots',
-        description: 'Find these hidden spots in the city!!',
+        name: 'San Francisco',
+        description: 'Frisco',
         user_id: userId
       })
       .save().then((model) => {
@@ -123,8 +125,8 @@ module.exports = {
     })
     .then((userId) => {
       return new List({
-        name: 'Jon\'s Red Bull Hit List',
-        description: 'It gives you wings',
+        name: 'New York City',
+        description: 'The Big Apple',
         user_id: userId
       })
       .save().then((model) => {
@@ -134,8 +136,8 @@ module.exports = {
     .then((listId) => {
       console.log('model: ', listId);
       return new Item({
-        name: 'Walgreens',
-        description: 'Most convenient to HR.',
+        name: 'Statue of Liberty',
+        description: 'Gift from France',
         list_id: listId
       }).save().then((model) => {
         return model.get('list_id');
@@ -144,8 +146,8 @@ module.exports = {
     .then((listId) => {
       console.log('model: ', listId);
       return new Item({
-        name: 'Costco',
-        description: 'Load up on bulk Red Bull.',
+        name: 'Empire State Building',
+        description: 'Take the stairs',
         list_id: listId
       })
       .save().then((model) => {
@@ -165,10 +167,4 @@ module.exports = {
       res.send(err);
     });
   },
-  delete: (req, res) => {
-    knex.schema.dropTable('items')
-      .dropTable('lists').then(() => {
-        res.send('DB Cleared');
-      });
-  }
 };
