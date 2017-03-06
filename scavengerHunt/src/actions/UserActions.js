@@ -7,14 +7,14 @@ import {
 const listUrl = config.mainServer;
 
 // Updates profile prop
-export const updateProfile = () => {
+export const updateProfile = (userID) => {
   return (dispatch) => {
     axios({
       method: 'get',
-      url: `${listUrl}/api/`
+      url: `${listUrl}/api/users/stats/${userID}`
     })
     .then(response => {
-      console.log('updateProfile');
+      console.log('updateProfile', response);
       dispatch({
         type: UPDATE_PROFILE,
         payload: response.data
