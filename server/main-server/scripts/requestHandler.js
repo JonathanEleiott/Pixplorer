@@ -5,17 +5,11 @@ const firebase = require('./firebaseConfig');
 const headers = require('./headers');
 const requestHandlerAPI = require('./handlers/api');
 
-AWS.config.loadFromPath('../awsConfig.json');
+AWS.config = require('../awsConfig.json');
 //import { headers, firebase } from './config';
 
 const imageServerUrl = 'http://54.202.3.62:8084';
 // const imageServerUrl = 'http://localhost:8084';
-
-// const vision = gcloud.vision({
-//   projectId: 'thesis-de1f8',
-//   keyFilename: '../../keys/Thesis-b9fb73d56c41.json'
-// });
-// const s3 = new AWS.S3();
 
 const sendResponse = function (res, statusCode, headersSent, responseMessage) {
   //console.log(responseMessage);

@@ -17,7 +17,7 @@ import { connect } from 'react-redux';
 import config from '../config.js'; //
 
 import { Card, CardSection, Button } from './mostCommon';
-import { logoutUser } from '../actions';
+import { logoutUser, updateProfile } from '../actions';
 
 class ProfilePage extends Component {
   constructor(props, context) {
@@ -31,7 +31,7 @@ class ProfilePage extends Component {
   componentWillMount() {
     AsyncStorage.getItem('profilePicLocalStoragePath', (err, result) => {
       this.setState({
-        profilePicLocation: result
+        profilePicLocation: result || ''
       });
       console.log(err, result);
     });
@@ -265,5 +265,5 @@ const mapStateToProps = ({ core, auth, user }) => {
 };
 
 export default connect(mapStateToProps, {
-  logoutUser
+  logoutUser, updateProfile
 })(ProfilePage);
