@@ -302,6 +302,7 @@ const goToSubscribedList = () => {
 
 // Goes to the items list screen
 const goToItemsList = (list, name, destination) => {
+  console.log('goToItemsList destination', destination);
   if (destination === 'globalList') {
     Actions.itemsList({
       list,
@@ -312,7 +313,8 @@ const goToItemsList = (list, name, destination) => {
     Actions.itemsList({
       list,
       getTitle: () => name,
-      onBack: () => Actions[destination]()
+      onBack: () => Actions[destination](),
+      fromGlobal: false
     });
   }
 };
