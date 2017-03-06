@@ -343,14 +343,14 @@ module.exports = {
   itemsFound: (req, res) => { 
     console.log(`Serving ${req.method} request for ${req.url} (handlers/api.itemsFound)`);
     
-    // const itemId = req.body.item.id;
-    // const listId = req.body.item.list_id;
-    // const userId = req.body.user_id // need to send this
-    // const isComplete = req.body.complete;
-    const complete = 1;
-    const itemId = 3;
-    const listId = 1;
-    const userId = 2;
+    const itemId = req.body.item.id;
+    const listId = req.body.item.list_id;
+    const userId = req.body.user_id; // need to send this
+    const complete = req.body.complete;
+    // const complete = 1;
+    // const itemId = 3;
+    // const listId = 1;
+    // const userId = 2;
 
     console.log(`VARS: complete = ${complete}, itemId = ${itemId}, 
       listId = ${listId}, userId = ${userId}`);
