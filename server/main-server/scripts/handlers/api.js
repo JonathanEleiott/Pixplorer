@@ -400,7 +400,7 @@ module.exports = {
 
     new List()
       .where({ id: listId })
-      .fetchAll({ withRelated: ['completed'] })
+      .fetchAll({ withRelated: ['completed.item'] })
       .then((lists) => { 
         res.send(lists.toJSON());
       })
