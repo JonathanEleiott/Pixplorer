@@ -7,6 +7,7 @@ import { Actions } from 'react-native-router-flux';
 import FontAwesome from 'react-native-fontawesome';
 import Swipeout from '@maintained-repos/react-native-swipeout';
 import { Card, CardSection, Button, Input } from './mostCommon';
+import { Verified } from './subcomponents';
 import {
   listTitleClicked,
   createListClicked,
@@ -77,10 +78,23 @@ class SubscribedList extends Component {
     return this.renderBody(list, index);
   }
 
+  // isVerified(list) {
+  //   if (list.verified) {
+  //     return <FontAwesome style={styles.checkStyle}>checkCircleO</FontAwesome>;
+  //   }
+  // }
+
   // Checks to see if the user has admin abilities
   renderBody(list, index) {
     const { listStyle, descriptionStyle, imageStyle, arrowStyle } = styles;
     console.log('list subscribers', list);
+
+    // If List is verified, display check (include in return: {verified})
+    let verified = '';
+    if (list.verified) {
+      verified = <Verified />;
+    }
+
     return (
       <CardSection key={index} style={{ padding: 20 }}>
         <TouchableHighlight
@@ -103,7 +117,8 @@ class SubscribedList extends Component {
         value={list}
         onPress={() => this.clickOnATitle(list)}
         >
-          <Text style={listStyle} value={list.name}>{list.name} {'\n'}
+          <Text style={listStyle} value={list.name}>{list.name} 
+            { ' ' }{ verified }{ '\n' }
             <Text style={descriptionStyle}>
               {list.items.length} items - {list.subscribers} subscribers
             </Text>
@@ -171,6 +186,12 @@ const styles = {
   arrowStyle: {
     fontSize: 30,
     color: '#333'
+  }, 
+  checkStyle: {
+    fontSize: 20,
+    color: '#4285f4',
+    paddingLeft: 10,
+    marginLeft: 10
   }
 };
 

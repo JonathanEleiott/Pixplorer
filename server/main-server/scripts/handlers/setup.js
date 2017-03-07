@@ -22,6 +22,7 @@ module.exports = {
       table.string('name');
       table.string('description');
       table.integer('subscribers').defaultTo(0);
+      table.boolean('verified').defaultTo(false);
       table.boolean('public').defaultTo(true);
       table.integer('user_id').unsigned().references('users.id');
       table.timestamps();
@@ -69,7 +70,8 @@ module.exports = {
       return new List({
         name: 'San Francisco',
         description: 'Frisco',
-        user_id: userId
+        user_id: userId,
+        verified: true
       })
       .save().then((model) => {
         return model.get('id');
