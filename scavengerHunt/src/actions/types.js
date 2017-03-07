@@ -7,6 +7,8 @@ export const SIGNUP_USER = 'signup_user';
 export const LOGIN_USER_SUCCESS = 'login_user_sucess';
 export const LOGIN_USER_FAIL = 'login_user_fail';
 export const LOGOUT_USER = 'logout_user';
+export const USER_UPDATED_PASSWORD = 'user_updated_password';
+
 
 export const LIST_TITLE_CLICKED = 'list_title_clicked';
 export const CREATE_LIST_CLICKED = 'create_list_clicked';

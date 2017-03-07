@@ -93,6 +93,28 @@ module.exports = {
       }
   },
 
+  updateUserPassword: (req, res) => {
+    console.log(`Serving ${req.method} request for ${req.url} (inside requestHandler.updateUserPassword)`);
+    const { newPassword1 } = req.body;
+    console.log(newPassword1);
+    const user = firebase.auth().currentUser;
+
+    if (user) {
+      user.updatePassword(newPassword1)
+        .then((success) => {
+          console.log('success password update: ', success);
+          sendResponse(res, 201, '', 'Password Updated!');
+        })
+        .catch((error) => {
+          console.log('error deleteUser: ', error);
+          sendResponse(res, 401, '', 'User not logged in, or doesn\'t exist!');
+        });
+      } else {
+        console.log('user not even logged in');
+        sendResponse(res, 401, '', 'User not logged in, or doesn\'t exist!');
+      }
+  },
+
   postImage: (req, res) => {
     //http://localhost:8084/imageMockRoute
     console.log(`Serving ${req.method} request for ${req.url} (inside requestHandler.postImage)`);
