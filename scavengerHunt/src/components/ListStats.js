@@ -7,6 +7,8 @@ import { Card, CardSection } from './mostCommon';
 class ListStats extends Component {
 
   render() {
+    console.log('graph data timeStamp', this.props.timeStamp);
+    console.log('graph data list', this.props.list);
     const { list } = this.props;
 
     const data = [{

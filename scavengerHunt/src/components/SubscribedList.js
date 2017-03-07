@@ -39,47 +39,54 @@ class SubscribedList extends Component {
     this.props.deleteList(listName, this.props.userID);
   }
 
+  renderBody() {
+    console.log('mad props', this.props);
+    if (typeof this.props.userLists !== 'string') {
+      return this.props.userLists.map((subscription, index) => {
+        const { listStyle, arrowStyle } = styles;
+        const swipeButts = [{
+          key: Math.random(),
+          text: 'Delete',
+          backgroundColor: 'red',
+          onPress: () => this.deleteListFromDB(subscription.list)
+        }];
+        return (
+          <Swipeout key={index} right={swipeButts}>
+            <CardSection key={index} style={{ padding: 20 }}>
+              <TouchableHighlight
+                activeOpacity={0.5}
+                underlayColor={'white'}
+                value={subscription.list}
+                onPress={() => this.clickOnATitle(subscription.list)}
+              >
+                <Text
+                  style={listStyle}
+                  value={subscription.list.name}
+                >{subscription.list.name}
+                </Text>
+              </TouchableHighlight>
+              <TouchableHighlight
+                activeOpacity={0.5}
+                underlayColor={'white'}
+                value={subscription.list}
+                onPress={() => this.clickOnATitle(subscription.list)}
+              >
+                <View>
+                  <FontAwesome style={arrowStyle}>arrowCircleRight</FontAwesome>
+                </View>
+              </TouchableHighlight>
+            </CardSection>
+          </Swipeout>
+        );
+      });
+    }
+  }
+
   render() {
     return (
       <ScrollView>
         <Card>
-          { this.props.userLists.map((subscription, index) => {
-            const { listStyle, arrowStyle } = styles;
-            const swipeButts = [{
-              key: Math.random(),
-              text: 'Delete',
-              backgroundColor: 'red',
-              onPress: () => this.deleteListFromDB(subscription.list)
-            }];
-            return (
-              <Swipeout key={index} right={swipeButts}>
-                <CardSection key={index} style={{ padding: 20 }}>
-                  <TouchableHighlight
-                    activeOpacity={0.5}
-                    underlayColor={'white'}
-                    value={subscription.list}
-                    onPress={() => this.clickOnATitle(subscription.list)}
-                  >
-                    <Text
-                      style={listStyle}
-                      value={subscription.list.name}
-                    >{subscription.list.name}
-                    </Text>
-                  </TouchableHighlight>
-                  <TouchableHighlight
-                    activeOpacity={0.5}
-                    underlayColor={'white'}
-                    value={subscription.list}
-                    onPress={() => this.clickOnATitle(subscription.list)}
-                  >
-                    <View>
-                      <FontAwesome style={arrowStyle}>arrowCircleRight</FontAwesome>
-                    </View>
-                  </TouchableHighlight>
-                </CardSection>
-              </Swipeout>
-            );
-          })}
+          { this.renderBody() }
           <Button onPress={this.createAList.bind(this)}>
             Create A New List
           </Button>
