@@ -4,6 +4,7 @@ import axios from 'axios';
 import { Actions } from 'react-native-router-flux';
 import * as Keychain from 'react-native-keychain';
 import md5 from "react-native-md5";
+import config from '../config.js';
 import {
   EMAIL_CHANGED,
   PASSWORD_CHANGED,
@@ -16,11 +17,7 @@ import {
   USER_UPDATED_PASSWORD
 } from './types';
 
-//Amazon EC2 production server
-const authUrl = 'http://54.218.118.52:8080/'; // AWS EC2 production server
-// const authUrl = 'http://198.199.94.223:8080/';
-// const authUrl = 'https://cc1da1ae.ngrok.io/';
-// const authUrl = 'http://localhost:8080/';
+const authUrl = config.mainServer;
 
 // Changes email prop to what the user typed in
 export const emailChanged = (text) => {
@@ -51,14 +48,14 @@ export const loginUser = (credentials, cb, source) => {
   let password = credentials.password;
   if (source !== 'fromKeychain') {
     password = md5.hex_md5(credentials.password).slice(0, 16);
-  } 
+  }
 
   return (dispatch) => {
     dispatch({ type: LOGIN_USER });
 
     axios({
       method: 'post',
-      url: `${authUrl}login`,
+      url: `${authUrl}/login`,
       data: {
         email,
         password
@@ -100,7 +97,7 @@ export const signupUser = ({ email, password }) => {
     console.log('passwordHash', passwordHash);
     axios({
       method: 'post',
-      url: `${authUrl}createUser`,
+      url: `${authUrl}/createUser`,
       data: {
         email,
         password: passwordHash
@@ -129,7 +126,7 @@ export const logoutUser = () => {
 
     axios({
       method: 'post',
-      url: `${authUrl}logout`
+      url: `${authUrl}/logout`
     })
     .then((response) => {
       console.log('response LOGOUT USER', response);
@@ -152,7 +149,7 @@ export const logoutUser = () => {
 // IF USER LOGGED IN WILL RETURN FIREBASE ID//
 //////////////////////////////////////////////
 export const getUniqueUserId = (dispatch, callback) => {
-  const requrl = `${authUrl}checkUserCredentials`;
+  const requrl = `${authUrl}/checkUserCredentials`;
   axios({
     method: 'get',
     url: requrl,
@@ -179,17 +176,17 @@ export const userUpdatedTheirPassword = ({ currentPassword, newPassword1, email 
   const currentPasswordMD5 = md5.hex_md5(currentPassword).slice(0, 16);
   const newPassword1MD5 = md5.hex_md5(newPassword1).slice(0, 16);
   return (dispatch) => {
-    const requrl = `${authUrl}updateUserPassword`;
+    const requrl = `${authUrl}/updateUserPassword`;
     axios({
       method: 'post',
       url: requrl,
-      data: { currentPassword: currentPasswordMD5, 
+      data: { currentPassword: currentPasswordMD5,
               newPassword1: newPassword1MD5
              }
     })
     .then((response) => {
       console.log('getUniqueUserId', response);
-      console.log(`EMAIL: ${email} and newPassword1MD5: ${newPassword1MD5}`); 
+      console.log(`EMAIL: ${email} and newPassword1MD5: ${newPassword1MD5}`);
       Keychain
         .setGenericPassword(email, newPassword1MD5)
         .then(() => {
@@ -200,7 +197,6 @@ export const userUpdatedTheirPassword = ({ currentPassword, newPassword1, email 
         .catch((err) => {
           console.log('error', err);
         });
-      
     })
     .catch((response) => {
       console.log('response from check user credentials request error', response);
