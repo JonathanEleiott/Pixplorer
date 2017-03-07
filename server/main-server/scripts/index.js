@@ -42,6 +42,10 @@ app.post('/deleteUser', (req, res) => {
   requestHandler.deleteUser(req, res);
 });
 
+app.post('/updateUserPassword', (req, res) => {
+  requestHandler.updateUserPassword(req, res);
+});
+
 app.get('/checkUserCredentials', (req, res) => {
   requestHandler.checkUserCredentials(req, res);
 });

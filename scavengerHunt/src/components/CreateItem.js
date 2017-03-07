@@ -32,9 +32,9 @@ class CreateItem extends Component {
       targetImageLatitude: '',
       targetImageLongitude: '',
       newItemTargetDistance: 1,
-      distanceMeasurementUnits: 'kilometers',
-      displayDistanceUnits: 'kilometers',
-      displayDistance: '1',
+      distanceMeasurementUnits: 'unlimited',
+      displayDistanceUnits: 'unlimited',
+      displayDistance: 'unlimited',
       imageDataPath: '',
       item: {}
     };
@@ -131,6 +131,11 @@ class CreateItem extends Component {
       this.setState({
         newItemTargetDistance: this.state.newItemTargetDistance * 0.001
       });
+    } else if (measurementUnitsString === 'unlimited') {
+      this.setState({
+        newItemTargetDistance: 21000,
+        displayDistance: 'unlimited'
+      });
     }
   }
 
@@ -171,14 +176,22 @@ class CreateItem extends Component {
         </CardSection>
 
         <CardSection style={{ flexDirection: 'column' }}>
-          <Text style={{ textAlign: 'center' }}> Choose distance units </Text>
+          <Text style={{ textAlign: 'center', fontSize: 17, marginTop: 10 }}> Choose distance units </Text>
           <Picker
             selectedValue={this.state.displayDistanceUnits}
             onValueChange={(measurementUnits) => {
               this.convertToKilometers(measurementUnits);
-              this.setState({ displayDistanceUnits: measurementUnits });
+              this.setState({ 
+                displayDistanceUnits: measurementUnits
+              });
+              if (measurementUnits !== 'unlimited' && !this.state.displayDistance.match(/[0-9]/gi)) {
+                this.setState({ 
+                  displayDistance: '1'
+                });
+              }
             }}
           >
+            <Picker.Item label="No distance/Unlimited" value="unlimited" />
             <Picker.Item label="Kilometers" value="kilometers" />
             <Picker.Item label="Meters" value="meters" />
             <Picker.Item label="Miles" value="miles" />
@@ -187,7 +200,7 @@ class CreateItem extends Component {
         </CardSection>
 
         <CardSection>
-          <Text>
+          <Text style={{ marginLeft: 15 }}>
             Note: The user will have to be within the target
             distance when taking the photo to successfuly complete
             (check off) the item from their list
@@ -196,7 +209,7 @@ class CreateItem extends Component {
 
         <CardSection>
           <Button onPress={this.handleSubmit}>
-            Save Item
+            Add a photo
           </Button>
         </CardSection>
       </Card>

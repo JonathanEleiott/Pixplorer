@@ -11,14 +11,15 @@ import {
   LOGIN_USER_SUCCESS,
   LOGIN_USER_FAIL,
   LOGOUT_USER,
-  CURRENT_USER_FIREBASE_ID
+  CURRENT_USER_FIREBASE_ID,
+  USER_UPDATED_PASSWORD
 } from './types';
 
 //Amazon EC2 production server
 // const authUrl = 'http://54.218.118.52:8080/'; // AWS EC2 production server
 // const authUrl = 'http://198.199.94.223:8080/';
-const authUrl = 'https://cc1da1ae.ngrok.io/';
-// const authUrl = 'http://localhost:8080/';
+// const authUrl = 'https://cc1da1ae.ngrok.io/';
+const authUrl = 'http://localhost:8080/';
 
 // Changes email prop to what the user typed in
 export const emailChanged = (text) => {
@@ -125,13 +126,11 @@ export const logoutUser = () => {
     })
     .then((response) => {
       console.log('response LOGOUT USER', response);
-
       Keychain
         .resetGenericPassword()
         .then(() => {
           console.log('Credentials successfully deleted');
         });
-
       Actions.auth();
     })
     .catch(response => {
@@ -145,19 +144,46 @@ export const logoutUser = () => {
 //////////////////////////////////////////////
 // IF USER LOGGED IN WILL RETURN FIREBASE ID//
 //////////////////////////////////////////////
-export const getUniqueUserId = (dispatch) => {
+export const getUniqueUserId = (dispatch, callback) => {
   const requrl = `${authUrl}checkUserCredentials`;
   axios({
     method: 'get',
     url: requrl,
   })
   .then((response) => {
+    if (callback) {
+      callback(response.data.uid);
+    }
     console.log('getUniqueUserId');
     dispatch({ type: CURRENT_USER_FIREBASE_ID, payload: response.data.uid });
   })
   .catch((response) => {
     console.log('response from check user credentials request error', response);
   });
+};
+
+
+// Sends AJAX request to change/update user's password
+//////////////////////////////////////////////
+///////// UPDATE USER PASSWORD ///////////////
+//////////////////////////////////////////////
+export const userUpdatedTheirPassword = ({ currentPassword, newPassword1 }) => {
+  console.log('USER UPDATED PASSWORD: ', currentPassword, newPassword1);
+  return (dispatch) => {
+    const requrl = `${authUrl}updateUserPassword`;
+    axios({
+      method: 'post',
+      url: requrl,
+      data: { currentPassword, newPassword1 }
+    })
+    .then((response) => {
+      console.log('getUniqueUserId');
+      dispatch({ type: USER_UPDATED_PASSWORD, payload: response.data });
+    })
+    .catch((response) => {
+      console.log('response from check user credentials request error', response);
+    });
+  };
 };
 
 // Sets the user if the log in was successful and directs them to next page

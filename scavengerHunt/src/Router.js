@@ -13,6 +13,7 @@ import CompareItem from './components/CompareItem';
 import GlobalList from './components/GlobalList';
 import ListStats from './components/ListStats';
 import ProfilePage from './components/ProfilePage';
+import ChangePassword from './components/ChangePassword';
 
 //TODO: MAke sure to put the components back! Right now it goes straight to camera!!!
 /////////////////////////////////////////////////
@@ -116,6 +117,14 @@ class RouterComponent extends Component {
             key="profilePage"
             component={ProfilePage}
             title="My Profile"
+            onLeft={() => { Actions.main(); }}
+            leftTitle={this.renderFontAwesome('angleLeft')}
+            rightTitle={''}
+          />
+          <Scene
+            key="ChangePassword"
+            component={ChangePassword}
+            title="Change Password"
             onLeft={() => { Actions.main(); }}
             leftTitle={this.renderFontAwesome('angleLeft')}
             rightTitle={''}

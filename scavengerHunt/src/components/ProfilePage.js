@@ -9,6 +9,7 @@ import {
   ScrollView
 } from 'react-native';
 import * as Keychain from 'react-native-keychain';
+import { Actions } from 'react-native-router-flux';
 
 import Camera from 'react-native-camera';
 import axios from 'axios';
@@ -160,8 +161,12 @@ class ProfilePage extends Component {
           </CardSection>
 
           <CardSection>
-            <Button>
-               Change Password
+            <Button 
+              onPress={() => {
+                Actions.ChangePassword();
+              }}
+            >
+              Change Password
             </Button>
           </CardSection>
 
@@ -220,7 +225,7 @@ const styles = {
   },
   profilePhotoStyle: {
     width: 50,
-    height: 260,
+    height: 220,
     flex: 1,
     borderRadius: 60
   },
