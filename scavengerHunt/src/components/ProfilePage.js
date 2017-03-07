@@ -27,6 +27,7 @@ class ProfilePage extends Component {
       currentScreen: 'profilePage',
       profilePicLocation: ''
     };
+    console.log('state!!!', this.state);
   }
 
   componentWillMount() {
