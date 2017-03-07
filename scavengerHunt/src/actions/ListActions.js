@@ -277,10 +277,11 @@ export const goToListStats = (listID, itemsArray) => {
       // loop through itemsArray
         // if itemsArray.id is in old object
           // new object = name: itemsArray.name, count: old object.id (count)
+          console.log('goToListStats call', response.data[0]);
 
       dispatch({
         type: ITEM_TIME_STAMPS,
-        payload: { times: response.data.completed }
+        payload: { times: response.data[0].completed }
       });
       Actions.listStats();
     })

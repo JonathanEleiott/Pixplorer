@@ -3,3 +3,4 @@
 export * from './Analyzing';
 export * from './Match';
 export * from './Instructions';
+export * from './Verified';
