@@ -27,15 +27,15 @@ class CreateItem extends Component {
       status: 1,
       newItemName: '',
       newItemDesc: '',
-      newItemURL: '',
-      newItemListId: null,
+      //newItemURL: '',
+      //newItemListId: null,
       targetImageLatitude: '',
       targetImageLongitude: '',
       newItemTargetDistance: 1,
       distanceMeasurementUnits: 'kilometers',
       displayDistanceUnits: 'kilometers',
       displayDistance: '1',
-      imageDataPath: '',
+      //imageDataPath: '',
       item: {}
     };
 
@@ -63,7 +63,7 @@ class CreateItem extends Component {
         listId: this.props.listId,
         name: this.state.newItemName,
         desc: this.state.newItemDesc,
-        image: this.state.newItemURL
+        //image: this.state.newItemURL
         } }
       );
 
@@ -101,13 +101,13 @@ class CreateItem extends Component {
             })
             .then((response) => {
               console.log('SUCCESS: Image sent to server:', response.data);
-              console.log('PArams:', this.state);
-              this.setState({
-                newItemURL: response.data,
-              });
+
+              const itemData = this.state.item;
+              itemData.image = response.data;
+    
               // Step 1
                 // Add item to Database and redirect user to updated list
-                this.props.manageItem(1, this.state.item);
+                this.props.manageItem(1, itemData);
             })
             .catch((error) => {
               console.log('Error sending image to server', error);
@@ -213,7 +213,7 @@ class CreateItem extends Component {
         aspect={Camera.constants.Aspect.fill}
         captureTarget={Camera.constants.CaptureTarget.temp}
       >
-        <Text style={styles.header}>List Item Found...</Text>
+        <Text style={styles.header}>Add Your Item...</Text>
         <Text style={styles.capture} onPress={this.takePicture.bind(this)}>SNAP THE PIC!!</Text>
       </Camera>
     );
