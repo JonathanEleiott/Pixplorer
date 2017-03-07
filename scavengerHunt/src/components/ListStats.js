@@ -7,23 +7,31 @@ import { Card, CardSection } from './mostCommon';
 class ListStats extends Component {
 
   render() {
-    console.log('graph data timeStamp', this.props.timeStamp);
-    console.log('graph data list', this.props.list);
-    const { list } = this.props;
+    const { list, timeStamps } = this.props;
+    const counter = [];
+    console.log('timeStamps', this.props.timeStamps);
 
-    const data = [{
-      name: 'Washington',
-      population: 7694980
-    }, {
-      name: 'Oregon',
-      population: 2584160
-    }, {
-      name: 'Minnesota',
-      population: 6590667
-    }, {
-      name: 'Alaska',
-      population: 7284698
-    }];
+    for (let i = 0; i < timeStamps.length; i++) {
+      for (let j = 0; j <= counter.length; j++) {
+        if (timeStamps[i] && j === counter.length) {
+          counter[j] = {};
+          counter[j].name = timeStamps[i].item.name;
+          counter[j].count = 1;
+          j = -1;
+          i++;
+        } else if (timeStamps[i] && counter[j].name === timeStamps[i].item.name) {
+          counter[j].count += 1;
+          j = -1;
+          i++;
+        }
+      }
+    }
+
+    console.log('counter', counter);
+
+    const data = counter;
+
+    console.log('data', data);
 
     const options = {
       margin: {
@@ -40,7 +48,7 @@ class ListStats extends Component {
       legendPosition: 'topLeft',
       animate: {
         type: 'oneByOne',
-        duration: 200,
+        duration: 2000,
         fillTransition: 3
       },
       label: {
@@ -55,19 +63,19 @@ class ListStats extends Component {
      <Card>
        <CardSection>
          <Text>
-          Number of Subscribers - { list.subscribers }
+           Number of Subscribers - { list.subscribers }
          </Text>
        </CardSection>
 
        <CardSection>
          <Text>
-          Total Items in List - { list.items.length }
+           Total Items in List - { list.items.length }
          </Text>
        </CardSection>
        <Pie
-          data={data}
-          options={options}
-          accessorKey="population"
+         data={data}
+         options={options}
+         accessorKey="count"
        />
      </Card>
    );
@@ -78,7 +86,7 @@ const mapStateToProps = ({ core, auth }) => {
   const { list, timeStamps } = core;
   const { userID } = auth;
 
-  return { list, userID };
+  return { list, userID, timeStamps };
 };
 
 export default connect(mapStateToProps, {})(ListStats);
