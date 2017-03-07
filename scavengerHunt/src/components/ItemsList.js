@@ -1,7 +1,7 @@
 // Shows a list of items items based on which list was clicked
 
 import React, { Component } from 'react';
-import { View, Text, ScrollView } from 'react-native';
+import { View, Text, ScrollView, Image } from 'react-native';
 import { connect } from 'react-redux';
 import Swipeout from '@maintained-repos/react-native-swipeout';
 import FontAwesome from 'react-native-fontawesome';
@@ -17,6 +17,9 @@ class ItemsList extends Component {
   constructor() {
     super();
     this.uncheckedBoxClicked = this.uncheckedBoxClicked.bind(this);
+    this.state = {
+      //profilePicLocation: 'https://user-profile-pics1.s3.amazonaws.com/Test4%40aol.com7913539368583191.jpg'
+    };
   }
 
   // Displays item with checked/unchecked box based on if it has been found yet
@@ -153,6 +156,15 @@ class ItemsList extends Component {
     return (
       <ScrollView style={styles.listStyle}>
         <Card>
+          <CardSection>
+            <Image 
+              source={{ 
+              uri: 'https://media-cdn.tripadvisor.com/media/photo-s/06/e5/55/c5/champs-elysees.jpg'
+              //uri: 'https://user-profile-pics1.s3.amazonaws.com/Test4%40aol.com8765642049910938.jpg'
+            }} 
+              style={{ width: 400, height: 200, flex: 1 }}
+            />
+          </CardSection>
           <Button onPress={this.clickOnGoToStatsPage.bind(this)}>See List Stats</Button>
           { this.renderList() }
           { this.showAddButton() }
@@ -182,7 +194,25 @@ const styles = {
   checkFull: {
     fontSize: 30,
     color: 'green'
-  }
+  },
+  profilePhotoStyle: {
+    width: 50,
+    height: 220,
+    flex: 1,
+    borderRadius: 60
+  },
+  // backdropView: {
+  //     flex: 1,
+  //     flexDirection: 'column',
+  //     justifyContent: 'center',
+  //     backgroundColor: 'rgba(0,0,0,0)',
+  //   },
+  //   headline: {
+  //     fontSize: 60,
+  //     textAlign: 'center',
+  //     backgroundColor: 'rgba(0,0,0,0)',
+  //     color: 'white',
+  //   }
 };
 
 const mapStateToProps = ({ core, auth }) => {

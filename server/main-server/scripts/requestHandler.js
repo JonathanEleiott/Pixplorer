@@ -157,7 +157,7 @@ module.exports = {
         }
       })
       .then((response) => {
-        console.log(response)
+        console.log('Profile Pic Changed', response.data)
         sendResponse(res, 201, headers, response.data);
       })
       .catch((error) => {
