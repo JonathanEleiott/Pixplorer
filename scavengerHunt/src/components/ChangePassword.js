@@ -37,7 +37,7 @@ class LoginForm extends Component {
       });
     } else {
       this.props.userUpdatedTheirPassword({ currentPassword, newPassword1 });
-      Actions.main();
+      Actions.main({ type: 'reset' });
     }
   }
 

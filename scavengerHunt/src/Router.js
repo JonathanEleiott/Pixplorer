@@ -67,9 +67,9 @@ class RouterComponent extends Component {
           key="main"
           onRight={() => {
             if (!this.checkIfUserIsLoggedIn) {
-              Actions.auth();
+              Actions.auth({ type: 'reset' });
             } else {
-              Actions.profilePage();
+              Actions.profilePage({ type: 'reset' });
             }
           }}
           //rightButtonTextStyle={[styles.navTitle, styles.navTitleDisabled]}
@@ -117,7 +117,7 @@ class RouterComponent extends Component {
             key="profilePage"
             component={ProfilePage}
             title="My Profile"
-            onLeft={() => { Actions.main(); }}
+            onLeft={() => { Actions.subscribedList(); }}
             leftTitle={this.renderFontAwesome('angleLeft')}
             rightTitle={''}
           />
