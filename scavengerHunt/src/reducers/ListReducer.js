@@ -16,7 +16,7 @@ import {
   MANAGE_ITEM, // Added by bill - step 8
   LOADING,
   SUCCESS,
-  ITEM_TIME_STAMPS
+  LIST_STATS
 } from '../actions/types';
 
 const INITIAL_STATE = {
@@ -77,8 +77,8 @@ export default (state = INITIAL_STATE, action) => {
       // Takes away loading screen/spinner
     case SUCCESS:
       return { ...state, loading: false };
-    case ITEM_TIME_STAMPS:
-      return { ...state, timeStamps: action.payload };
+    case LIST_STATS:
+      return { ...state, listStats: action.payload };
     default:
       return state;
   }
