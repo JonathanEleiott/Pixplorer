@@ -18,8 +18,8 @@ import {
 //Amazon EC2 production server
 // const authUrl = 'http://54.218.118.52:8080/'; // AWS EC2 production server
 // const authUrl = 'http://198.199.94.223:8080/';
-// const authUrl = 'https://cc1da1ae.ngrok.io/';
-const authUrl = 'http://localhost:8080/';
+const authUrl = 'https://cc1da1ae.ngrok.io/';
+// const authUrl = 'http://localhost:8080/';
 
 // Changes email prop to what the user typed in
 export const emailChanged = (text) => {
@@ -131,7 +131,7 @@ export const logoutUser = () => {
         .then(() => {
           console.log('Credentials successfully deleted');
         });
-      Actions.auth();
+      Actions.auth({ type: 'reset' });
     })
     .catch(response => {
       console.log('response from signup request error', response);
@@ -189,10 +189,11 @@ export const userUpdatedTheirPassword = ({ currentPassword, newPassword1 }) => {
 // Sets the user if the log in was successful and directs them to next page
 const loginUserSuccess = (dispatch, errorMessage) => {
   dispatch({ type: LOGIN_USER_SUCCESS, payload: errorMessage });
-  Actions.main();
+  Actions.main({ type: 'reset' });
 };
 
 // Resets password and shows fail message
 const loginUserFail = (dispatch, user) => {
   dispatch({ type: LOGIN_USER_FAIL, payload: user });
+  Actions.auth({ type: 'reset' });
 };

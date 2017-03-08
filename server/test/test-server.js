@@ -297,6 +297,8 @@ describe('IMAGE UPLOAD', () => {
         console.log(response.data);
         expect(response.status).to.equal(201);
         expect(response.data).to.exist;
+        expect(response.data.imageMongoId).to.exist;
+        expect(response.data.s3ImageLocation).to.exist;
         done();
       })
       .catch((error) => {
