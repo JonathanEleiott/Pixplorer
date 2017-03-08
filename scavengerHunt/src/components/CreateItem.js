@@ -27,8 +27,6 @@ class CreateItem extends Component {
       status: 1,
       newItemName: '',
       newItemDesc: '',
-      //newItemURL: '',
-      //newItemListId: null,
       targetImageLatitude: '',
       targetImageLongitude: '',
       newItemTargetDistance: 1,
@@ -62,8 +60,7 @@ class CreateItem extends Component {
       this.setState({ item: {
         listId: this.props.listId,
         name: this.state.newItemName,
-        desc: this.state.newItemDesc,
-        //image: this.state.newItemURL
+        desc: this.state.newItemDesc
         } }
       );
 
@@ -105,8 +102,8 @@ class CreateItem extends Component {
               const itemData = this.state.item;
               //itemData.image = response.data;
               itemData.image = response.data.imageMongoId;
-              itemData.imageURL = response.data.s3ImageLocation;
-    
+              itemData.imageURL = JSON.parse(response.data.s3ImageLocation);
+
               // Step 1
                 // Add item to Database and redirect user to updated list
                 this.props.manageItem(1, itemData);
@@ -166,16 +163,21 @@ class CreateItem extends Component {
 
 
         <CardSection style={{ flexDirection: 'column' }}>
-          <Text style={{ textAlign: 'center', fontSize: 17, marginTop: 10 }}> Choose distance units </Text>
+          <Text
+            style={{ textAlign: 'center', fontSize: 17, marginTop: 10 }}
+          > Choose distance units
+          </Text>
           <Picker
             selectedValue={this.state.displayDistanceUnits}
             onValueChange={(measurementUnits) => {
               this.convertToKilometers(measurementUnits);
-              this.setState({ 
+              this.setState({
                 displayDistanceUnits: measurementUnits
               });
-              if (measurementUnits !== 'unlimited' && !this.state.displayDistance.match(/[0-9]/gi)) {
-                this.setState({ 
+              if (
+                measurementUnits !== 'unlimited' && !this.state.displayDistance.match(/[0-9]/gi)
+              ) {
+                this.setState({
                   displayDistance: '1'
                 });
               }

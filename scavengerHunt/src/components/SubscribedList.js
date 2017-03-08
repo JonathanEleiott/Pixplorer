@@ -58,21 +58,6 @@ class SubscribedList extends Component {
                 value={subscription.list}
                 onPress={() => this.clickOnATitle(subscription.list)}
               >
-                <Image
-                  source={{
-                    // uri: `https://s3..../${topPic}.jpg`
-                    uri: 'https://media-cdn.tripadvisor.com/media/photo-s/06/e5/55/c5/champs-elysees.jpg'
-                    // uri: 'https://user-profile-pics1.s3.amazonaws.com/Test4%40aol.com8765642049910938.jpg'
-                  }}
-                  style={{ width: 50, height: 50 }}
-                />
-              </TouchableHighlight>
-              <TouchableHighlight
-                activeOpacity={0.5}
-                underlayColor={'white'}
-                value={subscription.list}
-                onPress={() => this.clickOnATitle(subscription.list)}
-              >
                 <Text
                   style={listStyle}
                   value={subscription.list.name}
