@@ -9,7 +9,6 @@ class ListStats extends Component {
   renderPieChart() {
     const { timeStamps } = this.props;
     const counter = [];
-    console.log('timeStamps', this.props.timeStamps);
 
     for (let i = 0; i < timeStamps.length; i++) {
       for (let j = 0; j <= counter.length; j++) {

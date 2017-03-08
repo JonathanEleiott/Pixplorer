@@ -83,7 +83,6 @@ export const importAllLists = () => {
       url: `${listUrl}/api/all`
     })
     .then(response => {
-      console.log('importAllLists');
       dispatch({
         type: IMPORT_ALL_LISTS,
         payload: response.data
@@ -91,13 +90,12 @@ export const importAllLists = () => {
       success();
     })
     .catch(error => {
-      console.log('error', error);
+      console.log('importAllLists error', error);
     });
   };
 };
 
 export const importUserLists = (userId) => {
-  console.log('importUserLists', userId);
   loading();
   return (dispatch) => {
     axios({
@@ -105,7 +103,6 @@ export const importUserLists = (userId) => {
       url: `${listUrl}/api/lists/${userId}`
     })
     .then(response => {
-      console.log('response importUserLists');
       dispatch({
         type: IMPORT_USER_LISTS,
         payload: response.data
@@ -113,7 +110,7 @@ export const importUserLists = (userId) => {
       success();
     })
     .catch(error => {
-      console.log('error', error);
+      console.log('importUserLists error', error);
     });
   };
 };
@@ -129,7 +126,6 @@ export const addListToDB = (listName, user) => {
       data: listName
     })
     .then(response => {
-      console.log('response in addListToDB', response);
       goToItemsList(response.data.items, response.data.name, 'subscribedList');
       dispatch({
         type: ADD_LIST_TO_DB,
@@ -138,13 +134,12 @@ export const addListToDB = (listName, user) => {
       success();
     })
     .catch(error => {
-      console.log('error in addListToDB call', error);
+      console.log('addListToDB request error', error);
     });
   };
 };
 
 export const addListToSubscribedPage = (list, user) => {
-  console.log('addListToSubscribedPage');
   loading();
   return () => {
     axios({
@@ -160,7 +155,7 @@ export const addListToSubscribedPage = (list, user) => {
       success();
     })
     .catch(error => {
-      console.log('error in addListToSubscribedPage call', error);
+      console.log('addListToSubscribedPage request error', error);
     });
   };
 };
@@ -182,7 +177,6 @@ export const deleteItem = (item, list, userID) => {
       url: `${listUrl}/api/items/${item.id}/${list.id}/${userID}`
     })
     .then(response => {
-      console.log('response deleteItem', response);
       goToItemsList(response.data.items, response.data.name, 'subscribedList');
       dispatch({
         type: DELETE_ITEM,
@@ -191,7 +185,7 @@ export const deleteItem = (item, list, userID) => {
       success();
     })
     .catch(error => {
-      console.log('error in addListToDB call', error);
+      console.log('addListToDB request error', error);
     });
   };
 };
@@ -213,7 +207,7 @@ export const deleteList = (listName, user) => {
       success();
     })
     .catch(error => {
-      console.log('error in addListToDB call', error);
+      console.log('addListToDB request error', error);
     });
   };
 };
@@ -226,8 +220,7 @@ export const listNameChanged = (name) => {
   };
 };
 
-// BILL
-// STEP 6
+// Checks picture against DB picture
 export const manageItem = (type = 1, itemOrList) => {
   loading();
   if (type === 2) {
@@ -257,7 +250,7 @@ export const manageItem = (type = 1, itemOrList) => {
       success();
     })
     .catch(error => {
-      console.log('Error in manageItem call', error);
+      console.log('manageItem request error', error);
     });
   };
 };
@@ -280,7 +273,7 @@ export const goToListStats = (listID) => {
       Actions.listStats();
     })
     .catch((error) => {
-      console.log('error in goToListStats', error);
+      console.log('goToListStats request error', error);
     });
   };
 };
@@ -297,7 +290,6 @@ const goToSubscribedList = () => {
 
 // Goes to the items list screen
 const goToItemsList = (list, name, destination) => {
-  console.log('goToItemsList destination', destination);
   if (destination === 'globalList') {
     Actions.itemsList({
       list,
@@ -316,19 +308,11 @@ const goToItemsList = (list, name, destination) => {
 
 // Goes to the add an item
 const goToCreateItem = (list) => {
-  ////////////////////////////////////
-  // CHANGE TO Actions.createItem() //
-  // IF YOU DON'T WANT A BACK BUTON //
-  ////////////////////////////////////
   Actions.createItem({ listId: list.id });
 };
 
 // Goes to the camera screen
 const goToCompareItem = (item) => {
-  ////////////////////////////////////
-  // CHANGE TO Actions.camera() //////
-  // IF YOU DON'T WANT A BACK BUTON //
-  ////////////////////////////////////
   Actions.compareItem({ item });
 };
 

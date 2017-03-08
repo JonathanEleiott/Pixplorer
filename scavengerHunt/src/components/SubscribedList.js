@@ -1,7 +1,7 @@
 // Creates a list of all scavenger hunts
 
 import React, { Component } from 'react';
-import { Text, View, ScrollView, TouchableHighlight, Image } from 'react-native';
+import { Text, View, ScrollView, TouchableHighlight } from 'react-native';
 import { connect } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
 import Swipeout from '@maintained-repos/react-native-swipeout';

@@ -47,7 +47,6 @@ class CreateItem extends Component {
         const targetImageLatitude = position.coords.latitude;
         const targetImageLongitude = position.coords.longitude;
         this.setState({ targetImageLatitude, targetImageLongitude });
-        console.log('success getting current position: ', this.state);
       },
       (error) => {
         console.log('error getting current position', JSON.stringify(error));
@@ -74,11 +73,9 @@ class CreateItem extends Component {
   }
 
   takePicture() {
-    console.log('PRESSED');
     this.camera.capture()
       .then((data) => {
         Vibration.vibrate();
-        console.log('DATA IMG:', data.path);
 
         this.setState({
           status: 4,
@@ -97,8 +94,6 @@ class CreateItem extends Component {
               }
             })
             .then((response) => {
-              console.log('SUCCESS: Image sent to server:', response.data);
-
               const itemData = this.state.item;
               //itemData.image = response.data;
               itemData.image = response.data.imageMongoId;
