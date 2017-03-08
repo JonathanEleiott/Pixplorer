@@ -162,7 +162,7 @@ class ProfilePage extends Component {
           </CardSection>
 
           <CardSection>
-            <Button 
+            <Button
               onPress={() => {
                 Actions.ChangePassword();
               }}

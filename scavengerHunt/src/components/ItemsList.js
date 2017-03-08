@@ -6,7 +6,13 @@ import { connect } from 'react-redux';
 import Swipeout from '@maintained-repos/react-native-swipeout';
 import FontAwesome from 'react-native-fontawesome';
 import { Card, CardSection, Button } from './mostCommon';
-import { addItem, clickedUncheckedBox, deleteItem, goToListStats } from '../actions';
+import {
+  addItem,
+  clickedUncheckedBox,
+  deleteItem,
+  goToListStats,
+  addListToSubscribedPage
+} from '../actions';
 
 /////////////////////////////////////////////////////////
 // ITEM LIST IS A HARDCODED JSON FILE!!! ///////////////
@@ -74,7 +80,7 @@ class ItemsList extends Component {
     // to see if we can mark things off the list
   clickableBoxes(item) {
     const { nameStyle, descriptionStyle } = styles;
-    console.log('clickableBoxes props', this.props);
+
     if (this.props.fromGlobal) {
       return (
         <Text style={nameStyle} >{ `${item.name} ${'\n'}` }
@@ -99,8 +105,22 @@ class ItemsList extends Component {
 // Sends user to the stats page for this list
   clickOnGoToStatsPage() {
     const { list } = this.props;
-    console.log('list', list);
+
     this.props.goToListStats(list.id, list.items);
+  }
+
+  // Decides whether the add list to subscribed page button is shown
+  showAddListToSubscribedPageButton() {
+    const { list, userID } = this.props;
+    if (this.props.fromGlobal) {
+      return (
+        <Button
+          onPress={() => this.props.addListToSubscribedPage(list.id, userID)}
+        >
+        Add This to Your List
+        </Button>
+      );
+    }
   }
 
   // Decides whether the user should be able to add to the list of items
@@ -153,19 +173,26 @@ class ItemsList extends Component {
   }
 
   render() {
+    const { list } = this.props;
+    // list.topPic only used if we add own image
+      // topPic used in uri call
+    const topPic = list.topPic || list.items[0].image;
+
     return (
       <ScrollView style={styles.listStyle}>
         <Card>
           <CardSection>
-            <Image 
-              source={{ 
+            <Image
+              source={{
+                // uri: `https://s3-us-west-1.amazonaws.com/user-profile-pics1/${topPic}.jpg`
               uri: 'https://media-cdn.tripadvisor.com/media/photo-s/06/e5/55/c5/champs-elysees.jpg'
-              //uri: 'https://user-profile-pics1.s3.amazonaws.com/Test4%40aol.com8765642049910938.jpg'
-            }} 
+              // uri: 'https://user-profile-pics1.s3.amazonaws.com/Test4%40aol.com8765642049910938.jpg'
+            }}
               style={{ width: 400, height: 200, flex: 1 }}
             />
           </CardSection>
           <Button onPress={this.clickOnGoToStatsPage.bind(this)}>See List Stats</Button>
+          { this.showAddListToSubscribedPageButton() }
           { this.renderList() }
           { this.showAddButton() }
         </Card>
@@ -223,5 +250,5 @@ const mapStateToProps = ({ core, auth }) => {
 };
 
 export default connect(mapStateToProps, {
-  addItem, clickedUncheckedBox, deleteItem, goToListStats
+  addItem, clickedUncheckedBox, deleteItem, goToListStats, addListToSubscribedPage
 })(ItemsList);

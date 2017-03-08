@@ -42,7 +42,7 @@ class ListStats extends Component {
       },
       width: 350,
       height: 350,
-      color: '#2980B9',
+      color: '#bbbbbb',
       r: 50,
       R: 150,
       legendPosition: 'topLeft',

@@ -1,9 +1,9 @@
 // Sends trigger and calls functions
-
 import axios from 'axios';
 import { Actions } from 'react-native-router-flux';
 import * as Keychain from 'react-native-keychain';
-import md5 from "react-native-md5";
+import md5 from 'react-native-md5';
+import config from '../config.js';
 import {
   EMAIL_CHANGED,
   PASSWORD_CHANGED,
@@ -16,11 +16,7 @@ import {
   USER_UPDATED_PASSWORD
 } from './types';
 
-//Amazon EC2 production server
-const authUrl = 'http://54.218.118.52:8080/'; // AWS EC2 production server
-// const authUrl = 'http://198.199.94.223:8080/';
-// const authUrl = 'https://cc1da1ae.ngrok.io/';
-// const authUrl = 'http://localhost:8080/';
+const authUrl = config.mainServer;
 
 // Changes email prop to what the user typed in
 export const emailChanged = (text) => {
@@ -51,14 +47,13 @@ export const loginUser = (credentials, cb, source) => {
   let password = credentials.password;
   if (source !== 'fromKeychain') {
     password = md5.hex_md5(credentials.password).slice(0, 16);
-  } 
+  }
 
   return (dispatch) => {
     dispatch({ type: LOGIN_USER });
-
     axios({
       method: 'post',
-      url: `${authUrl}login`,
+      url: `${authUrl}/login`,
       data: {
         email,
         password
@@ -66,7 +61,7 @@ export const loginUser = (credentials, cb, source) => {
     })
     .then(response => {
       console.log('loginUser success');
-      loginUserSuccess(dispatch, response.data.user_id);
+      loginUserSuccess(dispatch, response.data.user_id, email);
       console.log('response login user', response.data);
       // callbackFromSplashComponent();
       //pass dispatch down to getUniqueUserId
@@ -77,8 +72,8 @@ export const loginUser = (credentials, cb, source) => {
         .then(() => {
           console.log({ status: 'Credentials saved!' });
         })
-        .catch((err) => {
-          console.log('error', err);
+        .catch((error) => {
+          console.log('error', error);
         });
     })
     .catch(response => {
@@ -89,31 +84,27 @@ export const loginUser = (credentials, cb, source) => {
 };
 
 // Sends AJAX request to sign up the user
-//////////////////////////////////////////
-// RESPONSE NEEDS TO SEND CORRECT USER, //
-// NOT 'user' ////////////////////////////
-//////////////////////////////////////////
 export const signupUser = ({ email, password }) => {
+  console.log('inside signupUser', email, password);
   return (dispatch) => {
     dispatch({ type: SIGNUP_USER });
     const passwordHash = md5.hex_md5(password).slice(0, 16);
     console.log('passwordHash', passwordHash);
     axios({
       method: 'post',
-      url: `${authUrl}createUser`,
+      url: `${authUrl}/createUser`,
       data: {
         email,
         password: passwordHash
       }
     })
     .then((response) => {
-      console.log('response signupUser', response);
       const statusCode = response.status;
-
+      console.log('data in signupUser', response);
       if (statusCode === 203) {
         loginUserFail(dispatch, response.data.message);
       } else {
-        loginUserSuccess(dispatch, response.data.user_id);
+        loginUserSuccess(dispatch, response.data.user_id, email);
       }
     })
     .catch(response => {
@@ -126,13 +117,11 @@ export const signupUser = ({ email, password }) => {
 export const logoutUser = () => {
   return (dispatch) => {
     dispatch({ type: LOGOUT_USER });
-
     axios({
       method: 'post',
-      url: `${authUrl}logout`
+      url: `${authUrl}/logout`
     })
-    .then((response) => {
-      console.log('response LOGOUT USER', response);
+    .then(() => {
       Keychain
         .resetGenericPassword()
         .then(() => {
@@ -152,7 +141,7 @@ export const logoutUser = () => {
 // IF USER LOGGED IN WILL RETURN FIREBASE ID//
 //////////////////////////////////////////////
 export const getUniqueUserId = (dispatch, callback) => {
-  const requrl = `${authUrl}checkUserCredentials`;
+  const requrl = `${authUrl}/checkUserCredentials`;
   axios({
     method: 'get',
     url: requrl,
@@ -179,28 +168,27 @@ export const userUpdatedTheirPassword = ({ currentPassword, newPassword1, email 
   const currentPasswordMD5 = md5.hex_md5(currentPassword).slice(0, 16);
   const newPassword1MD5 = md5.hex_md5(newPassword1).slice(0, 16);
   return (dispatch) => {
-    const requrl = `${authUrl}updateUserPassword`;
+    const requrl = `${authUrl}/updateUserPassword`;
     axios({
       method: 'post',
       url: requrl,
-      data: { currentPassword: currentPasswordMD5, 
+      data: { currentPassword: currentPasswordMD5,
               newPassword1: newPassword1MD5
              }
     })
     .then((response) => {
       console.log('getUniqueUserId', response);
-      console.log(`EMAIL: ${email} and newPassword1MD5: ${newPassword1MD5}`); 
+      console.log(`EMAIL: ${email} and newPassword1MD5: ${newPassword1MD5}`);
+      Actions.subscribedList({ type: 'reset' });
       Keychain
         .setGenericPassword(email, newPassword1MD5)
         .then(() => {
-          console.log({ status: 'Credentials saved!' });
+          console.log('Email in userUpdatedTheirPassword', email);
           dispatch({ type: USER_UPDATED_PASSWORD, payload: response.data });
-          Actions.main();
         })
         .catch((err) => {
           console.log('error', err);
         });
-      
     })
     .catch((response) => {
       console.log('response from check user credentials request error', response);
@@ -209,13 +197,15 @@ export const userUpdatedTheirPassword = ({ currentPassword, newPassword1, email 
 };
 
 // Sets the user if the log in was successful and directs them to next page
-const loginUserSuccess = (dispatch, errorMessage) => {
-  dispatch({ type: LOGIN_USER_SUCCESS, payload: errorMessage });
+const loginUserSuccess = (dispatch, user, email) => {
+  console.log('loginUserSuccess', user);
+  dispatch({ type: LOGIN_USER_SUCCESS, payload: { user, email } });
   Actions.main({ type: 'reset' });
 };
 
 // Resets password and shows fail message
 const loginUserFail = (dispatch, user) => {
+  console.log('loginUserFail');
   dispatch({ type: LOGIN_USER_FAIL, payload: user });
   Actions.auth({ type: 'reset' });
 };
