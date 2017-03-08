@@ -60,6 +60,7 @@ class Onboard extends Component {
             style={styles.image} 
             source={{ uri: 'https://images.britcdn.com/wp-content/uploads/2016/05/The-Eiffel-in-Paris-000080582563_Medium.jpg' }} 
           >
+          <View style={styles.overlay}>
               <View>
                 <Text style={styles.title}>PIX
                   <Text style={styles.title2}>PLORER</Text></Text>
@@ -68,6 +69,7 @@ class Onboard extends Component {
                 <Text style={styles.oneButton} onPress={this.buttonSkip}>Skip Intro</Text>
                 <Text style={styles.oneButton} onPress={this.buttonNextOne}>Next Step</Text>
               </View>
+            </View>  
             </Image>
         </View>
       );
@@ -237,6 +239,12 @@ const styles = StyleSheet.create({
   title2: {
     color: '#ffffff',
     backgroundColor: 'transparent',
+  },
+  overlay: {
+    flex: 1,
+    flexDirection: 'column', 
+    justifyContent: 'flex-end',
+    backgroundColor: 'rgba( 0, 0, 0, 0.3)'
   }
 });
 
