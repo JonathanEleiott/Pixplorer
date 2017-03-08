@@ -61,7 +61,7 @@ export const loginUser = (credentials, cb, source) => {
     })
     .then(response => {
       console.log('loginUser success');
-      loginUserSuccess(dispatch, response.data.user_id);
+      loginUserSuccess(dispatch, response.data.user_id, email);
       console.log('response login user', response.data);
       // callbackFromSplashComponent();
       //pass dispatch down to getUniqueUserId
@@ -100,11 +100,11 @@ export const signupUser = ({ email, password }) => {
     })
     .then((response) => {
       const statusCode = response.status;
-      console.log('data in signupUser', response.data);
+      console.log('data in signupUser', response);
       if (statusCode === 203) {
         loginUserFail(dispatch, response.data.message);
       } else {
-        loginUserSuccess(dispatch, response.data.user_id);
+        loginUserSuccess(dispatch, response.data.user_id, email);
       }
     })
     .catch(response => {
@@ -179,12 +179,12 @@ export const userUpdatedTheirPassword = ({ currentPassword, newPassword1, email 
     .then((response) => {
       console.log('getUniqueUserId', response);
       console.log(`EMAIL: ${email} and newPassword1MD5: ${newPassword1MD5}`);
+      Actions.subscribedList({ type: 'reset' });
       Keychain
         .setGenericPassword(email, newPassword1MD5)
         .then(() => {
-          console.log({ status: 'Credentials saved!' });
+          console.log('Email in userUpdatedTheirPassword', email);
           dispatch({ type: USER_UPDATED_PASSWORD, payload: response.data });
-          Actions.main();
         })
         .catch((err) => {
           console.log('error', err);
@@ -197,9 +197,9 @@ export const userUpdatedTheirPassword = ({ currentPassword, newPassword1, email 
 };
 
 // Sets the user if the log in was successful and directs them to next page
-const loginUserSuccess = (dispatch, user) => {
+const loginUserSuccess = (dispatch, user, email) => {
   console.log('loginUserSuccess', user);
-  dispatch({ type: LOGIN_USER_SUCCESS, payload: user });
+  dispatch({ type: LOGIN_USER_SUCCESS, payload: { user, email } });
   Actions.main({ type: 'reset' });
 };
 
