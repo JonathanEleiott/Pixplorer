@@ -155,7 +155,7 @@ export const getUniqueUserId = (dispatch, callback) => {
 export const userUpdatedTheirPassword = ({ currentPassword, newPassword1, email }) => {
   if (newPassword1.length < 6) {
     return (dispatch) => {
-      loginUserFail(dispatch, 'Password must be at least 6 characters long');
+      loginUserFail(dispatch, 'Password must be at least 6 characters long', 'updatePassword');
     };
   }
   const currentPasswordMD5 = md5.hex_md5(currentPassword).slice(0, 16);
@@ -193,7 +193,12 @@ const loginUserSuccess = (dispatch, user, email) => {
 };
 
 // Resets password and shows fail message
-const loginUserFail = (dispatch, user) => {
-  dispatch({ type: LOGIN_USER_FAIL, payload: user });
-  Actions.auth({ type: 'reset' });
+const loginUserFail = (dispatch, user, source) => {
+  if (source === 'updatePassword') {
+    dispatch({ type: LOGIN_USER_FAIL, payload: 'Password must be at least 6 character long' });
+    Actions.ChangePassword();
+  } else {
+    dispatch({ type: LOGIN_USER_FAIL, payload: user });
+    Actions.auth({ type: 'reset' });
+  }
 };
