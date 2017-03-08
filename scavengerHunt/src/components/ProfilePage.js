@@ -25,15 +25,15 @@ class ProfilePage extends Component {
     super(props, context);
     this.state = {
       currentScreen: 'profilePage',
-      profilePicLocation: ''
+      profilePicLocation: 'https://user-profile-pics1.s3.amazonaws.com/profilePicturePlaceholder14754681787256096.jpg'
     };
     console.log('state!!!', this.state);
   }
 
   componentWillMount() {
-    AsyncStorage.getItem('profilePicLocalStoragePath', (err, result) => {
+    AsyncStorage.getItem(this.props.currentUserId, (err, result) => {
       this.setState({
-        profilePicLocation: result || ''
+        profilePicLocation: result || 'https://user-profile-pics1.s3.amazonaws.com/profilePicturePlaceholder14754681787256096.jpg'
       });
       console.log(err, result);
     });
@@ -48,7 +48,7 @@ class ProfilePage extends Component {
         Vibration.vibrate();
         console.log('DATA IMG:', data.path);
 
-        AsyncStorage.setItem('profilePicLocalStoragePath', data.path);
+        AsyncStorage.setItem(this.props.currentUserId, data.path);
 
         this.setState({
           currentScreen: 'profilePage',

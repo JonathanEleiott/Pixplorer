@@ -176,21 +176,12 @@ class ItemsList extends Component {
     const { list } = this.props;
     // list.topPic only used if we add own image
       // topPic used in uri call
-    const topPic = list.topPic || list.items[0].image;
+    
 
     return (
       <ScrollView style={styles.listStyle}>
         <Card>
-          <CardSection>
-            <Image
-              source={{
-                // uri: `https://s3-us-west-1.amazonaws.com/user-profile-pics1/${topPic}.jpg`
-              uri: 'https://media-cdn.tripadvisor.com/media/photo-s/06/e5/55/c5/champs-elysees.jpg'
-              // uri: 'https://user-profile-pics1.s3.amazonaws.com/Test4%40aol.com8765642049910938.jpg'
-            }}
-              style={{ width: 400, height: 200, flex: 1 }}
-            />
-          </CardSection>
+          
           <Button onPress={this.clickOnGoToStatsPage.bind(this)}>See List Stats</Button>
           { this.showAddListToSubscribedPageButton() }
           { this.renderList() }
