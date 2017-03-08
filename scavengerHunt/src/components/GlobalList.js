@@ -87,7 +87,6 @@ class SubscribedList extends Component {
   // Checks to see if the user has admin abilities
   renderBody(list, index) {
     const { listStyle, descriptionStyle, imageStyle, arrowStyle } = styles;
-    console.log('list subscribers', list);
 
     // If List is verified, display check (include in return: {verified})
     let verified = '';
@@ -117,7 +116,7 @@ class SubscribedList extends Component {
         value={list}
         onPress={() => this.clickOnATitle(list)}
         >
-          <Text style={listStyle} value={list.name}>{list.name} 
+          <Text style={listStyle} value={list.name}>{list.name}
             { ' ' }{ verified }{ '\n' }
             <Text style={descriptionStyle}>
               {list.items.length} items - {list.subscribers} subscribers
@@ -151,9 +150,6 @@ class SubscribedList extends Component {
             />
           </CardSection>
           { this.props.allLists.map((list, index) => {
-            /////////////////////////////////////////////
-            // SHOW ALL THE GLOABL LISTS TO THE USER  //
-            ////////////////////////////////////////////
             if (!this.props.searchText) {
               return (this.swipeoutBody(list, index));
             } else if (list.name.includes(this.props.searchText)) {
@@ -186,7 +182,7 @@ const styles = {
   arrowStyle: {
     fontSize: 30,
     color: '#333'
-  }, 
+  },
   checkStyle: {
     fontSize: 20,
     color: '#4285f4',

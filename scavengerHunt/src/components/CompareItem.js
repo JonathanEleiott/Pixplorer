@@ -38,7 +38,6 @@ class CompareItem extends Component {
         const userImageLatitude = position.coords.latitude;
         const userImageLongitude = position.coords.longitude;
         this.setState({ userImageLatitude, userImageLongitude });
-        console.log('success getting current position: ', this.state);
       },
       (error) => {
         console.log('error getting current position', JSON.stringify(error));
@@ -84,8 +83,6 @@ class CompareItem extends Component {
             })
             .then((response) => {
               if (response.data === 'Images are the same!') {
-                // MATCH
-                console.log('we have a match, now save to db');
                 axios({
                     method: 'post',
                     url: `${config.mainServer}/api/items/found`,
@@ -95,7 +92,6 @@ class CompareItem extends Component {
                       user_id: userID
                     }
                   }).then((responseDB) => {
-                    console.log('completed item saved to db');
                     this.setState({
                       currentList: responseDB.data,
                       status: 4,
@@ -104,8 +100,6 @@ class CompareItem extends Component {
                     console.log('Error saving to DB', error);
                   });
               } else {
-                // NO MATCH
-                console.log('no match:', response.data);
                 axios({
                     method: 'post',
                     url: `${config.mainServer}/api/items/found`,

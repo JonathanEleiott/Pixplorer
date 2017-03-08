@@ -15,7 +15,7 @@ class CreateList extends Component {
   // Makes an AJAX call to add list to DB
   addNewList() {
     const { listName, userID } = this.props;
-    console.log('userID', userID);
+    
     this.props.addListToDB({ listName, userID });
   }
 

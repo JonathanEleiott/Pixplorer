@@ -36,14 +36,7 @@ export const passwordChanged = (text) => {
 
 // Sends AJAX request to log in the user
 export const loginUser = (credentials, cb, source) => {
-  //////////////////////////////////////////////////////////
-  // "WHERE THE HECK DOES THAT CHANGE?!" - Dan
-  // This requires email when signing in, but username when confirming user on return
-  //////////////////////////////////////////////////////////
-
   const email = credentials.email || credentials.username;
-  //const password = credentials.password;
-  console.log('credentials.password', credentials.password);
   let password = credentials.password;
   if (source !== 'fromKeychain') {
     password = md5.hex_md5(credentials.password).slice(0, 16);
@@ -60,11 +53,7 @@ export const loginUser = (credentials, cb, source) => {
       }
     })
     .then(response => {
-      console.log('loginUser success');
       loginUserSuccess(dispatch, response.data.user_id, email);
-      console.log('response login user', response.data);
-      // callbackFromSplashComponent();
-      //pass dispatch down to getUniqueUserId
       getUniqueUserId(dispatch);
 
       Keychain
@@ -73,11 +62,11 @@ export const loginUser = (credentials, cb, source) => {
           console.log({ status: 'Credentials saved!' });
         })
         .catch((error) => {
-          console.log('error', error);
+          console.log('Keychain error', error);
         });
     })
     .catch(response => {
-      console.log('response from login request error', response);
+      console.log('loginUser post error', response);
       loginUserFail(dispatch, 'Email or password were not correct');
     });
   };
@@ -85,11 +74,9 @@ export const loginUser = (credentials, cb, source) => {
 
 // Sends AJAX request to sign up the user
 export const signupUser = ({ email, password }) => {
-  console.log('inside signupUser', email, password);
   return (dispatch) => {
     dispatch({ type: SIGNUP_USER });
     const passwordHash = md5.hex_md5(password).slice(0, 16);
-    console.log('passwordHash', passwordHash);
     axios({
       method: 'post',
       url: `${authUrl}/createUser`,
@@ -100,7 +87,6 @@ export const signupUser = ({ email, password }) => {
     })
     .then((response) => {
       const statusCode = response.status;
-      console.log('data in signupUser', response);
       if (statusCode === 203) {
         loginUserFail(dispatch, response.data.message);
       } else {
@@ -108,7 +94,7 @@ export const signupUser = ({ email, password }) => {
       }
     })
     .catch(response => {
-      console.log('response from signup request error', response);
+      console.log('signup request error', response);
       loginUserFail(dispatch, 'User already exists');
     });
   };
@@ -131,7 +117,6 @@ export const logoutUser = () => {
     })
     .catch(response => {
       console.log('response from signup request error', response);
-      //loginUserFail(dispatch, 'user');
     });
   };
 };
@@ -150,7 +135,6 @@ export const getUniqueUserId = (dispatch, callback) => {
     if (callback) {
       callback(response.data.uid);
     }
-    console.log('getUniqueUserId');
     dispatch({ type: CURRENT_USER_FIREBASE_ID, payload: response.data.uid });
   })
   .catch((response) => {
@@ -164,7 +148,6 @@ export const getUniqueUserId = (dispatch, callback) => {
 ///////// UPDATE USER PASSWORD ///////////////
 //////////////////////////////////////////////
 export const userUpdatedTheirPassword = ({ currentPassword, newPassword1, email }) => {
-  console.log('USER UPDATED PASSWORD: ', currentPassword, newPassword1);
   const currentPasswordMD5 = md5.hex_md5(currentPassword).slice(0, 16);
   const newPassword1MD5 = md5.hex_md5(newPassword1).slice(0, 16);
   return (dispatch) => {
@@ -177,35 +160,30 @@ export const userUpdatedTheirPassword = ({ currentPassword, newPassword1, email 
              }
     })
     .then((response) => {
-      console.log('getUniqueUserId', response);
-      console.log(`EMAIL: ${email} and newPassword1MD5: ${newPassword1MD5}`);
       Actions.profilePage({ type: 'reset' });
       Keychain
         .setGenericPassword(email, newPassword1MD5)
         .then(() => {
-          console.log('Email in userUpdatedTheirPassword', email);
           dispatch({ type: USER_UPDATED_PASSWORD, payload: response.data });
         })
         .catch((err) => {
-          console.log('error', err);
+          console.log('userUpdated Keychain error', err);
         });
     })
     .catch((response) => {
-      console.log('response from check user credentials request error', response);
+      console.log('check user credentials request error', response);
     });
   };
 };
 
 // Sets the user if the log in was successful and directs them to next page
 const loginUserSuccess = (dispatch, user, email) => {
-  console.log('loginUserSuccess', user);
   dispatch({ type: LOGIN_USER_SUCCESS, payload: { user, email } });
   Actions.main({ type: 'reset' });
 };
 
 // Resets password and shows fail message
 const loginUserFail = (dispatch, user) => {
-  console.log('loginUserFail');
   dispatch({ type: LOGIN_USER_FAIL, payload: user });
   Actions.auth({ type: 'reset' });
 };

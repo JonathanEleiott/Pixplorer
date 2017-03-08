@@ -3,19 +3,21 @@
 import React, { Component } from 'react';
 import { Text } from 'react-native';
 import { connect } from 'react-redux';
-import { Spinner, Card, CardSection, Input, Button } from './mostCommon'; 
 import { Actions } from 'react-native-router-flux';
+import { Spinner, Card, CardSection, Input, Button } from './mostCommon';
 
-import { emailChanged, passwordChanged, loginUser, signupUser, userUpdatedTheirPassword } from '../actions';
+import {
+  emailChanged, passwordChanged, loginUser, signupUser, userUpdatedTheirPassword
+} from '../actions';
 
 class LoginForm extends Component {
-  
+
   constructor(props) {
     super(props);
     this.state = {
       currentPassword: '',
       newPassword1: '',
-      newPassword2: '', 
+      newPassword2: '',
       error: ''
     };
   }
@@ -37,10 +39,8 @@ class LoginForm extends Component {
       });
     } else {
       const context = this;
-      console.log('PROPS: ', this.props);
-      console.log('EMAIL: ', context.props.email);
-      this.props.userUpdatedTheirPassword({ 
-        currentPassword, newPassword1, email: context.props.email 
+      this.props.userUpdatedTheirPassword({
+        currentPassword, newPassword1, email: context.props.email
       });
       Actions.main({ type: 'reset' });
     }

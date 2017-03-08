@@ -17,9 +17,6 @@ import ProfilePage from './components/ProfilePage';
 import ChangePassword from './components/ChangePassword';
 
 //TODO: MAke sure to put the components back! Right now it goes straight to camera!!!
-/////////////////////////////////////////////////
-// Profile Page needs a username and user info //
-/////////////////////////////////////////////////
 class RouterComponent extends Component {
   constructor(props, context) {
     super(props, context);
@@ -28,7 +25,6 @@ class RouterComponent extends Component {
   checkIfUserIsLoggedIn() {
     const { store } = this.context;
     const userLoggedIn = !!store.getState().auth.currentUserId;
-    console.log('user logged in: ', userLoggedIn);
     return userLoggedIn;
   }
 

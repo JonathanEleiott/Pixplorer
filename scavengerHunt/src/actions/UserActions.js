@@ -14,14 +14,13 @@ export const updateProfile = (userID) => {
       url: `${listUrl}/api/users/stats/${userID}`
     })
     .then(response => {
-      console.log('updateProfile', response);
       dispatch({
         type: UPDATE_PROFILE,
         payload: response.data
       });
     })
     .catch(error => {
-      console.log('error', error);
+      console.log('updateProfile error', error);
     });
   };
 };

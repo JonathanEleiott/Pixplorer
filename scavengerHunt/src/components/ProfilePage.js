@@ -27,7 +27,6 @@ class ProfilePage extends Component {
       currentScreen: 'profilePage',
       profilePicLocation: 'https://user-profile-pics1.s3.amazonaws.com/profilePicturePlaceholder14754681787256096.jpg'
     };
-    console.log('state!!!', this.state);
   }
 
   componentWillMount() {
@@ -35,18 +34,14 @@ class ProfilePage extends Component {
       this.setState({
         profilePicLocation: result || 'https://user-profile-pics1.s3.amazonaws.com/profilePicturePlaceholder14754681787256096.jpg'
       });
-      console.log(err, result);
     });
-    console.log('profile page this.props.userID', this.props.userID);
     this.props.updateProfile(this.props.userID);
   }
 
   takePicture() {
-    console.log('PRESSED');
     this.camera.capture()
       .then((data) => {
         Vibration.vibrate();
-        console.log('DATA IMG:', data.path);
 
         AsyncStorage.setItem(this.props.currentUserId, data.path);
 
@@ -79,7 +74,6 @@ class ProfilePage extends Component {
           .getGenericPassword()
           .then((credentials) => {
             if (credentials) {
-              console.log('Keychain credentials: ', credentials);
               sendImageWithUserEmail(credentials.username);
             } else {
               sendImageWithUserEmail('noemail@aol.com');
@@ -141,7 +135,6 @@ class ProfilePage extends Component {
           <CardSection>
             <Button
               onPress={() => {
-                console.log('pressed update profile pic button!');
                 this.setState({
                   currentScreen: 'frontCamera'
                 });
@@ -164,7 +157,6 @@ class ProfilePage extends Component {
           <CardSection>
            <Button
              onPress={() => {
-               console.log('pressed logout!');
                this.props.logoutUser();
              }}
            >
