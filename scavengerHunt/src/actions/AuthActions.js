@@ -86,11 +86,8 @@ export const loginUser = (credentials, cb, source) => {
 };
 
 // Sends AJAX request to sign up the user
-//////////////////////////////////////////
-// RESPONSE NEEDS TO SEND CORRECT USER, //
-// NOT 'user' ////////////////////////////
-//////////////////////////////////////////
 export const signupUser = ({ email, password }) => {
+  console.log('inside signupUser', email, password);
   return (dispatch) => {
     dispatch({ type: SIGNUP_USER });
     const passwordHash = md5.hex_md5(password).slice(0, 16);
@@ -104,9 +101,8 @@ export const signupUser = ({ email, password }) => {
       }
     })
     .then((response) => {
-      console.log('response signupUser', response);
       const statusCode = response.status;
-
+      console.log('data in signupUser', response.data);
       if (statusCode === 203) {
         loginUserFail(dispatch, response.data.message);
       } else {
@@ -128,8 +124,7 @@ export const logoutUser = () => {
       method: 'post',
       url: `${authUrl}/logout`
     })
-    .then((response) => {
-      console.log('response LOGOUT USER', response);
+    .then(() => {
       Keychain
         .resetGenericPassword()
         .then(() => {
@@ -205,13 +200,15 @@ export const userUpdatedTheirPassword = ({ currentPassword, newPassword1, email 
 };
 
 // Sets the user if the log in was successful and directs them to next page
-const loginUserSuccess = (dispatch, errorMessage) => {
-  dispatch({ type: LOGIN_USER_SUCCESS, payload: errorMessage });
+const loginUserSuccess = (dispatch, user) => {
+  console.log('loginUserSuccess', user);
+  dispatch({ type: LOGIN_USER_SUCCESS, payload: user });
   Actions.main({ type: 'reset' });
 };
 
 // Resets password and shows fail message
 const loginUserFail = (dispatch, user) => {
+  console.log('loginUserFail');
   dispatch({ type: LOGIN_USER_FAIL, payload: user });
   Actions.auth({ type: 'reset' });
 };
