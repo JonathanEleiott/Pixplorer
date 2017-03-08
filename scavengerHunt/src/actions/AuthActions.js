@@ -3,6 +3,7 @@
 import axios from 'axios';
 import { Actions } from 'react-native-router-flux';
 import * as Keychain from 'react-native-keychain';
+import md5 from "react-native-md5";
 import {
   EMAIL_CHANGED,
   PASSWORD_CHANGED,
@@ -38,14 +39,19 @@ export const passwordChanged = (text) => {
 };
 
 // Sends AJAX request to log in the user
-export const loginUser = (credentials) => {
+export const loginUser = (credentials, cb, source) => {
   //////////////////////////////////////////////////////////
   // "WHERE THE HECK DOES THAT CHANGE?!" - Dan
   // This requires email when signing in, but username when confirming user on return
   //////////////////////////////////////////////////////////
 
   const email = credentials.email || credentials.username;
-  const password = credentials.password;
+  //const password = credentials.password;
+  console.log('credentials.password', credentials.password);
+  let password = credentials.password;
+  if (source !== 'fromKeychain') {
+    password = md5.hex_md5(credentials.password).slice(0, 16);
+  } 
 
   return (dispatch) => {
     dispatch({ type: LOGIN_USER });
@@ -90,13 +96,14 @@ export const loginUser = (credentials) => {
 export const signupUser = ({ email, password }) => {
   return (dispatch) => {
     dispatch({ type: SIGNUP_USER });
-
+    const passwordHash = md5.hex_md5(password).slice(0, 16);
+    console.log('passwordHash', passwordHash);
     axios({
       method: 'post',
       url: `${authUrl}createUser`,
       data: {
         email,
-        password
+        password: passwordHash
       }
     })
     .then((response) => {
@@ -167,18 +174,33 @@ export const getUniqueUserId = (dispatch, callback) => {
 //////////////////////////////////////////////
 ///////// UPDATE USER PASSWORD ///////////////
 //////////////////////////////////////////////
-export const userUpdatedTheirPassword = ({ currentPassword, newPassword1 }) => {
+export const userUpdatedTheirPassword = ({ currentPassword, newPassword1, email }) => {
   console.log('USER UPDATED PASSWORD: ', currentPassword, newPassword1);
+  const currentPasswordMD5 = md5.hex_md5(currentPassword).slice(0, 16);
+  const newPassword1MD5 = md5.hex_md5(newPassword1).slice(0, 16);
   return (dispatch) => {
     const requrl = `${authUrl}updateUserPassword`;
     axios({
       method: 'post',
       url: requrl,
-      data: { currentPassword, newPassword1 }
+      data: { currentPassword: currentPasswordMD5, 
+              newPassword1: newPassword1MD5
+             }
     })
     .then((response) => {
-      console.log('getUniqueUserId');
-      dispatch({ type: USER_UPDATED_PASSWORD, payload: response.data });
+      console.log('getUniqueUserId', response);
+      console.log(`EMAIL: ${email} and newPassword1MD5: ${newPassword1MD5}`); 
+      Keychain
+        .setGenericPassword(email, newPassword1MD5)
+        .then(() => {
+          console.log({ status: 'Credentials saved!' });
+          dispatch({ type: USER_UPDATED_PASSWORD, payload: response.data });
+          Actions.main();
+        })
+        .catch((err) => {
+          console.log('error', err);
+        });
+      
     })
     .catch((response) => {
       console.log('response from check user credentials request error', response);

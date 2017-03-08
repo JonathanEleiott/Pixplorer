@@ -19,7 +19,7 @@ class Splash extends Component {
           console.log({ ...credentials, status: 'Credentials loaded!' });
           this.props.loginUser(credentials, () => {
             Actions.main();
-          });
+          }, 'fromKeychain');
         } else {
           console.log({ status: 'No credentials stored.' });
           setTimeout(() => { Actions.onboarding(); }, this.props.timeout);

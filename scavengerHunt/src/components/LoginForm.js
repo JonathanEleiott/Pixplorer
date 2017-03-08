@@ -72,7 +72,7 @@ class LoginForm extends Component {
           <Input
             secureTextEntry
             label="Password"
-            placeholder="password123"
+            placeholder="password1234"
             onChangeText={this.onPasswordChange.bind(this)}
             value={this.props.password}
           />

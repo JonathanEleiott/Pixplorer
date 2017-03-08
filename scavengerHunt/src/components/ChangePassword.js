@@ -36,7 +36,12 @@ class LoginForm extends Component {
         newPassword2: ''
       });
     } else {
-      this.props.userUpdatedTheirPassword({ currentPassword, newPassword1 });
+      const context = this;
+      console.log('PROPS: ', this.props);
+      console.log('EMAIL: ', context.props.email);
+      this.props.userUpdatedTheirPassword({ 
+        currentPassword, newPassword1, email: context.props.email 
+      });
       Actions.main({ type: 'reset' });
     }
   }
