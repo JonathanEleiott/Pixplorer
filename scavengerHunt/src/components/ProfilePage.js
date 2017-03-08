@@ -92,7 +92,6 @@ class ProfilePage extends Component {
   }
 
   renderProfilePage() {
-    console.log('this.props', this.props);
     return (
       <ScrollView>
         <Card>
@@ -108,7 +107,7 @@ class ProfilePage extends Component {
              Email Address:
             </Text>
             <Text style={styles.textStyle}>
-             gandalfTheGrey@gmail.com
+             { this.props.email }
             </Text>
           </CardSection>
 
@@ -136,15 +135,6 @@ class ProfilePage extends Component {
             </Text>
             <Text style={styles.textStyle}>
               { this.props.userStats.completeCount }
-            </Text>
-          </CardSection>
-
-          <CardSection>
-            <Text style={styles.textStyle}>
-              Number of Bunnies Found
-            </Text>
-            <Text style={styles.textStyle}>
-              322
             </Text>
           </CardSection>
 
@@ -265,10 +255,10 @@ const styles = {
 
 const mapStateToProps = ({ core, auth, user }) => {
   const { list, allLists, userLists } = core;
-  const { currentUserId, userID } = auth;
+  const { currentUserId, userID, email } = auth;
   const { userStats } = user;
 
-  return { list, allLists, userLists, currentUserId, userID, userStats };
+  return { list, allLists, userLists, currentUserId, userID, email, userStats };
 };
 
 export default connect(mapStateToProps, {

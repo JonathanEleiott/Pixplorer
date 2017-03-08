@@ -73,7 +73,8 @@ class ItemsList extends Component {
 
   // Makes an AJAX call to change an item from active to inactive
   deleteItem(item) {
-    this.props.deleteItem(item, this.props.list);
+    console.log('item', item, 'list', this.props.list);
+    this.props.deleteItem(item, this.props.list, this.props.userID);
   }
 
   // Checks whether we came from global scope
@@ -172,16 +173,29 @@ class ItemsList extends Component {
     );
   }
 
-  render() {
-    const { list } = this.props;
-    // list.topPic only used if we add own image
-      // topPic used in uri call
-    
 
+  renderPicture() {
+    const { list } = this.props;
+    console.log('list in renderPicture', list);
+    if (list.items && list.items.length > 0 && list.items[0].imageURL) {
+      return (
+        <Image
+          source={{
+            uri: list.items[0].imageURL
+          }}
+          style={{ width: 400, height: 200, flex: 1 }}
+        />
+      );
+    }
+  }
+
+  render() {
     return (
       <ScrollView style={styles.listStyle}>
         <Card>
-          
+          <CardSection>
+            { this.renderPicture() }
+          </CardSection>
           <Button onPress={this.clickOnGoToStatsPage.bind(this)}>See List Stats</Button>
           { this.showAddListToSubscribedPageButton() }
           { this.renderList() }
@@ -218,19 +232,7 @@ const styles = {
     height: 220,
     flex: 1,
     borderRadius: 60
-  },
-  // backdropView: {
-  //     flex: 1,
-  //     flexDirection: 'column',
-  //     justifyContent: 'center',
-  //     backgroundColor: 'rgba(0,0,0,0)',
-  //   },
-  //   headline: {
-  //     fontSize: 60,
-  //     textAlign: 'center',
-  //     backgroundColor: 'rgba(0,0,0,0)',
-  //     color: 'white',
-  //   }
+  }
 };
 
 const mapStateToProps = ({ core, auth }) => {

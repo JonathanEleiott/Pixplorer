@@ -116,6 +116,7 @@ class RouterComponent extends Component {
             component={CompareItem}
             title="Found Item"
             onRight={() => { console.log('clicked the Right Button!'); }}
+            rightTitle={''}
           />
           <Scene
             key="listStats"

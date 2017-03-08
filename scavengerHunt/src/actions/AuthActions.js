@@ -179,7 +179,7 @@ export const userUpdatedTheirPassword = ({ currentPassword, newPassword1, email 
     .then((response) => {
       console.log('getUniqueUserId', response);
       console.log(`EMAIL: ${email} and newPassword1MD5: ${newPassword1MD5}`);
-      Actions.subscribedList({ type: 'reset' });
+      Actions.profilePage({ type: 'reset' });
       Keychain
         .setGenericPassword(email, newPassword1MD5)
         .then(() => {

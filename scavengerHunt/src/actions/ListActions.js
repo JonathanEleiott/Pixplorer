@@ -129,6 +129,7 @@ export const addListToDB = (listName, user) => {
       data: listName
     })
     .then(response => {
+      console.log('response in addListToDB', response);
       goToItemsList(response.data.items, response.data.name, 'subscribedList');
       dispatch({
         type: ADD_LIST_TO_DB,
@@ -173,14 +174,15 @@ export const searchGlobalListChanged = (text) => {
 };
 
 // Deletes an item in the DB
-export const deleteItem = (item, list) => {
+export const deleteItem = (item, list, userID) => {
   loading();
   return (dispatch) => {
     axios({
       method: 'delete',
-      url: `${listUrl}/api/items/${item.id}/${list.id}`
+      url: `${listUrl}/api/items/${item.id}/${list.id}/${userID}`
     })
     .then(response => {
+      console.log('response deleteItem', response);
       goToItemsList(response.data.items, response.data.name, 'subscribedList');
       dispatch({
         type: DELETE_ITEM,
