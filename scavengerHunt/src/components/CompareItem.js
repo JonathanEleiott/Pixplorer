@@ -105,7 +105,7 @@ class CompareItem extends Component {
                   });
               } else {
                 // NO MATCH
-                console.log('no match');
+                console.log('no match:', response.data);
                 axios({
                     method: 'post',
                     url: `${config.mainServer}/api/items/found`,
