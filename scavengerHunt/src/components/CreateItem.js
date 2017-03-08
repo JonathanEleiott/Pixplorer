@@ -103,7 +103,9 @@ class CreateItem extends Component {
               console.log('SUCCESS: Image sent to server:', response.data);
 
               const itemData = this.state.item;
-              itemData.image = response.data;
+              //itemData.image = response.data;
+              itemData.image = response.data.imageMongoId;
+              itemData.imageURL = response.data.s3ImageLocation;
     
               // Step 1
                 // Add item to Database and redirect user to updated list

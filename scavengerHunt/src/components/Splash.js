@@ -22,11 +22,11 @@ class Splash extends Component {
           });
         } else {
           console.log({ status: 'No credentials stored.' });
-          setTimeout(() => { Actions.auth(); }, this.props.timeout);
+          setTimeout(() => { Actions.onboarding(); }, this.props.timeout);
         }
       })
       .catch(() => {
-        setTimeout(() => { Actions.auth(); }, this.props.timeout);
+        setTimeout(() => { Actions.onboarding(); }, this.props.timeout);
       });
   }
 

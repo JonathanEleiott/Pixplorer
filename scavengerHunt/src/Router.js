@@ -4,6 +4,7 @@ import { View } from 'react-native';
 import FontAwesome from 'react-native-fontawesome';
 
 import Splash from './components/Splash';
+import Onboard from './components/Onboard';
 import LoginForm from './components/LoginForm';
 import ItemsList from './components/ItemsList';
 import SubscribedList from './components/SubscribedList';
@@ -50,9 +51,17 @@ class RouterComponent extends Component {
             if (!this.checkIfUserIsLoggedIn) {
               return 'auth';
             }
-            return 'main';
+            return 'onboarding';
           }}
         />
+
+        <Scene key="onboarding">
+          <Scene
+            key="onboard"
+            component={Onboard}
+            title="Welcome"
+          />
+        </Scene>
 
         <Scene key="auth">
           <Scene
