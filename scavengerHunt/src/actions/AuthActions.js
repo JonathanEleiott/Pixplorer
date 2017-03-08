@@ -74,6 +74,11 @@ export const loginUser = (credentials, cb, source) => {
 
 // Sends AJAX request to sign up the user
 export const signupUser = ({ email, password }) => {
+  if (password.length < 6) {
+    return (dispatch) => {
+      loginUserFail(dispatch, 'Password must be at least 6 characters long');
+    };
+  }
   return (dispatch) => {
     dispatch({ type: SIGNUP_USER });
     const passwordHash = md5.hex_md5(password).slice(0, 16);
@@ -148,6 +153,11 @@ export const getUniqueUserId = (dispatch, callback) => {
 ///////// UPDATE USER PASSWORD ///////////////
 //////////////////////////////////////////////
 export const userUpdatedTheirPassword = ({ currentPassword, newPassword1, email }) => {
+  if (newPassword1.length < 6) {
+    return (dispatch) => {
+      loginUserFail(dispatch, 'Password must be at least 6 characters long');
+    };
+  }
   const currentPasswordMD5 = md5.hex_md5(currentPassword).slice(0, 16);
   const newPassword1MD5 = md5.hex_md5(newPassword1).slice(0, 16);
   return (dispatch) => {
@@ -156,19 +166,19 @@ export const userUpdatedTheirPassword = ({ currentPassword, newPassword1, email 
       method: 'post',
       url: requrl,
       data: { currentPassword: currentPasswordMD5,
-              newPassword1: newPassword1MD5
-             }
+        newPassword1: newPassword1MD5
+      }
     })
     .then((response) => {
       Actions.profilePage({ type: 'reset' });
       Keychain
-        .setGenericPassword(email, newPassword1MD5)
-        .then(() => {
-          dispatch({ type: USER_UPDATED_PASSWORD, payload: response.data });
-        })
-        .catch((err) => {
-          console.log('userUpdated Keychain error', err);
-        });
+      .setGenericPassword(email, newPassword1MD5)
+      .then(() => {
+        dispatch({ type: USER_UPDATED_PASSWORD, payload: response.data });
+      })
+      .catch((err) => {
+        console.log('userUpdated Keychain error', err);
+      });
     })
     .catch((response) => {
       console.log('check user credentials request error', response);
