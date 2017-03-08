@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Image } from 'react-native';
 import { connect } from 'react-redux';
 
 import { Actions } from 'react-native-router-flux';
@@ -53,8 +53,44 @@ class Onboard extends Component {
       });
     };
     const buttonOneAction = function () {};
-
     if (this.state.stage === 1) {
+      return (
+        <View style={styles.imageContainer}>
+          <Image 
+            style={styles.image} 
+            source={{ uri: 'https://images.britcdn.com/wp-content/uploads/2016/05/The-Eiffel-in-Paris-000080582563_Medium.jpg' }} 
+          >
+              <View>
+                <Text style={styles.title}>PIX
+                  <Text style={styles.title2}>PLORER</Text></Text>
+              </View>
+              <View style={styles.buttonContainer}>
+                <Text style={styles.oneButton} onPress={this.buttonSkip}>Skip Intro</Text>
+                <Text style={styles.oneButton} onPress={this.buttonNextOne}>Next Step</Text>
+              </View>
+            </Image>
+        </View>
+      );
+    }
+
+    if (this.state.stage === 2) {
+      return (
+        <View style={styles.imageContainer}>
+          <Image 
+            style={styles.image} 
+            source={{ uri: 'https://s-media-cache-ak0.pinimg.com/originals/3c/93/c2/3c93c2c3116ca2d1d789e70269402089.jpg' }} 
+          >
+              
+              <View style={styles.buttonContainer}>
+                <Text style={styles.oneButton} onPress={this.buttonSkip}>Skip Intro</Text>
+                <Text style={styles.oneButton} onPress={this.buttonNextTwo}>Next Step</Text>
+              </View>
+            </Image>
+        </View>
+      );
+    }
+
+    if (this.state.stage === 0) {
       return (
         <View style={styles.splashNoMatch}>
           <Text style={styles.noMatchHeader}>WELCOME!</Text>
@@ -67,7 +103,7 @@ class Onboard extends Component {
           </View>
         </View>
       );
-    } else if (this.state.stage === 2) {
+    } else if (this.state.stage === 33) {
       return (
         <View style={styles.splashNoMatch}>
           <Text style={styles.noMatchHeader}>STEP 2!</Text>
@@ -168,6 +204,39 @@ const styles = StyleSheet.create({
     color: '#4286f4',
     textAlign: 'center',
     marginBottom: 60,
+  },
+  imageContainer: {
+    flex: 1,
+    //alignItems: 'stretch',
+    flexDirection: 'column', 
+    justifyContent: 'flex-end'
+  },
+  image: {
+    flex: 1,
+    flexDirection: 'column', 
+    justifyContent: 'flex-end'
+  },
+  oneButton: {
+    flex: 0,
+    backgroundColor: '#eeeeee',
+    color: '#333333',
+    padding: 10,
+    margin: 40,
+    fontSize: 20,
+    borderWidth: 1,
+    borderColor: '#333333',
+  },
+  title: {
+    fontSize: 60,
+    textAlign: 'center',
+    color: '#48eaea',
+    padding: 10,
+    marginBottom: 200,
+    backgroundColor: 'rgba( 0, 0, 0, 0.2)'
+  },
+  title2: {
+    color: '#ffffff',
+    backgroundColor: 'transparent',
   }
 });
 
