@@ -6,8 +6,8 @@ import { Card, CardSection } from './mostCommon';
 
 class ListStats extends Component {
 
-  render() {
-    const { list, timeStamps } = this.props;
+  renderPieChart() {
+    const { timeStamps } = this.props;
     const counter = [];
     console.log('timeStamps', this.props.timeStamps);
 
@@ -26,13 +26,7 @@ class ListStats extends Component {
         }
       }
     }
-
-    console.log('counter', counter);
-
     const data = counter;
-
-    console.log('data', data);
-
     const options = {
       margin: {
         top: 20,
@@ -59,6 +53,20 @@ class ListStats extends Component {
       }
     };
 
+    if (counter.length > 0) {
+      return (
+        <Pie
+          data={data}
+          options={options}
+          accessorKey="count"
+        />
+      );
+    }
+  }
+
+  render() {
+    const { list } = this.props;
+
    return (
      <Card>
        <CardSection>
@@ -72,11 +80,7 @@ class ListStats extends Component {
            Total Items in List - { list.items.length }
          </Text>
        </CardSection>
-       <Pie
-         data={data}
-         options={options}
-         accessorKey="count"
-       />
+       { this.renderPieChart() }
      </Card>
    );
   }
