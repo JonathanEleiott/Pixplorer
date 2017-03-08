@@ -1,9 +1,8 @@
 // Sends trigger and calls functions
-
 import axios from 'axios';
 import { Actions } from 'react-native-router-flux';
 import * as Keychain from 'react-native-keychain';
-import md5 from "react-native-md5";
+import md5 from 'react-native-md5';
 import config from '../config.js';
 import {
   EMAIL_CHANGED,
@@ -52,7 +51,6 @@ export const loginUser = (credentials, cb, source) => {
 
   return (dispatch) => {
     dispatch({ type: LOGIN_USER });
-
     axios({
       method: 'post',
       url: `${authUrl}/login`,
@@ -74,8 +72,8 @@ export const loginUser = (credentials, cb, source) => {
         .then(() => {
           console.log({ status: 'Credentials saved!' });
         })
-        .catch((err) => {
-          console.log('error', err);
+        .catch((error) => {
+          console.log('error', error);
         });
     })
     .catch(response => {
@@ -119,7 +117,6 @@ export const signupUser = ({ email, password }) => {
 export const logoutUser = () => {
   return (dispatch) => {
     dispatch({ type: LOGOUT_USER });
-
     axios({
       method: 'post',
       url: `${authUrl}/logout`
