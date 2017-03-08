@@ -164,18 +164,6 @@ class CreateItem extends Component {
           />
         </CardSection>
 
-        <CardSection>
-          <Input
-            label="Target Distance"
-            keyboardType="numeric"
-            placeholder="Set the distance (e.g. 1 mile, or 0.7 kilometers)"
-            onChangeText={(distance) => {
-              this.setState({ newItemTargetDistance: distance, displayDistance: distance });
-            }}
-            value={this.state.displayDistance}
-            maxLength={60}
-          />
-        </CardSection>
 
         <CardSection style={{ flexDirection: 'column' }}>
           <Text style={{ textAlign: 'center', fontSize: 17, marginTop: 10 }}> Choose distance units </Text>
@@ -199,6 +187,19 @@ class CreateItem extends Component {
             <Picker.Item label="Miles" value="miles" />
             <Picker.Item label="Feet" value="feet" />
           </Picker>
+        </CardSection>
+
+        <CardSection>
+          <Input
+            label="Target Distance"
+            keyboardType="numeric"
+            placeholder="Set the distance (e.g. 1 mile, or 0.7 kilometers)"
+            onChangeText={(distance) => {
+              this.setState({ newItemTargetDistance: distance, displayDistance: distance });
+            }}
+            value={this.state.displayDistance}
+            maxLength={60}
+          />
         </CardSection>
 
         <CardSection>
