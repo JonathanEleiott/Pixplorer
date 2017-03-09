@@ -163,7 +163,7 @@ class ItemsList extends Component {
   // Allows editing based on whether the current user made the list
   renderBody(item, index) {
     return (
-      <CardSection key={index} style={{ borderBottomWidth: 0, padding: 20, height: 100 }}>
+      <CardSection key={index} style={{ borderBottomWidth: 0, padding: 20 }}>
         { this.isComplete(item.complete, item) }
         { this.clickableBoxes(item) }
       </CardSection>
@@ -203,7 +203,7 @@ class ItemsList extends Component {
         <View style={styles.buttonContainer}>
           { this.showAddButton() }
         </View>
-        
+
       </ScrollView>
     );
   }
