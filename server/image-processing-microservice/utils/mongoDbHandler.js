@@ -52,12 +52,18 @@ module.exports = {
   userData: model,
 
   setImage: (s3ImageLocation, GoogleVisionResultLabels, targetImageLatitude, targetImageLongitude, targetImageAllowedDistance, respond) => {
+
+    let allowedDistance = +targetImageAllowedDistance;
+    if (allowedDistance < 1) {
+      allowedDistance = 1;
+    }
+
     const update = { 
       s3ImageLocation: JSON.stringify(s3ImageLocation), 
       GoogleVisionResultLabels: JSON.stringify(GoogleVisionResultLabels),
       targetImageLatitude: JSON.stringify(targetImageLatitude),
       targetImageLongitude: JSON.stringify(targetImageLongitude), 
-      targetImageAllowedDistance: JSON.stringify(targetImageAllowedDistance) 
+      targetImageAllowedDistance: JSON.stringify(allowedDistance)
     };
 
     const newImage = new model(update);
@@ -90,6 +96,10 @@ module.exports = {
   },
 
   compareImage: (comparisonImageId, googleImageLabelsToCompare, userImageLatitude, userImageLongitude, respond) => {
+    console.log('comparisonImageId: ', comparisonImageId);
+    console.log('googleImageLabelsToCompare: ', googleImageLabelsToCompare);
+    console.log('userImageLatitude: ', userImageLatitude);
+    console.log('userImageLongitude: ', userImageLongitude);
     const query = { _id: comparisonImageId };
     model.findOne(query, {}, (err, imageFromDB) => {
       if (err || !imageFromDB) {
@@ -107,12 +117,16 @@ module.exports = {
           googleImageLabelsToCompare
         );
 
+        let allowedDistance = +imageFromDB.targetImageAllowedDistance;
+        if (allowedDistance < 1) {
+          allowedDistance = 1;
+        }
         ///////////////////////////////////////////
         ///HARDCODED DISTANCE < 1km//////////
         ///MODIFY THIS TO ACCEPT DYNAMIC DISTANCE///
         ///////////////////////////////////////////
 
-        const withinDistance = coordinatesComparison <= (+imageFromDB.targetImageAllowedDistance);
+        const withinDistance = coordinatesComparison <= (allowedDistance);
 
         if (labelComparison && withinDistance) {
           respond(201, 'Images are the same!');
