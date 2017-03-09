@@ -23,10 +23,10 @@ class Splash extends Component {
         } else {
           setTimeout(() => { Actions.onboarding(); }, this.props.timeout);
             this.props.timeout = this.props.timeout || 2000;
-            setTimeout(() => { 
-              //this.props.logoutUser(); 
-              Actions.onboarding(); 
-            }, 
+            setTimeout(() => {
+              //this.props.logoutUser();
+              Actions.onboarding();
+            },
             this.props.timeout * 2);
         }
       })
@@ -34,10 +34,10 @@ class Splash extends Component {
         setTimeout(() => { Actions.onboarding(); }, this.props.timeout);
 
         this.props.timeout = this.props.timeout || 2000;
-        setTimeout(() => { 
-          //this.props.logoutUser(); 
-          Actions.onboarding(); 
-        }, 
+        setTimeout(() => {
+          //this.props.logoutUser();
+          Actions.onboarding();
+        },
         this.props.timeout * 2);
       });
 
@@ -47,16 +47,16 @@ class Splash extends Component {
   render() {
     return (
       <View style={styles.imageContainer}>
-        <Image 
-          style={styles.image} 
-          source={SplashImg} 
+        <Image
+          style={styles.image}
+          source={SplashImg}
         >
         <View style={styles.overlay}>
             <View>
               <Text style={styles.title}>PIX
                 <Text style={styles.title2}>PLORER</Text></Text>
             </View>
-          </View>  
+          </View>
           </Image>
       </View>
     );
@@ -83,14 +83,14 @@ const styles = StyleSheet.create({
   imageContainer: {
     flex: 1,
     //alignItems: 'stretch',
-    flexDirection: 'column', 
+    flexDirection: 'column',
     justifyContent: 'flex-end'
   },
   image: {
     flex: 1,
-    flexDirection: 'column', 
+    flexDirection: 'column',
     justifyContent: 'flex-end',
-    width: undefined, 
+    width: undefined,
     height: undefined
   },
   oneButton: {
@@ -118,7 +118,7 @@ const styles = StyleSheet.create({
   },
   overlay: {
     flex: 1,
-    flexDirection: 'column', 
+    flexDirection: 'column',
     justifyContent: 'flex-end',
     backgroundColor: 'rgba( 0, 0, 0, 0.3)'
   },
