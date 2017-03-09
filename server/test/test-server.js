@@ -434,7 +434,7 @@ describe('IMAGE UPLOAD', () => {
         .then((response) => {
           const item = {
             listId: 3, 
-            name: 'Powel St Cable Car2',
+            name: 'Powel St Cable Car3',
             desc: 'The San Francisco cable car system is the world\'s last manually operated cable car system.',
             image: response.data.imageMongoId,
             imageURL: JSON.parse(response.data.s3ImageLocation)
