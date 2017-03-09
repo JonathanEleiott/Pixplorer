@@ -142,7 +142,7 @@ class CreateItem extends Component {
             placeholder="Golden Gate Bridge"
             onChangeText={(text) => this.setState({ newItemName: text })}
             value={this.state.newItemName}
-            maxLength={28}
+            maxLength={25}
           />
         </CardSection>
 
@@ -152,7 +152,7 @@ class CreateItem extends Component {
             placeholder="Grab a shot of this iconic landmark!"
             onChangeText={(text) => this.setState({ newItemDesc: text })}
             value={this.state.newItemDesc}
-            maxLength={60}
+            maxLength={50}
           />
         </CardSection>
 
