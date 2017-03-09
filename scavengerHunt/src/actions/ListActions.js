@@ -23,7 +23,7 @@ import {
   MANAGE_ITEM, // Added by Bill - Step 5
   SUCCESS,
   LOADING,
-  ITEM_TIME_STAMPS
+  LIST_STATS
 } from './types';
 
 import config from '../config.js';
@@ -267,7 +267,7 @@ export const goToListStats = (listID) => {
     })
     .then((response) => {
       dispatch({
-        type: ITEM_TIME_STAMPS,
+        type: LIST_STATS,
         payload: response.data[0].completed
       });
       Actions.listStats();

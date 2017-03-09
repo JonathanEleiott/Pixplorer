@@ -7,18 +7,18 @@ import { Card, CardSection } from './mostCommon';
 class ListStats extends Component {
 
   renderPieChart() {
-    const { timeStamps } = this.props;
+    const { listStats } = this.props;
     const counter = [];
 
-    for (let i = 0; i < timeStamps.length; i++) {
+    for (let i = 0; i < listStats.length; i++) {
       for (let j = 0; j <= counter.length; j++) {
-        if (timeStamps[i] && j === counter.length) {
+        if (listStats[i] && j === counter.length) {
           counter[j] = {};
-          counter[j].name = timeStamps[i].item.name;
+          counter[j].name = listStats[i].item.name;
           counter[j].count = 1;
           j = -1;
           i++;
-        } else if (timeStamps[i] && counter[j].name === timeStamps[i].item.name) {
+        } else if (listStats[i] && counter[j].name === listStats[i].item.name) {
           counter[j].count += 1;
           j = -1;
           i++;
@@ -66,7 +66,7 @@ class ListStats extends Component {
   render() {
     const { list } = this.props;
 
-   return (
+    return (
      <Card>
        <CardSection>
          <Text>
@@ -86,10 +86,10 @@ class ListStats extends Component {
 }
 
 const mapStateToProps = ({ core, auth }) => {
-  const { list, timeStamps } = core;
+  const { list, listStats } = core;
   const { userID } = auth;
 
-  return { list, userID, timeStamps };
+  return { list, userID, listStats };
 };
 
 export default connect(mapStateToProps, {})(ListStats);
