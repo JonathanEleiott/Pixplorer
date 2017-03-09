@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text } from 'react-native';
+import { Text, View } from 'react-native';
 import { connect } from 'react-redux';
 import { Pie } from 'react-native-pathjs-charts';
 import { Card, CardSection } from './mostCommon';
@@ -49,7 +49,7 @@ class ListStats extends Component {
         fontSize: 8,
         fontWeight: true,
         color: '#ECF0F1'
-      }
+      }, 
     };
 
     if (counter.length > 0) {
@@ -68,22 +68,45 @@ class ListStats extends Component {
 
     return (
      <Card>
-       <CardSection>
-         <Text>
-           Number of Subscribers - { list.subscribers }
-         </Text>
-       </CardSection>
+      <View style={styles.buttonContainer}>
+    
+          <Text style={styles.label}>
+            Subscribers{'\n'}<Text style={styles.stat}>{ list.subscribers }</Text>
+          </Text>
+    
+          <Text style={styles.label}>
+            Items in List{'\n'}<Text style={styles.stat}>{ list.items.length }</Text>
+          </Text>
+   
+      </View>
 
-       <CardSection>
-         <Text>
-           Total Items in List - { list.items.length }
-         </Text>
-       </CardSection>
+       
        { this.renderPieChart() }
      </Card>
    );
   }
 }
+
+const styles = {
+   buttonContainer: {
+      flexDirection: 'row',
+      justifyContent: 'space-around',
+      alignSelf: 'center',
+      marginTop: 10
+    },
+    label: {
+      fontSize: 16,
+      color: '#666666',
+      alignSelf: 'center',
+      padding: 10,
+      flex: 1,
+      textAlign: 'center',
+    },
+    stat: {
+      fontSize: 40,
+      color: '#333333',
+    }
+};
 
 const mapStateToProps = ({ core, auth }) => {
   const { list, listStats } = core;

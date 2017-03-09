@@ -86,13 +86,16 @@ class SubscribedList extends Component {
       <ScrollView>
         <Card>
           { this.renderBody() }
+        </Card>
+        <View style={styles.buttonContainer}>
           <Button onPress={this.createAList.bind(this)}>
             Create A New List
           </Button>
           <Button onPress={() => Actions.globalList()}>
             Go To Global List
           </Button>
-        </Card>
+        </View>
+        
       </ScrollView>
     );
   }
@@ -102,12 +105,19 @@ const styles = {
   listStyle: {
     paddingLeft: 10,
     fontSize: 20,
-    width: 250
+    width: 300
   },
   arrowStyle: {
     fontSize: 30,
     color: '#333'
-  }
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignSelf: 'center',
+    marginTop: 20,
+    marginBottom: 20
+  },
 };
 
 const mapStateToProps = ({ core, auth }) => {

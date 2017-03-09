@@ -96,74 +96,65 @@ class ProfilePage extends Component {
             />
           </CardSection>
 
-          <CardSection>
+        </Card>
+
+        <View style={styles.buttonContainer}>
+        
             <Text style={styles.textStyle}>
              Email Address:
             </Text>
             <Text style={styles.textStyle}>
              { this.props.email }
             </Text>
-          </CardSection>
 
-          <CardSection>
-            <Text style={styles.textStyle}>
-              Number of Created Lists
-            </Text>
-            <Text style={styles.textStyle}>
-              { this.props.userStats.listCount }
-            </Text>
-          </CardSection>
+        </View>
 
-          <CardSection>
-            <Text style={styles.textStyle}>
-              Number of Subscribed Lists
+        <View style={styles.buttonContainer}>
+        
+            <Text style={styles.label}>
+              Lists Created{'\n'}
+              <Text style={styles.stat}>{ this.props.userStats.listCount }</Text>
             </Text>
-            <Text style={styles.textStyle}>
-              { this.props.userStats.subscriptionCount }
+        
+            <Text style={styles.label}>
+              Subscribed{'\n'}
+              <Text style={styles.stat}>{ this.props.userStats.subscriptionCount }</Text>
             </Text>
-          </CardSection>
 
-          <CardSection>
-            <Text style={styles.textStyle}>
-              Number of Items checked off
+            <Text style={styles.label}>
+              Items Found{'\n'}
+              <Text style={styles.stat}>{ this.props.userStats.completeCount }</Text>
             </Text>
-            <Text style={styles.textStyle}>
-              { this.props.userStats.completeCount }
-            </Text>
-          </CardSection>
+        
+        </View>
 
-          <CardSection>
-            <Button
-              onPress={() => {
-                this.setState({
-                  currentScreen: 'frontCamera'
-                });
-              }}
-            >
-               Update Profile Photo
-            </Button>
-          </CardSection>
-
-          <CardSection>
-            <Button
+        <View style={styles.buttonContainer}>
+          <Button
+            onPress={() => {
+              this.setState({
+                currentScreen: 'frontCamera'
+              });
+            }}
+          >
+             Update Profile Photo
+          </Button>
+          <Button
               onPress={() => {
                 Actions.ChangePassword();
               }}
             >
               Change Password
             </Button>
-          </CardSection>
-
-          <CardSection>
-           <Button
+        </View>
+        <View style={styles.buttonContainer}>
+          <Button
              onPress={() => {
                this.props.logoutUser();
              }}
            >
               Log out
             </Button>
-          </CardSection>
-        </Card>
+        </View>
       </ScrollView>
     );
   }
@@ -181,7 +172,7 @@ class ProfilePage extends Component {
           captureTarget={Camera.constants.CaptureTarget.disk}
           defaultTouchToFocus
         >
-          <Text style={styles.header}>List Item Found...</Text>
+          <Text style={styles.header}>New Profile Pic</Text>
           <Text style={styles.capture} onPress={this.takePicture.bind(this)}>SNAP THE PIC!!</Text>
         </Camera>
       </View>
@@ -203,14 +194,15 @@ ProfilePage.contextTypes = {
 
 const styles = {
   textStyle: {
-    paddingRight: 20,
-    paddingLeft: 10
+    fontSize: 18,
+    marginTop: 10,
+    padding: 5
   },
   profilePhotoStyle: {
     width: 50,
     height: 220,
     flex: 1,
-    borderRadius: 60
+    //borderRadius: 60
   },
   container: {
     flex: 1,
@@ -228,7 +220,7 @@ const styles = {
   capture: {
     flex: 0,
     backgroundColor: '#fff',
-    borderRadius: 5,
+    //borderRadius: 5,
     color: '#000',
     padding: 10,
     margin: 40,
@@ -242,7 +234,28 @@ const styles = {
     padding: 10,
     margin: 20,
     marginBottom: 400
-  }
+  },
+  listStyle: {
+    padding: 10,
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignSelf: 'center',
+    marginTop: 10
+  },
+  label: {
+      fontSize: 16,
+      color: '#666666',
+      alignSelf: 'center',
+      padding: 10,
+      flex: 1,
+      textAlign: 'center',
+    },
+    stat: {
+      fontSize: 40,
+      color: '#333333',
+    }
 };
 
 const mapStateToProps = ({ core, auth, user }) => {

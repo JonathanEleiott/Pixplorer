@@ -144,7 +144,7 @@ class SubscribedList extends Component {
           <CardSection>
             <Input
               label="Search List"
-              placeholder="My Hunt"
+              placeholder="Where to?"
               onChangeText={this.onSearchGlobalListChange.bind(this)}
               value={this.props.searchText}
             />
@@ -156,10 +156,13 @@ class SubscribedList extends Component {
               return (this.swipeoutBody(list, index));
             }
           })}
+          
+        </Card>
+        <View style={styles.buttonContainer}>
           <Button onPress={() => Actions.subscribedList()}>
             Go To Subscribed List
           </Button>
-        </Card>
+        </View>
       </ScrollView>
     );
   }
@@ -188,7 +191,14 @@ const styles = {
     color: '#4285f4',
     paddingLeft: 10,
     marginLeft: 10
-  }
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignSelf: 'center',
+    marginTop: 20,
+    marginBottom: 20
+  },
 };
 
 const mapStateToProps = ({ core, auth }) => {
