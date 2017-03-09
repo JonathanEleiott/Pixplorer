@@ -1,7 +1,7 @@
 // Creates a form for authentication
 
 import React, { Component } from 'react';
-import { Text } from 'react-native';
+import { Text, View } from 'react-native';
 import { connect } from 'react-redux';
 import { Spinner, Card, CardSection, Input, Button } from './mostCommon';
 import { emailChanged, passwordChanged, loginUser, signupUser } from '../actions';
@@ -56,40 +56,51 @@ class LoginForm extends Component {
     );
   }
 
-  render() {
-    return (
-      <Card>
-        <CardSection>
-          <Input
-            label="Email"
-            placeholder="example@gmail.com"
-            onChangeText={this.onEmailChange.bind(this)}
-            value={this.props.email}
-          />
-        </CardSection>
-
-        <CardSection>
-          <Input
-            secureTextEntry
-            label="Password"
-            placeholder="password1234"
-            onChangeText={this.onPasswordChange.bind(this)}
-            value={this.props.password}
-          />
-        </CardSection>
-
+  renderError() {
+    if (this.props.error !== '') {
+      return (
         <Text style={styles.errorTextStyle}>
           {this.props.error}
         </Text>
+      );
+    }
+  }
 
-        <CardSection>
+  render() {
+    return (
+      <View>
+        <Card>
+          <CardSection>
+            <Input
+              label="Email"
+              placeholder="example@gmail.com"
+              onChangeText={this.onEmailChange.bind(this)}
+              value={this.props.email}
+            />
+          </CardSection>
+
+          <CardSection>
+            <Input
+              secureTextEntry
+              label="Password"
+              placeholder="password1234"
+              onChangeText={this.onPasswordChange.bind(this)}
+              value={this.props.password}
+            />
+          </CardSection>
+
+          
+
+        </Card>
+
+        {this.renderError()}
+
+        <View style={styles.buttonContainer}>
           {this.renderLoginButton()}
-        </CardSection>
-
-        <CardSection>
           {this.renderSignupButton()}
-        </CardSection>
-      </Card>
+        </View>
+      </View>
+
     );
   }
 }
@@ -98,8 +109,17 @@ const styles = {
   errorTextStyle: {
     fontSize: 20,
     alignSelf: 'center',
-    color: 'red'
-  }
+    color: 'red',
+    paddingTop: 5,
+    marginTop: 5,
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignSelf: 'center',
+    marginTop: 20,
+    marginBottom: 20
+  },
 };
 
 const mapStateToProps = ({ auth }) => {

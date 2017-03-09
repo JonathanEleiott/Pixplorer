@@ -192,11 +192,18 @@ class ItemsList extends Component {
           <CardSection>
             { this.renderPicture() }
           </CardSection>
+        </Card>
+        <View style={styles.buttonContainer}>
           <Button onPress={this.clickOnGoToStatsPage.bind(this)}>See List Stats</Button>
           { this.showAddListToSubscribedPageButton() }
+        </View>
+        <Card>
           { this.renderList() }
-          { this.showAddButton() }
         </Card>
+        <View style={styles.buttonContainer}>
+          { this.showAddButton() }
+        </View>
+        
       </ScrollView>
     );
   }
@@ -228,7 +235,13 @@ const styles = {
     height: 220,
     flex: 1,
     borderRadius: 60
-  }
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignSelf: 'center',
+    marginTop: 10
+  },
 };
 
 const mapStateToProps = ({ core, auth }) => {
