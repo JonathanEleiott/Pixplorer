@@ -1,13 +1,11 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet, Image } from 'react-native';
-import { connect } from 'react-redux';
 
 import { Actions } from 'react-native-router-flux';
 import FontAwesome from 'react-native-fontawesome';
-import * as Keychain from 'react-native-keychain';
-//use splash to check if user's credentials exist in KeyChain for iOS
-//import { emailChanged, passwordChanged, loginUser, signupUser } from '../actions';
-
+import OB1 from '../images/onboard-1.jpg';
+import OB2 from '../images/onboard-2.jpg';
+import OB3 from '../images/onboard-3.jpg';
 
 class Onboard extends Component {
 
@@ -40,34 +38,27 @@ class Onboard extends Component {
   }
 
   buttonNextThree() {
-    // this.setState({
-    //   stage: 2
-    // });
     Actions.auth();
   }
 
   render() {
-    const buttonTwoAction = function () {
-      this.setState({
-        stage: 2
-      });
-    };
-    const buttonOneAction = function () {};
     if (this.state.stage === 1) {
       return (
         <View style={styles.imageContainer}>
           <Image 
             style={styles.image} 
-            source={{ uri: 'https://images.britcdn.com/wp-content/uploads/2016/05/The-Eiffel-in-Paris-000080582563_Medium.jpg' }} 
+            source={OB1} 
           >
+          <View style={styles.overlay}>
               <View>
                 <Text style={styles.title}>PIX
                   <Text style={styles.title2}>PLORER</Text></Text>
               </View>
               <View style={styles.buttonContainer}>
-                <Text style={styles.oneButton} onPress={this.buttonSkip}>Skip Intro</Text>
-                <Text style={styles.oneButton} onPress={this.buttonNextOne}>Next Step</Text>
+                <Text style={styles.oneButton} onPress={this.buttonSkip}>Skip to Login</Text>
+                <Text style={styles.oneButton} onPress={this.buttonNextOne}>Introduction</Text>
               </View>
+            </View>  
             </Image>
         </View>
       );
@@ -78,54 +69,45 @@ class Onboard extends Component {
         <View style={styles.imageContainer}>
           <Image 
             style={styles.image} 
-            source={{ uri: 'https://s-media-cache-ak0.pinimg.com/originals/3c/93/c2/3c93c2c3116ca2d1d789e70269402089.jpg' }} 
+            source={OB2} 
           >
-              
-              <View style={styles.buttonContainer}>
-                <Text style={styles.oneButton} onPress={this.buttonSkip}>Skip Intro</Text>
-                <Text style={styles.oneButton} onPress={this.buttonNextTwo}>Next Step</Text>
+          <View style={styles.overlay}>
+              <View style={styles.box}>
+                <Text style={styles.step}>
+                  <Text style={styles.title3}>DISCOVER{'\n'}</Text>
+                  This app is created for exploring the world so you will find 
+                  lists that contain unique items like the Golden Gate Bridge or the Sears Tower. 
+                </Text>
               </View>
+              <View style={styles.buttonContainer}>
+                <Text style={styles.oneButton} onPress={this.buttonSkip}>Skip</Text>
+                <Text style={styles.oneButton} onPress={this.buttonNextTwo}>Next</Text>
+              </View>
+            </View>  
             </Image>
         </View>
       );
     }
 
-    if (this.state.stage === 0) {
+    if (this.state.stage === 3) {
       return (
-        <View style={styles.splashNoMatch}>
-          <Text style={styles.noMatchHeader}>WELCOME!</Text>
-          <View>
-            <FontAwesome style={styles.noMatchIconStyle}>camera</FontAwesome>
-          </View>
-          <View style={styles.buttonContainer}>
-            <Text style={styles.noMatchButton} onPress={this.buttonSkip}>Skip Intro</Text>
-            <Text style={styles.noMatchButton} onPress={this.buttonNextOne}>Next Step</Text>
-          </View>
-        </View>
-      );
-    } else if (this.state.stage === 33) {
-      return (
-        <View style={styles.splashNoMatch}>
-          <Text style={styles.noMatchHeader}>STEP 2!</Text>
-          <View>
-            <FontAwesome style={styles.noMatchIconStyle}>info</FontAwesome>
-          </View>
-          <View style={styles.buttonContainer}>
-            <Text style={styles.noMatchButton} onPress={this.buttonSkip}>Skip Intro</Text>
-            <Text style={styles.noMatchButton} onPress={this.buttonNextTwo}>Next Step</Text>
-          </View>
-        </View>
-      );
-    } else if (this.state.stage === 3) {
-      return (
-        <View style={styles.splashNoMatch}>
-          <Text style={styles.noMatchHeader}>STEP 3!</Text>
-          <View>
-            <FontAwesome style={styles.noMatchIconStyle}>warning</FontAwesome>
-          </View>
-          <View style={styles.buttonContainer}>
-            <Text style={styles.noMatchButton} onPress={this.buttonNextThree}>Finished</Text>
-          </View>
+        <View style={styles.imageContainer}>
+          <Image 
+            style={styles.image} 
+            source={OB3} 
+          >
+          <View style={styles.overlay}>
+              <View style={styles.box}>
+                <Text style={styles.step}>
+                  <Text style={styles.title3}>CREATE{'\n'}</Text>
+                  Build your own lists of items for others to enjoy exploring in your footsteps.
+                </Text>
+              </View>
+              <View style={styles.buttonContainer}>
+                <Text style={styles.oneButton} onPress={this.buttonNextThree}>Finished</Text>
+              </View>
+            </View>  
+            </Image>
         </View>
       );
     }
@@ -133,77 +115,10 @@ class Onboard extends Component {
 }
 
 const styles = StyleSheet.create({
-  matchHeader: {
-    flex: 0,
-    color: '#49cc52',
-    backgroundColor: 'transparent',
-    fontSize: 36,
-    padding: 10,
-    margin: 20,
-    marginBottom: 160
-  },
-  noMatchHeader: {
-    flex: 0,
-    color: '#4286f4',
-    backgroundColor: 'transparent',
-    fontSize: 36,
-    padding: 10,
-    margin: 20,
-    marginBottom: 160
-  },
-  noMatch: {
-    flex: 1,
-    justifyContent: 'center',
-    alignSelf: 'stretch',
-    alignItems: 'center',
-    backgroundColor: '#4286f4'
-  },
-  splashMatch: {
-    flex: 1,
-    justifyContent: 'center',
-    alignSelf: 'stretch',
-    alignItems: 'center',
-    backgroundColor: 'white'
-  },
-  splashNoMatch: {
-    flex: 1,
-    justifyContent: 'center',
-    alignSelf: 'stretch',
-    alignItems: 'center',
-    backgroundColor: '#666'
-  },
   buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignSelf: 'center'
-  },
-  matchButton: {
-    flex: 0,
-    backgroundColor: '#49cc52',
-    color: '#fff',
-    padding: 10,
-    margin: 40,
-    fontSize: 20,
-  },
-  noMatchButton: {
-    flex: 0,
-    backgroundColor: '#4286f4',
-    color: '#fff',
-    padding: 10,
-    margin: 40,
-    fontSize: 20,
-  },
-  matchIconStyle: {
-    fontSize: 160,
-    color: '#49cc52',
-    textAlign: 'center',
-    marginBottom: 60,
-  },
-  noMatchIconStyle: {
-    fontSize: 200,
-    color: '#4286f4',
-    textAlign: 'center',
-    marginBottom: 60,
   },
   imageContainer: {
     flex: 1,
@@ -214,7 +129,9 @@ const styles = StyleSheet.create({
   image: {
     flex: 1,
     flexDirection: 'column', 
-    justifyContent: 'flex-end'
+    justifyContent: 'flex-end',
+    width: undefined, 
+    height: undefined
   },
   oneButton: {
     flex: 0,
@@ -237,6 +154,36 @@ const styles = StyleSheet.create({
   title2: {
     color: '#ffffff',
     backgroundColor: 'transparent',
+    fontSize: 50
+  },
+  overlay: {
+    flex: 1,
+    flexDirection: 'column', 
+    justifyContent: 'flex-end',
+    backgroundColor: 'rgba( 0, 0, 0, 0.3)'
+  },
+  step: {
+    fontSize: 14,
+    textAlign: 'left',
+    color: 'white',
+    padding: 10,
+    //marginBottom: 200,
+    marginLeft: 30,
+    marginRight: 30,
+    backgroundColor: 'rgba( 0, 0, 0, 0.2)'
+  },
+  title3: {
+    color: '#ffffff',
+    fontSize: 30,
+    fontWeight: 'bold',
+    backgroundColor: 'transparent',
+    flex: 1
+  },
+  box: {
+    flex: 1,
+    flexDirection: 'column', 
+    justifyContent: 'flex-start',
+    marginTop: 30
   }
 });
 
