@@ -99,7 +99,7 @@ class ProfilePage extends Component {
         </Card>
 
         <View style={styles.buttonContainer}>
-        
+
             <Text style={styles.textStyle}>
              Email Address:
             </Text>
@@ -110,12 +110,12 @@ class ProfilePage extends Component {
         </View>
 
         <View style={styles.buttonContainer}>
-        
+
             <Text style={styles.label}>
               Lists Created{'\n'}
               <Text style={styles.stat}>{ this.props.userStats.listCount }</Text>
             </Text>
-        
+
             <Text style={styles.label}>
               Subscribed{'\n'}
               <Text style={styles.stat}>{ this.props.userStats.subscriptionCount }</Text>
@@ -125,7 +125,7 @@ class ProfilePage extends Component {
               Items Found{'\n'}
               <Text style={styles.stat}>{ this.props.userStats.completeCount }</Text>
             </Text>
-        
+
         </View>
 
         <View style={styles.buttonContainer}>
@@ -142,7 +142,7 @@ class ProfilePage extends Component {
               onPress={() => {
                 Actions.ChangePassword();
               }}
-            >
+          >
               Change Password
             </Button>
         </View>
@@ -151,9 +151,9 @@ class ProfilePage extends Component {
              onPress={() => {
                this.props.logoutUser();
              }}
-           >
-              Log out
-            </Button>
+          >
+            Log out
+          </Button>
         </View>
       </ScrollView>
     );
