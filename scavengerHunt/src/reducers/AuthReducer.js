@@ -7,7 +7,8 @@ import {
   SIGNUP_USER,
   LOGIN_USER_SUCCESS,
   LOGIN_USER_FAIL,
-  CURRENT_USER_FIREBASE_ID
+  CURRENT_USER_FIREBASE_ID,
+  LOGOUT_USER
 } from '../actions/types';
 
 const INITIAL_STATE = {
@@ -45,6 +46,8 @@ export default (state = INITIAL_STATE, action) => {
     //get current user unique id from Firebase
     case CURRENT_USER_FIREBASE_ID:
       return { ...state, currentUserId: action.payload };
+    case LOGOUT_USER:
+      return { ...state, loading: false };
     default:
       return state;
   }

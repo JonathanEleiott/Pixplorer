@@ -6,7 +6,7 @@ import { Actions } from 'react-native-router-flux';
 import FontAwesome from 'react-native-fontawesome';
 import * as Keychain from 'react-native-keychain';
 //use splash to check if user's credentials exist in KeyChain for iOS
-import { emailChanged, passwordChanged, loginUser, signupUser } from '../actions';
+import { emailChanged, passwordChanged, loginUser, signupUser, logoutUser } from '../actions';
 
 
 class Splash extends Component {
@@ -21,11 +21,27 @@ class Splash extends Component {
           }, 'fromKeychain');
         } else {
           setTimeout(() => { Actions.onboarding(); }, this.props.timeout);
+            this.props.timeout = this.props.timeout || 1000;
+            setTimeout(() => { 
+              this.props.logoutUser(); 
+              Actions.auth(); 
+            }, 
+            this.props.timeout * 2);
         }
       })
       .catch(() => {
         setTimeout(() => { Actions.onboarding(); }, this.props.timeout);
+
+        this.props.timeout = this.props.timeout || 1000;
+        setTimeout(() => { 
+          this.props.logoutUser(); 
+          Actions.auth(); 
+        }, 
+        this.props.timeout * 2);
       });
+
+      //if everything fails, take them to auth
+      
   }
 
   render() {
@@ -59,5 +75,5 @@ const mapStateToProps = ({ auth }) => {
 };
 
 export default connect(mapStateToProps, {
-  emailChanged, passwordChanged, loginUser, signupUser
+  emailChanged, passwordChanged, loginUser, signupUser, logoutUser
 })(Splash);
