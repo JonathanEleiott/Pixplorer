@@ -32,7 +32,6 @@ class Splash extends Component {
       })
       .catch(() => {
         setTimeout(() => { Actions.onboarding(); }, this.props.timeout);
-
         this.props.timeout = this.props.timeout || 2000;
         setTimeout(() => { 
           //this.props.logoutUser(); 
@@ -41,7 +40,6 @@ class Splash extends Component {
         this.props.timeout * 2);
       });
 
-      //if everything fails, take them to auth
   }
 
   render() {

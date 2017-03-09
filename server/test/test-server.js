@@ -427,14 +427,14 @@ describe('IMAGE UPLOAD', () => {
           data: {
             imageBuffer: imageData,
             targetImageLatitude: 37.784831,
-            targetImageLongitude: 122.407686,
+            targetImageLongitude: -122.407686,
             targetImageAllowedDistance: 0.4 //km
           }
         })
         .then((response) => {
           const item = {
             listId: 3, 
-            name: 'Powel St Cable Car3',
+            name: 'Powel St Cable Car1057',
             desc: 'The San Francisco cable car system is the world\'s last manually operated cable car system.',
             image: response.data.imageMongoId,
             imageURL: JSON.parse(response.data.s3ImageLocation)
