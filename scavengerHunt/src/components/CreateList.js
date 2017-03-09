@@ -25,7 +25,7 @@ class CreateList extends Component {
         <CardSection>
           <Input
             label="Name"
-            placeholder="My Hunt"
+            placeholder="New York City"
             onChangeText={this.onListNameChange.bind(this)}
             value={this.props.huntName}
             maxLength={28}

@@ -106,10 +106,10 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 60,
     textAlign: 'center',
-    color: '#48eaea',
+    color: '#41d13a',
     padding: 10,
     marginBottom: 200,
-    backgroundColor: 'rgba( 0, 0, 0, 0.4)'
+    backgroundColor: 'rgba( 0, 0, 0, 0.2)'
   },
   title2: {
     color: '#ffffff',
@@ -120,7 +120,7 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'column', 
     justifyContent: 'flex-end',
-    backgroundColor: 'rgba( 0, 0, 0, 0.1)'
+    backgroundColor: 'rgba( 0, 0, 0, 0.3)'
   },
 });
 
