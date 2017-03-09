@@ -414,53 +414,250 @@ describe('IMAGE UPLOAD', () => {
   //   });
   // });
 
-  it('it should set a list item image', function(done) {
-      this.timeout(4500);
-      const axiosImageParams = generateParams('post', 'postImage', '');
-      const axiosDBParams = generateParams('post', 'api/items', '');
+  // var mySQLlistId = 2; //change this depending on the list you're adding
+  // it('it should set Golden Gate Bridge', function(done) {
+  //     this.timeout(4500);
+  //     const axiosImageParams = generateParams('post', 'postImage', '');
+  //     const axiosDBParams = generateParams('post', 'api/items', '');
 
-      const processData = (data) => {
-        const imageData = new Buffer(data).toString('base64');
-        axios({
-          method: axiosImageParams.method,
-          url: axiosImageParams.uri,
-          data: {
-            imageBuffer: imageData,
-            targetImageLatitude: 37.784831,
-            targetImageLongitude: -122.407686,
-            targetImageAllowedDistance: 0.4 //km
-          }
-        })
-        .then((response) => {
-          const item = {
-            listId: 3, 
-            name: 'Powel St Cable Car1057',
-            desc: 'The San Francisco cable car system is the world\'s last manually operated cable car system.',
-            image: response.data.imageMongoId,
-            imageURL: JSON.parse(response.data.s3ImageLocation)
-          };
+  //     const processData = (data) => {
+  //       const imageData = new Buffer(data).toString('base64');
+  //       axios({
+  //         method: axiosImageParams.method,
+  //         url: axiosImageParams.uri,
+  //         data: {
+  //           imageBuffer: imageData,
+  //           targetImageLatitude: 37.819810, 
+  //           targetImageLongitude: -122.478545,
+  //           targetImageAllowedDistance: 5 //km
+  //         }
+  //       })
+  //       .then((response) => {
+  //         const item = {
+  //           listId: mySQLlistId, 
+  //           name: 'The Golden Gate Bridge',
+  //           desc: 'The Golden Gate Bridge is a suspension bridge spanning the Golden Gate strait. It is the most photographed bridge on Earth',
+  //           image: response.data.imageMongoId,
+  //           imageURL: JSON.parse(response.data.s3ImageLocation)
+  //         };
 
-          axios({
-            method: axiosDBParams.method,
-            url: axiosDBParams.uri,
-            data: item
-          })
-          .then((dbResponse) => {
-            console.log(dbResponse);
-          })
-          .catch((dbError) => {
-            console.log(dbError);
-          });
-        })
-        .catch((error) => {
-          console.log('error');
-          done(error);
-        });
-      };
+  //         axios({
+  //           method: axiosDBParams.method,
+  //           url: axiosDBParams.uri,
+  //           data: item
+  //         })
+  //         .then((dbResponse) => {
+  //           console.log(dbResponse);
+  //         })
+  //         .catch((dbError) => {
+  //           console.log(dbError);
+  //         });
+  //       })
+  //       .catch((error) => {
+  //         console.log('error');
+  //         done(error);
+  //       });
+  //     };
 
-      fs.readFile('IMG_0896.jpg', (err, data) => {
-        if (err) throw err;
-        processData(data);
-      });
-    });
+  //     fs.readFile('Golden_Gate_Bridge.jpg', (err, data) => {
+  //       if (err) throw err;
+  //       processData(data);
+  //     });
+  // });
+  // it('it should set Westfield Mall', function(done) {
+  //     this.timeout(4500);
+  //     const axiosImageParams = generateParams('post', 'postImage', '');
+  //     const axiosDBParams = generateParams('post', 'api/items', '');
+
+  //     const processData = (data) => {
+  //       const imageData = new Buffer(data).toString('base64');
+  //       axios({
+  //         method: axiosImageParams.method,
+  //         url: axiosImageParams.uri,
+  //         data: {
+  //           imageBuffer: imageData,
+  //           targetImageLatitude: 37.784269,
+  //           targetImageLongitude: -122.407539,
+  //           targetImageAllowedDistance: 0.4 //km
+  //         }
+  //       })
+  //       .then((response) => {
+  //         const item = {
+  //           listId: mySQLlistId, 
+  //           name: 'Westfield Mall Entrance & Logo',
+  //           desc: '9-story mall featuring over 170 shops & restaurants, a multiplex & a dome-covered atrium',
+  //           image: response.data.imageMongoId,
+  //           imageURL: JSON.parse(response.data.s3ImageLocation)
+  //         };
+
+  //         axios({
+  //           method: axiosDBParams.method,
+  //           url: axiosDBParams.uri,
+  //           data: item
+  //         })
+  //         .then((dbResponse) => {
+  //           console.log(dbResponse);
+  //         })
+  //         .catch((dbError) => {
+  //           console.log(dbError);
+  //         });
+  //       })
+  //       .catch((error) => {
+  //         console.log('error');
+  //         done(error);
+  //       });
+  //     };
+
+  //     fs.readFile('Westfield_San_Francisco_Centre.jpg', (err, data) => {
+  //       if (err) throw err;
+  //       processData(data);
+  //     });
+  // });
+  // it('it should set Union Square Statue', function(done) {
+  //     this.timeout(4500);
+  //     const axiosImageParams = generateParams('post', 'postImage', '');
+  //     const axiosDBParams = generateParams('post', 'api/items', '');
+
+  //     const processData = (data) => {
+  //       const imageData = new Buffer(data).toString('base64');
+  //       axios({
+  //         method: axiosImageParams.method,
+  //         url: axiosImageParams.uri,
+  //         data: {
+  //           imageBuffer: imageData,
+  //           targetImageLatitude: 37.784831,
+  //           targetImageLongitude: -122.407686,
+  //           targetImageAllowedDistance: 0.4 //km
+  //         }
+  //       })
+  //       .then((response) => {
+  //         const item = {
+  //           listId: mySQLlistId, 
+  //           name: 'Union Square Victory Statue',
+  //           desc: 'Union Square is a 2.6-acre (1.1 ha) public plaza bordered by Geary, Powell, Post and Stockton Streets in downtown San Francisco, California. ',
+  //           image: response.data.imageMongoId,
+  //           imageURL: JSON.parse(response.data.s3ImageLocation)
+  //         };
+
+  //         axios({
+  //           method: axiosDBParams.method,
+  //           url: axiosDBParams.uri,
+  //           data: item
+  //         })
+  //         .then((dbResponse) => {
+  //           console.log(dbResponse);
+  //         })
+  //         .catch((dbError) => {
+  //           console.log(dbError);
+  //         });
+  //       })
+  //       .catch((error) => {
+  //         console.log('error');
+  //         done(error);
+  //       });
+  //     };
+
+  //     fs.readFile('Union_Square_San_Francisco.jpg', (err, data) => {
+  //       if (err) throw err;
+  //       processData(data);
+  //     });
+  // });
+  // it('it should set Powel St Cable Car', function(done) {
+  //     this.timeout(4500);
+  //     const axiosImageParams = generateParams('post', 'postImage', '');
+  //     const axiosDBParams = generateParams('post', 'api/items', '');
+
+  //     const processData = (data) => {
+  //       const imageData = new Buffer(data).toString('base64');
+  //       axios({
+  //         method: axiosImageParams.method,
+  //         url: axiosImageParams.uri,
+  //         data: {
+  //           imageBuffer: imageData,
+  //           targetImageLatitude: 37.784831,
+  //           targetImageLongitude: -122.407686,
+  //           targetImageAllowedDistance: 0.4 //km
+  //         }
+  //       })
+  //       .then((response) => {
+  //         const item = {
+  //           listId: mySQLlistId, 
+  //           name: 'Powel St Cable Car',
+  //           desc: 'The San Francisco cable car system is the world\'s last manually operated cable car system.',
+  //           image: response.data.imageMongoId,
+  //           imageURL: JSON.parse(response.data.s3ImageLocation)
+  //         };
+
+  //         axios({
+  //           method: axiosDBParams.method,
+  //           url: axiosDBParams.uri,
+  //           data: item
+  //         })
+  //         .then((dbResponse) => {
+  //           console.log(dbResponse);
+  //         })
+  //         .catch((dbError) => {
+  //           console.log(dbError);
+  //         });
+  //       })
+  //       .catch((error) => {
+  //         console.log('error');
+  //         done(error);
+  //       });
+  //     };
+
+  //     fs.readFile('cable-car-sf.jpg', (err, data) => {
+  //       if (err) throw err;
+  //       processData(data);
+  //     });
+  // });
+  // it('it should set BONUS: Hack Reactor Graffiti painting', function(done) {
+  //     this.timeout(4500);
+  //     const axiosImageParams = generateParams('post', 'postImage', '');
+  //     const axiosDBParams = generateParams('post', 'api/items', '');
+
+  //     const processData = (data) => {
+  //       const imageData = new Buffer(data).toString('base64');
+  //       axios({
+  //         method: axiosImageParams.method,
+  //         url: axiosImageParams.uri,
+  //         data: {
+  //           imageBuffer: imageData,
+  //           targetImageLatitude: 37.784831,
+  //           targetImageLongitude: -122.407686,
+  //           targetImageAllowedDistance: 0.4 //km
+  //         }
+  //       })
+  //       .then((response) => {
+  //         const item = {
+  //           listId: mySQLlistId, 
+  //           name: 'Bonus: 8th floor Hack Reactor Logo',
+  //           desc: 'Hack Reactor is a 12-week software engineering Coding Bootcamp education program founded in San Francisco',
+  //           image: response.data.imageMongoId,
+  //           imageURL: JSON.parse(response.data.s3ImageLocation)
+  //         };
+
+  //         axios({
+  //           method: axiosDBParams.method,
+  //           url: axiosDBParams.uri,
+  //           data: item
+  //         })
+  //         .then((dbResponse) => {
+  //           console.log(dbResponse);
+  //         })
+  //         .catch((dbError) => {
+  //           console.log(dbError);
+  //         });
+  //       })
+  //       .catch((error) => {
+  //         console.log('error');
+  //         done(error);
+  //       });
+  //     };
+
+  //     fs.readFile('Hack_Reactor_logo.jpg', (err, data) => {
+  //       if (err) throw err;
+  //       processData(data);
+  //     });
+  // });
 });
