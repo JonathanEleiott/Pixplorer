@@ -1,11 +1,11 @@
 // Creates a form for authentication
 
 import React, { Component } from 'react';
-import { Text, View } from 'react-native';
+import { Text, View, Image } from 'react-native';
 import { connect } from 'react-redux';
 import { Spinner, Card, CardSection, Input, Button } from './mostCommon';
 import { emailChanged, passwordChanged, loginUser, signupUser } from '../actions';
-
+import LOGIN1 from '../images/login-1.jpg';
 
 class LoginForm extends Component {
   // Updates email state/props to what the user has typed in the email box
@@ -71,6 +71,21 @@ class LoginForm extends Component {
       <View>
         <Card>
           <CardSection>
+            <Image
+              source={LOGIN1}
+              style={{ width: 400, height: 200, flex: 1 }}
+            >
+            <View style={styles.overlay}>
+               
+                  <Text style={styles.title}>PIX
+                    <Text style={styles.title2}>PLORER</Text></Text>
+               
+              </View> 
+            </Image>
+          </CardSection>
+        </Card>
+        <Card>
+          <CardSection style={{ padding: 10 }}>
             <Input
               label="Email"
               placeholder="example@gmail.com"
@@ -79,7 +94,7 @@ class LoginForm extends Component {
             />
           </CardSection>
 
-          <CardSection>
+          <CardSection style={{ padding: 10 }}>
             <Input
               secureTextEntry
               label="Password"
@@ -87,9 +102,7 @@ class LoginForm extends Component {
               onChangeText={this.onPasswordChange.bind(this)}
               value={this.props.password}
             />
-          </CardSection>
-
-          
+          </CardSection>  
 
         </Card>
 
@@ -119,6 +132,29 @@ const styles = {
     alignSelf: 'center',
     marginTop: 20,
     marginBottom: 20
+  },
+  imageContainer: {
+    flex: 1,
+    flexDirection: 'column', 
+    justifyContent: 'center'
+  },
+  title: {
+    fontSize: 60,
+    textAlign: 'center',
+    color: '#41d13a',
+    padding: 10,
+    backgroundColor: 'rgba( 0, 0, 0, 0.2)'
+  },
+  title2: {
+    color: '#ffffff',
+    backgroundColor: 'transparent',
+    fontSize: 50
+  },
+  overlay: {
+    flex: 1,
+    flexDirection: 'column', 
+    justifyContent: 'center',
+    backgroundColor: 'rgba( 0, 0, 0, 0.3)'
   },
 };
 

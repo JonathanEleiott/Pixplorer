@@ -35,7 +35,7 @@ class ListStats extends Component {
       },
       width: 350,
       height: 350,
-      color: '#bbbbbb',
+      color: '#41d13a',
       r: 50,
       R: 150,
       legendPosition: 'topLeft',
@@ -46,9 +46,9 @@ class ListStats extends Component {
       },
       label: {
         fontFamily: 'Arial',
-        fontSize: 8,
-        fontWeight: true,
-        color: '#ECF0F1'
+        fontSize: 16,
+        fontWeight: 'bold',
+        color: '#333333'
       }, 
     };
 

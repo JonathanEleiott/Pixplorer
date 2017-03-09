@@ -146,7 +146,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 60,
     textAlign: 'center',
-    color: '#48eaea',
+    color: '#41d13a',
     padding: 10,
     marginBottom: 200,
     backgroundColor: 'rgba( 0, 0, 0, 0.2)'
