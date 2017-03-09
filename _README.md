@@ -1,5 +1,5 @@
 # Project Name
-Skavenger
+PIXPLORER
 
 > Pithy project description
 Exploring the world with friends one picture at a time.
