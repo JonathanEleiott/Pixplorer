@@ -41,7 +41,7 @@ class RouterComponent extends Component {
         <Scene
           key="splash"
           component={Splash}
-          title="Skavenger"
+          title="Welcome"
           timeout={0}
           nextScene={() => {
             if (!this.checkIfUserIsLoggedIn) {
@@ -83,7 +83,7 @@ class RouterComponent extends Component {
           <Scene
             key="subscribedList"
             component={SubscribedList}
-            title="Subscribed List"
+            title="My List"
           />
           <Scene
             key="itemsList"
@@ -92,7 +92,7 @@ class RouterComponent extends Component {
           <Scene
             key="globalList"
             component={GlobalList}
-            title="Global Lists"
+            title="All Lists"
             onBack={() => Actions.subscribedList()}
           />
           <Scene

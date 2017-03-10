@@ -92,10 +92,10 @@ class SubscribedList extends Component {
             Create A New List
           </Button>
           <Button onPress={() => Actions.globalList()}>
-            Go To Global List
+            Go To All Lists
           </Button>
         </View>
-        
+
       </ScrollView>
     );
   }

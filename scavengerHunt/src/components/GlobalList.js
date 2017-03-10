@@ -156,11 +156,11 @@ class SubscribedList extends Component {
               return (this.swipeoutBody(list, index));
             }
           })}
-          
+
         </Card>
         <View style={styles.buttonContainer}>
           <Button onPress={() => Actions.subscribedList()}>
-            Go To Subscribed List
+            Go To My List
           </Button>
         </View>
       </ScrollView>
